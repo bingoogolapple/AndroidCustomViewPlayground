@@ -1,2 +1,2 @@
-include ':flowlayout', ':dustboxview'
+include ':flowlayout', ':dustboxview', ':strainerview', ':chrysanthemum'
 

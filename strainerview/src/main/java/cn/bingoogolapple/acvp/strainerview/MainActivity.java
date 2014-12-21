@@ -1,11 +1,11 @@
-package cn.bingoogolapple.acvp.dustboxview;
+package cn.bingoogolapple.acvp.strainerview;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 
 public class MainActivity extends ActionBarActivity {
-    private DustBoxView mDustBoxView;
+    private StrainerView mStrainerView;
     private Handler mHandler;
     private int mProgress = 0;
 
@@ -13,7 +13,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mDustBoxView = (DustBoxView) findViewById(R.id.dustboxview);
+        mStrainerView = (StrainerView) findViewById(R.id.strainerview);
         mHandler = new Handler();
         mHandler.post(mHandleProgressTask);
     }
@@ -24,7 +24,7 @@ public class MainActivity extends ActionBarActivity {
             if(mProgress == 101) {
                 mProgress = 0;
             }
-            mDustBoxView.setData(mProgress);
+            mStrainerView.setData(mProgress);
             mProgress++;
             mHandler.postDelayed(mHandleProgressTask, 50);
         }
