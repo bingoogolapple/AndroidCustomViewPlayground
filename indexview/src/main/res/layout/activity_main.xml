@@ -1,0 +1,28 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/tv_main_tip"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:background="@drawable/shape_tip"
+        android:gravity="center"
+        android:text="A"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
+        android:visibility="invisible" />
+
+    <cn.bingoogolapple.acvp.indexview.IndexView
+        android:id="@+id/indexview"
+        android:layout_width="40dp"
+        android:background="@android:color/white"
+        android:layout_height="match_parent"
+        android:layout_gravity="right|center" />
+</FrameLayout>

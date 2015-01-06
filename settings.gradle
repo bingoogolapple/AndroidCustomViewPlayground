@@ -1,2 +1,2 @@
-include ':flowlayout', ':dustboxview', ':strainerview', ':chrysanthemum', ':swiperefreshlayout', ':clearedittext'
+include ':flowlayout', ':dustboxview', ':strainerview', ':chrysanthemum', ':swiperefreshlayout', ':clearedittext', ':pslistview', ':indexview'
 
