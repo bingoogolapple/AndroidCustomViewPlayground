@@ -155,10 +155,10 @@ public class YouTubeLayout extends ViewGroup {
                 int touchSlop = mDragHelper.getTouchSlop();
                 // 如果小于拖动的最小距离，说明是点击事件
                 if ((Math.pow(dx, 2) + Math.pow(dy, 2)) < Math.pow(touchSlop, 2) && mDragHelper.isViewUnder(mHeaderView, currentX, currentY)) {
-                    if (mDragOffset > 0.5) {
-                        shrink();
-                    } else {
+                    if (mDragOffset == 1.0f || mDragOffset < 0.5) {
                         expand();
+                    } else {
+                        shrink();
                     }
                 }
                 break;
@@ -167,6 +167,7 @@ public class YouTubeLayout extends ViewGroup {
 
     /**
      * 移动到指定的位置
+     *
      * @param slideRatio 0表示移动到顶部，1表示移动到底部
      */
     private void smoothSlideTo(float slideRatio) {

@@ -48,14 +48,14 @@ public class YouTubeActivity extends ActionBarActivity implements AdapterView.On
 
     private void initMovieDatas() {
         mMovieDatas = new ArrayList<String>();
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 40; i++) {
             mMovieDatas.add("电影" + i);
         }
     }
 
     private void initCommentDatas() {
         mCommentDatas = new ArrayList<String>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             mCommentDatas.add("评论" + i);
         }
     }
