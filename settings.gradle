@@ -1,2 +1,1 @@
-include ':flowlayout', ':dustboxview', ':strainerview', ':chrysanthemum', ':swiperefreshlayout', ':clearedittext', ':pslistview', ':indexview', ':scratchcard', ':lockpatternview'
-
+include ':flowlayout', ':dustboxview', ':strainerview', ':chrysanthemum', ':swiperefreshlayout', ':clearedittext', ':pslistview', ':indexview', ':scratchcard', ':lockpatternview', ':viewdraghelper'

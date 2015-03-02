@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    style="@style/MatchMatch">
+
     <cn.bingoogolapple.acvp.dustboxview.DustBoxView
         android:id="@+id/dustboxview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_centerInParent="true"
+        style="@style/WrapWrap" />
 
 </RelativeLayout>

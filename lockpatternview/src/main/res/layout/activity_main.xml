@@ -1,16 +1,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    style="@style/MatchMatch.Vertical">
+
     <TextView
         android:id="@+id/tv_main_result"
         android:text="请绘制图案"
         android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        style="@style/MatchWrap" />
 
     <cn.acvp.bingoogolapple.lockpatternview.LockPatternView
         android:id="@+id/lpv_main_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        style="@style/MatchMatch" />
 </LinearLayout>

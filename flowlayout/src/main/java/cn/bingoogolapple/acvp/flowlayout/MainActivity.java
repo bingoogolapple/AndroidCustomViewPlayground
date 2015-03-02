@@ -1,12 +1,9 @@
 package cn.bingoogolapple.acvp.flowlayout;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 
 public class MainActivity extends ActionBarActivity {
     private FlowLayout mFlowLayout;

@@ -4,26 +4,25 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-
 public class MainActivity extends ActionBarActivity implements SwipeRefreshLayout.OnRefreshListener {
-
     private SwipeRefreshLayout mSwipeLayout;
     private ListView mListView;
-    private ArrayList<String> list = new ArrayList<String>();
+    private ArrayList<String> mDatas = new ArrayList<String>();
+    private BaseAdapter mAdapter;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mListView = (ListView) findViewById(R.id.listview);
-        mListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-                getData()));
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getData());
+        mListView.setAdapter(mAdapter);
 
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         mSwipeLayout.setOnRefreshListener(this);
@@ -33,21 +32,20 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
     }
 
     private ArrayList<String> getData() {
-        list.add("Hello");
-        list.add("This is stormzhang");
-        list.add("An Android Developer");
-        list.add("Love Open Source");
-        list.add("My GitHub: stormzhang");
-        list.add("weibo: googdev");
-        return list;
+        for (int i = 0; i < 5; i++) {
+            mDatas.add("" + i);
+        }
+        return mDatas;
     }
 
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                mDatas.add("" + mDatas.size());
+                mAdapter.notifyDataSetChanged();
                 mSwipeLayout.setRefreshing(false);
             }
-        }, 5000);
+        }, 2000);
     }
 }

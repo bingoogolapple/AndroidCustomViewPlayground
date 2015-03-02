@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch.Vertical">
+
+    <cn.bingoogolapple.acvp.viewdraghelper.SwipeRecyclerViewItem
+        android:layout_width="match_parent"
+        android:background="#55CCCCCC"
+        android:layout_height="200dp">
+
+        <View
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:background="#FFFF0000" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#FF00FF00" />
+
+    </cn.bingoogolapple.acvp.viewdraghelper.SwipeRecyclerViewItem>
+
+    <FrameLayout style="@style/MatchMatch">
+
+        <View
+            android:background="#FF0000FF"
+            style="@style/MatchMatch" />
+
+        <cn.bingoogolapple.acvp.viewdraghelper.YoutubeLayout
+            style="@style/MatchMatch"
+            android:id="@+id/youtubeLayout"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/viewHeader"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:fontFamily="sans-serif-thin"
+                android:textSize="25sp"
+                android:tag="text"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:background="#AD78CC" />
+
+            <TextView
+                android:id="@+id/viewDesc"
+                android:tag="desc"
+                android:textSize="35sp"
+                android:gravity="center"
+                android:text="Loreum Loreum"
+                android:textColor="@android:color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FF00FF" />
+        </cn.bingoogolapple.acvp.viewdraghelper.YoutubeLayout>
+    </FrameLayout>
+
+</LinearLayout>
