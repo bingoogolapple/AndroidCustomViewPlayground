@@ -1,0 +1,30 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch">
+
+    <ListView
+        android:id="@+id/lv_youtube_movice"
+        style="@style/MatchMatch"
+        android:background="#ff99cc00"
+        android:padding="15dp" />
+
+    <cn.bingoogolapple.acvp.viewdraghelper.widget.YouTubeLayout
+        android:id="@+id/ytbl_youtube_movie"
+        style="@style/MatchMatch">
+
+        <TextView
+            android:id="@+id/tv_youtube_movie"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:textSize="30sp"
+            android:text="电影名字"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:background="#ffff4444" />
+
+        <ListView
+            android:id="@+id/lv_youtube_comment"
+            style="@style/MatchMatch"
+            android:background="#ff00ddff"
+            android:padding="15dp" />
+    </cn.bingoogolapple.acvp.viewdraghelper.widget.YouTubeLayout>
+</FrameLayout>

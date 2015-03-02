@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch.Vertical">
+
+    <cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem
+        android:layout_width="match_parent"
+        android:background="#55CCCCCC"
+        android:layout_height="200dp">
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#FFFF0000" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#FF00FF00" />
+
+    </cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem>
+
+</LinearLayout>
