@@ -7,6 +7,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +47,14 @@ public class YouTubeActivity extends ActionBarActivity implements AdapterView.On
         mCommentLv.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mCommentDatas));
 
         mMovieLv.setOnItemClickListener(this);
+        mCommentLv.setOnItemClickListener(this);
+
+        mMovieYtbl.setScaleCallback(new YouTubeLayout.ScaleCallback() {
+            @Override
+            public void onScale(float scale) {
+                ViewHelper.setAlpha(mMovieLv, scale);
+            }
+        });
     }
 
     private void initMovieDatas() {
@@ -62,7 +73,26 @@ public class YouTubeActivity extends ActionBarActivity implements AdapterView.On
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mMovieTv.setText(mMovieDatas.get(position));
-        mMovieYtbl.expand();
+        if (parent.equals(mMovieLv)) {
+            mMovieTv.setText(mMovieDatas.get(position));
+            mMovieYtbl.expand();
+        } else if (parent.equals(mCommentLv)) {
+            Toast.makeText(this, "点击了" + mCommentDatas.get(position), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_youtube_testclickheader:
+                Toast.makeText(this, "点击了头部按钮", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btn_youtube_testclickfooter:
+                Toast.makeText(this, "点击了底部按钮", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btn_youtube_testclickbottom:
+                Toast.makeText(this, "点击了底层按钮", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

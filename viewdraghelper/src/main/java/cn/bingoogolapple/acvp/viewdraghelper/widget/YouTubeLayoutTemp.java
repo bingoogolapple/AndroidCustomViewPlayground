@@ -1,16 +1,16 @@
 package cn.bingoogolapple.acvp.viewdraghelper.widget;
 
 import android.content.Context;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nineoldandroids.view.ViewHelper;
-
-public class YouTubeLayout extends ViewGroup {
+public class YouTubeLayoutTemp extends ViewGroup {
     private final ViewDragHelper mDragHelper;
     private View mHeaderView;
     private View mFooterView;
@@ -19,13 +19,14 @@ public class YouTubeLayout extends ViewGroup {
 
     private float mDragOffset;
 
-    private ScaleCallback mScaleCallback;
+    private int mDownX;
+    private int mDownY;
 
-    public YouTubeLayout(Context context, AttributeSet attrs) {
+    public YouTubeLayoutTemp(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public YouTubeLayout(Context context, AttributeSet attrs, int defStyle) {
+    public YouTubeLayoutTemp(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mDragHelper = ViewDragHelper.create(this, 1.0f, new DragHelperCallback());
     }
@@ -41,7 +42,8 @@ public class YouTubeLayout extends ViewGroup {
         measureChildren(widthMeasureSpec, heightMeasureSpec);
         int maxWidth = MeasureSpec.getSize(widthMeasureSpec);
         int maxHeight = MeasureSpec.getSize(heightMeasureSpec);
-        setMeasuredDimension(resolveSizeAndStateCompact(maxWidth, widthMeasureSpec, 0), resolveSizeAndStateCompact(maxHeight, heightMeasureSpec, 0));
+        setMeasuredDimension(resolveSizeAndStateCompact(maxWidth, widthMeasureSpec, 0),
+                resolveSizeAndStateCompact(maxHeight, heightMeasureSpec, 0));
     }
 
     public static int resolveSizeAndStateCompact(int size, int measureSpec, int childMeasuredState) {
@@ -75,6 +77,7 @@ public class YouTubeLayout extends ViewGroup {
 
     @Override
     public void computeScroll() {
+        //这个是为了将事件执行到底
         if (mDragHelper.continueSettling(true)) {
             ViewCompat.postInvalidateOnAnimation(this);
         }
@@ -95,19 +98,50 @@ public class YouTubeLayout extends ViewGroup {
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_CANCEL || ev.getAction() == MotionEvent.ACTION_UP) {
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        final int action = MotionEventCompat.getActionMasked(event);
+        if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
             mDragHelper.cancel();
             return false;
         }
-
-        return mDragHelper.shouldInterceptTouchEvent(ev);
+        return mDragHelper.shouldInterceptTouchEvent(event);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        //同样是传递事件给ViewdragHelper
         mDragHelper.processTouchEvent(event);
-        return true;
+        final int currentX = (int) event.getX();
+        final int currentY = (int) event.getY();
+//        handleClickEvent(event, currentX, currentY);
+
+        //判断当前的点击事件是在TopView或者是在BottomView上，如果在其上，则返回true
+        //如果是在TopView上，事件则传递给ViewDragHelper处理，如果是在BottomView上，则自然的传递下去。如果是在其他地方，则返回false，将事件传递下去。
+        return mDragHelper.isViewUnder(mHeaderView, currentX, currentY) || isInMySubView(mHeaderView, currentX, currentY) || isInMySubView(mFooterView, currentX, currentY);
+    }
+
+    //手势的放下，抬起的处理，是为了针对点击事件做的处理
+    private void handleClickEvent(MotionEvent event, int currentX, int currentY) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mDownX = currentX;
+                mDownY = currentY;
+                break;
+            case MotionEvent.ACTION_UP:
+                int dx = currentX - mDownX;
+                int dy = currentY - mDownY;
+                // 判断为拖动的最小距离
+                int touchSlop = mDragHelper.getTouchSlop();
+                // 如果小于拖动的最小距离，说明是点击事件
+                if ((Math.pow(dx, 2) + Math.pow(dy, 2)) < Math.pow(touchSlop, 2) && mDragHelper.isViewUnder(mHeaderView, currentX, currentY)) {
+                    if (mDragOffset == 1.0f || mDragOffset < 0.5) {
+                        expand();
+                    } else {
+                        shrink();
+                    }
+                }
+                break;
+        }
     }
 
     /**
@@ -116,11 +150,22 @@ public class YouTubeLayout extends ViewGroup {
      * @param slideRatio 0表示移动到顶部，1表示移动到底部
      */
     private void smoothSlideTo(float slideRatio) {
-        int topBound = getPaddingTop();
+        final int topBound = getPaddingTop();
         int finalTop = (int) (topBound + slideRatio * mDragRange);
         if (mDragHelper.smoothSlideViewTo(mHeaderView, mHeaderView.getLeft(), finalTop)) {
             ViewCompat.postInvalidateOnAnimation(this);
         }
+    }
+
+    //判断点击事件是否在子View上
+    private boolean isInMySubView(View subView, int currentX, int currentY) {
+        int[] subViewLocation = new int[2];
+        subView.getLocationOnScreen(subViewLocation);
+        int[] myLocation = new int[2];
+        this.getLocationOnScreen(myLocation);
+        int screenX = myLocation[0] + currentX;
+        int screenY = myLocation[1] + currentY;
+        return screenX >= subViewLocation[0] && screenX < subViewLocation[0] + subView.getWidth() && screenY >= subViewLocation[1] && screenY < subViewLocation[1] + subView.getHeight();
     }
 
     private class DragHelperCallback extends ViewDragHelper.Callback {
@@ -132,8 +177,10 @@ public class YouTubeLayout extends ViewGroup {
 
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
-            int bottomBound = getHeight() - mHeaderView.getHeight();
-            return Math.min(Math.max(top, getPaddingTop()), bottomBound);
+            final int topBound = getPaddingTop();
+            final int bottomBound = getHeight() - mHeaderView.getHeight() - mHeaderView.getPaddingBottom();
+            final int newTop = Math.min(Math.max(top, topBound), bottomBound);
+            return newTop;
         }
 
         @Override
@@ -144,67 +191,26 @@ public class YouTubeLayout extends ViewGroup {
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             mHeaderViewTop = top;
-            /**
-             * 滑动过程
-             *
-             * 1.收缩过程
-             * mHeaderViewTop                                         0 --> mDragRange
-             * mDragOffset = 1.0f * mHeaderViewTop / mDragRange       0 --> 1.0
-             * scale = 1 - 0.4f * mDragOffset                         1 --> 0.6
-             */
-
-            mDragOffset = 1.0f * mHeaderViewTop / mDragRange;
-
-            float scale = 1 - 0.4f * mDragOffset;
-
-            ViewHelper.setPivotX(YouTubeLayout.this, YouTubeLayout.this.getWidth());
-            ViewHelper.setPivotY(YouTubeLayout.this, YouTubeLayout.this.getHeight());
-
-            ViewHelper.setPivotX(mHeaderView, mHeaderView.getWidth());
-            // 乘以0.9，使缩放结束时底部留一些间隙
-            ViewHelper.setPivotY(mHeaderView, mHeaderView.getHeight() * 0.9f);
-
-            if (mHeaderViewTop == mDragRange) {
-                // 收缩完毕时，缩放YouTubeLayout的宽度，还原mHeaderView的宽度
-                ViewHelper.setScaleX(YouTubeLayout.this, scale);
-                ViewHelper.setScaleX(mHeaderView, 1.0f);
-            } else {
-                // 滑动过程中，还原YouTubeLayout的宽度，缩放mHeaderView的宽度
-                ViewHelper.setScaleX(YouTubeLayout.this, 1.0f);
-                ViewHelper.setScaleX(mHeaderView, scale);
-            }
-            // 滑动过程和滑动完毕时，都要缩放mHeaderView的高度
-            ViewHelper.setScaleY(mHeaderView, scale);
-
-            ViewHelper.setAlpha(mFooterView, 1 - mDragOffset);
-
-            if (mScaleCallback != null) {
-                mScaleCallback.onScale(mDragOffset);
-            }
-
+            mDragOffset = (float) mHeaderViewTop / mDragRange;
+            mHeaderView.setPivotX(mHeaderView.getWidth());
+            mHeaderView.setPivotY(mHeaderView.getHeight());
+            mHeaderView.setScaleX(1 - mDragOffset / 2);
+            mHeaderView.setScaleY(1 - mDragOffset / 2);
+            mFooterView.setAlpha(1 - mDragOffset);
             requestLayout();
         }
 
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
+            Log.i("bingo", "xvel = " + xvel + "   yvel = " + yvel);
             int finalTop = getPaddingTop();
-            if ((yvel > 0 && yvel > xvel) || (yvel == 0 && mDragOffset > 0.5f)) {
+            if (xvel > 0 || yvel > 0 || (yvel == 0 && mDragOffset > 0.5f)) {
                 finalTop += mDragRange;
             }
             mDragHelper.settleCapturedViewAt(releasedChild.getLeft(), finalTop);
-
-            // 要执行下面的代码，不然不会自动收缩完毕或展开完毕
-            ViewCompat.postInvalidateOnAnimation(YouTubeLayout.this);
+            invalidate();
         }
 
-    }
-
-    public void setScaleCallback(ScaleCallback scaleCallback) {
-        mScaleCallback = scaleCallback;
-    }
-
-    public interface ScaleCallback {
-        public void onScale(float scale);
     }
 
 }

@@ -1,30 +1,64 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/MatchMatch">
 
-    <ListView
-        android:id="@+id/lv_youtube_movice"
-        style="@style/MatchMatch"
-        android:background="#ff99cc00"
-        android:padding="15dp" />
+    <LinearLayout style="@style/MatchMatch.Vertical">
+
+        <ListView
+            android:id="@+id/lv_youtube_movice"
+            style="@style/MatchAuto"
+            android:background="#ff99cc00"
+            android:padding="15dp" />
+
+        <Button
+            android:id="@+id/btn_youtube_testclickbottom"
+            style="@style/MatchWrap"
+            android:onClick="onClick"
+            android:gravity="center_vertical|left"
+            android:text="测试点击底层按钮事件" />
+    </LinearLayout>
 
     <cn.bingoogolapple.acvp.viewdraghelper.widget.YouTubeLayout
         android:id="@+id/ytbl_youtube_movie"
         style="@style/MatchMatch">
 
-        <TextView
-            android:id="@+id/tv_youtube_movie"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:textSize="30sp"
-            android:text="电影名字"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:background="#ffff4444" />
+        <RelativeLayout
+            style="@style/MatchWrap"
+            android:padding="10dp">
 
-        <ListView
-            android:id="@+id/lv_youtube_comment"
-            style="@style/MatchMatch"
-            android:background="#ff00ddff"
-            android:padding="15dp" />
+            <TextView
+                android:id="@+id/tv_youtube_movie"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:textSize="80sp"
+                android:text="电影名字"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:background="#ffff4444" />
+
+            <Button
+                android:id="@+id/btn_youtube_testclickheader"
+                style="@style/WrapWrap"
+                android:onClick="onClick"
+                android:layout_centerVertical="true"
+                android:text="测试头部点击事件" />
+        </RelativeLayout>
+
+        <LinearLayout style="@style/MatchMatch.Vertical">
+
+            <Button
+                android:id="@+id/btn_youtube_testclickfooter"
+                style="@style/MatchWrap"
+                android:onClick="onClick"
+                android:layout_centerInParent="true"
+                android:text="测试底部点击事件" />
+
+            <ListView
+                android:id="@+id/lv_youtube_comment"
+                style="@style/MatchMatch"
+                android:background="#ff00ddff"
+                android:padding="15dp" />
+        </LinearLayout>
+
+
     </cn.bingoogolapple.acvp.viewdraghelper.widget.YouTubeLayout>
 </FrameLayout>
