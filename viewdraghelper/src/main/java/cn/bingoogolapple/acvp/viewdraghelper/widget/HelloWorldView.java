@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class SwipeRecyclerViewItem extends ViewGroup {
+public class HelloWorldView extends ViewGroup {
     private static final String TAG = HelloWorldView.class.getSimpleName();
     private final ViewDragHelper mDragHelper;
     private View mTopView;
@@ -19,11 +19,11 @@ public class SwipeRecyclerViewItem extends ViewGroup {
     private float mDragOffset;
     private int mTopViewLeft;
 
-    public SwipeRecyclerViewItem(Context context, AttributeSet attrs) {
+    public HelloWorldView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SwipeRecyclerViewItem(Context context, AttributeSet attrs, int defStyleAttr) {
+    public HelloWorldView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mDragHelper = ViewDragHelper.create(this, 1.0f, mDragHelperCallback);
         mDragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
@@ -168,7 +168,7 @@ public class SwipeRecyclerViewItem extends ViewGroup {
             mDragHelper.settleCapturedViewAt(finalLeft, releasedChild.getTop());
 
             // 要执行下面的代码，不然不会自动收缩完毕或展开完毕
-            ViewCompat.postInvalidateOnAnimation(SwipeRecyclerViewItem.this);
+            ViewCompat.postInvalidateOnAnimation(HelloWorldView.this);
         }
 
         /**

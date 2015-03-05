@@ -1,18 +1,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/MatchMatch.Vertical"
+    android:gravity="center_vertical"
     android:padding="10dp">
+
+    <Button
+        android:id="@+id/btn_main_helloworld"
+        style="@style/MatchWrap"
+        android:onClick="onClick"
+        android:layout_marginTop="10dp"
+        android:text="HelloWorldDemo" />
 
     <Button
         android:id="@+id/btn_main_youtube"
         style="@style/MatchWrap"
         android:onClick="onClick"
-        android:text="YouTube" />
+        android:layout_marginTop="10dp"
+        android:text="YouTubeDemo" />
 
     <Button
         android:id="@+id/btn_main_swiperecyclerviewitem"
         style="@style/MatchWrap"
         android:onClick="onClick"
         android:layout_marginTop="10dp"
-        android:text="SwipeRecyclerViewItem" />
+        android:text="SwipeRecyclerViewItemDemo" />
 
 </LinearLayout>

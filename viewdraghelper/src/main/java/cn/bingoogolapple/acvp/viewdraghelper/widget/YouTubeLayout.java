@@ -32,6 +32,9 @@ public class YouTubeLayout extends ViewGroup {
 
     @Override
     protected void onFinishInflate() {
+        if (getChildCount() != 2) {
+            throw new RuntimeException(YouTubeLayout.class.getSimpleName() + "必须有且只有两个子控件");
+        }
         mHeaderView = getChildAt(0);
         mFooterView = getChildAt(1);
     }
@@ -157,6 +160,39 @@ public class YouTubeLayout extends ViewGroup {
 
             float scale = 1 - 0.4f * mDragOffset;
 
+            animWithNineOld(scale);
+//            animWithViewCompat(scale);
+
+            if (mScaleCallback != null) {
+                mScaleCallback.onScale(mDragOffset);
+            }
+            requestLayout();
+        }
+
+        private void animWithViewCompat(float scale) {
+            ViewCompat.setPivotX(YouTubeLayout.this, YouTubeLayout.this.getWidth());
+            ViewCompat.setPivotY(YouTubeLayout.this, YouTubeLayout.this.getHeight());
+
+            ViewCompat.setPivotX(mHeaderView, mHeaderView.getWidth());
+            // 乘以0.9，使缩放结束时底部留一些间隙
+            ViewCompat.setPivotY(mHeaderView, mHeaderView.getHeight() * 0.9f);
+
+            if (mHeaderViewTop == mDragRange) {
+                // 收缩完毕时，缩放YouTubeLayout的宽度，还原mHeaderView的宽度
+                ViewCompat.setScaleX(YouTubeLayout.this, scale);
+                ViewCompat.setScaleX(mHeaderView, 1.0f);
+            } else {
+                // 滑动过程中，还原YouTubeLayout的宽度，缩放mHeaderView的宽度
+                ViewCompat.setScaleX(YouTubeLayout.this, 1.0f);
+                ViewCompat.setScaleX(mHeaderView, scale);
+            }
+            // 滑动过程和滑动完毕时，都要缩放mHeaderView的高度
+            ViewCompat.setScaleY(mHeaderView, scale);
+
+            ViewCompat.setAlpha(mFooterView, 1 - mDragOffset);
+        }
+
+        private void animWithNineOld(float scale) {
             ViewHelper.setPivotX(YouTubeLayout.this, YouTubeLayout.this.getWidth());
             ViewHelper.setPivotY(YouTubeLayout.this, YouTubeLayout.this.getHeight());
 
@@ -177,12 +213,6 @@ public class YouTubeLayout extends ViewGroup {
             ViewHelper.setScaleY(mHeaderView, scale);
 
             ViewHelper.setAlpha(mFooterView, 1 - mDragOffset);
-
-            if (mScaleCallback != null) {
-                mScaleCallback.onScale(mDragOffset);
-            }
-
-            requestLayout();
         }
 
         @Override

@@ -59,6 +59,5 @@
                 android:padding="15dp" />
         </LinearLayout>
 
-
     </cn.bingoogolapple.acvp.viewdraghelper.widget.YouTubeLayout>
 </FrameLayout>
