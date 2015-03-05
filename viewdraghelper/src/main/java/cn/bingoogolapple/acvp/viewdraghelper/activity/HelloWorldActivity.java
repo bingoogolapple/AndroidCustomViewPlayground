@@ -20,6 +20,22 @@ public class HelloWorldActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BGAA.injectView2Activity(this);
+
+
+        findViewById(R.id.btn_helloworld_topview).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(HelloWorldActivity.this,"长按了TopView中的按钮",Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        findViewById(R.id.btn_helloworld_bottomview).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(HelloWorldActivity.this,"长按了BottomView中的按钮",Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
     }
 
     public void onClick(View view) {

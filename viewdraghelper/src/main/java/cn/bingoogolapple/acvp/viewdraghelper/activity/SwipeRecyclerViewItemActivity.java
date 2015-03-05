@@ -19,10 +19,26 @@ public class SwipeRecyclerViewItemActivity extends ActionBarActivity {
     @BGAAView(R.id.swiperecyclerviewitem_right)
     private SwipeRecyclerViewItem mRightSrvi;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BGAA.injectView2Activity(this);
+
+        findViewById(R.id.btn_swipeitem_topview).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(SwipeRecyclerViewItemActivity.this,"长按了TopView中的按钮",Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        findViewById(R.id.btn_swipeitem_bottomview).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(SwipeRecyclerViewItemActivity.this,"长按了BottomView中的按钮",Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
     }
 
     public void onClick(View view) {

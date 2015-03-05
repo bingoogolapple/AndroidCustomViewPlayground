@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:background="#55CCCCCC"
         android:layout_height="100dp"
+        app:srvi_bottomMode="pullOut"
         app:srvi_swipeDirection="left">
 
         <RelativeLayout
@@ -58,17 +59,35 @@
         android:layout_width="match_parent"
         android:background="#55CCCCCC"
         android:layout_height="100dp"
+        app:srvi_bottomMode="layDown"
         app:srvi_swipeDirection="right">
 
-        <View
+        <RelativeLayout
             android:layout_width="200dp"
             android:layout_height="100dp"
-            android:background="#FFFF0000"/>
+            android:background="#FFFF0000"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <View
+            <Button
+                style="@style/WrapWrap"
+                android:text="BottomView"
+                android:gravity="center"
+                android:onClick="onClick" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="#FF00FF00"/>
+            android:background="#FF00FF00"
+            android:gravity="center">
+
+            <Button
+                style="@style/WrapWrap"
+                android:text="TopView"
+                android:gravity="center"
+                android:onClick="onClick" />
+        </RelativeLayout>
 
     </cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem>
     <Button

@@ -25,6 +25,8 @@ public class SwipeRecyclerViewItem extends ViewGroup {
     // 默认向左滑动
     private SwipeDirection mSwipeDirection = SwipeDirection.Left;
 
+    private BottomModel mBottomModel = BottomModel.LayDown;
+
     public SwipeRecyclerViewItem(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
@@ -52,6 +54,11 @@ public class SwipeRecyclerViewItem extends ViewGroup {
             if (swipeDirection == SwipeDirection.Right.ordinal()) {
                 mSwipeDirection = SwipeDirection.Right;
             }
+        } else if (attr == R.styleable.SwipeRecyclerViewItem_srvi_bottomMode) {
+            int bottomMode = typedArray.getInt(attr, mBottomModel.ordinal());
+            if (bottomMode == BottomModel.PullOut.ordinal()) {
+                mBottomModel = BottomModel.PullOut;
+            }
         }
     }
 
@@ -62,6 +69,8 @@ public class SwipeRecyclerViewItem extends ViewGroup {
         }
         mTopView = getChildAt(1);
         mBottomView = getChildAt(0);
+
+        Log.i(TAG, "onFinishInflate");
     }
 
     @Override
@@ -96,13 +105,24 @@ public class SwipeRecyclerViewItem extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        Log.i(TAG, "onLayout");
         mDragRange = mBottomView.getWidth();
         if (mSwipeDirection == SwipeDirection.Left) {
             mTopView.layout(mTopViewLeft, 0, mTopViewLeft + mTopView.getMeasuredWidth(), mTopView.getMeasuredHeight());
-            mBottomView.layout(r - mBottomView.getMeasuredWidth(), 0, r, mBottomView.getMeasuredHeight());
+
+            if (mBottomModel == BottomModel.LayDown) {
+                mBottomView.layout(r - mBottomView.getMeasuredWidth(), 0, r, mBottomView.getMeasuredHeight());
+            } else {
+                mBottomView.layout(mTopViewLeft + mTopView.getMeasuredWidth(), 0, mTopViewLeft + mTopView.getMeasuredWidth() + mBottomView.getMeasuredWidth(), mBottomView.getMeasuredHeight());
+            }
         } else {
             mTopView.layout(mTopViewLeft, 0, mTopViewLeft + mTopView.getMeasuredWidth(), mTopView.getMeasuredHeight());
-            mBottomView.layout(0, 0, mBottomView.getMeasuredWidth(), mBottomView.getMeasuredHeight());
+
+            if (mBottomModel == BottomModel.LayDown) {
+                mBottomView.layout(0, 0, mBottomView.getMeasuredWidth(), mBottomView.getMeasuredHeight());
+            } else {
+                mBottomView.layout(mTopViewLeft - mBottomView.getMeasuredWidth(), 0, mTopViewLeft, mBottomView.getMeasuredHeight());
+            }
         }
     }
 
@@ -131,7 +151,7 @@ public class SwipeRecyclerViewItem extends ViewGroup {
     public boolean smoothSlideTo(float slideOffset) {
         final int leftBound = getPaddingLeft();
         int left = leftBound;
-        if(mSwipeDirection == SwipeDirection.Left) {
+        if (mSwipeDirection == SwipeDirection.Left) {
             left = (int) (leftBound - slideOffset * mDragRange);
         } else {
             left = (int) (leftBound + slideOffset * mDragRange);
@@ -253,5 +273,9 @@ public class SwipeRecyclerViewItem extends ViewGroup {
 
     public enum SwipeDirection {
         Left, Right
+    }
+
+    public enum BottomModel {
+        PullOut, LayDown
     }
 }

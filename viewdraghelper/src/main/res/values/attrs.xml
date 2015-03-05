@@ -5,5 +5,9 @@
             <enum name="left" value="0" />
             <enum name="right" value="1" />
         </attr>
+        <attr name="srvi_bottomMode" format="enum">
+            <enum name="pullOut" value="0" />
+            <enum name="layDown" value="1" />
+        </attr>
     </declare-styleable>
 </resources>
