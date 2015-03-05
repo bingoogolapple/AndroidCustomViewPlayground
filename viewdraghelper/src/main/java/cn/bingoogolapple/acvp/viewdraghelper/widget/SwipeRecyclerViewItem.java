@@ -1,6 +1,7 @@
 package cn.bingoogolapple.acvp.viewdraghelper.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
@@ -8,6 +9,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import cn.bingoogolapple.acvp.viewdraghelper.R;
 
 public class SwipeRecyclerViewItem extends ViewGroup {
     private static final String TAG = HelloWorldView.class.getSimpleName();
@@ -19,14 +22,37 @@ public class SwipeRecyclerViewItem extends ViewGroup {
     private float mDragOffset;
     private int mTopViewLeft;
 
+    // 默认向左滑动
+    private SwipeDirection mSwipeDirection = SwipeDirection.Left;
+
     public SwipeRecyclerViewItem(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
     public SwipeRecyclerViewItem(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initAttrs(context, attrs);
         mDragHelper = ViewDragHelper.create(this, 1.0f, mDragHelperCallback);
         mDragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
+    }
+
+    private void initAttrs(Context context, AttributeSet attrs) {
+        final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SwipeRecyclerViewItem);
+        final int N = typedArray.getIndexCount();
+        for (int i = 0; i < N; i++) {
+            initAttr(typedArray.getIndex(i), typedArray);
+        }
+        typedArray.recycle();
+    }
+
+    public void initAttr(int attr, TypedArray typedArray) {
+        if (attr == R.styleable.SwipeRecyclerViewItem_srvi_swipeDirection) {
+            // 默认向左滑动
+            int swipeDirection = typedArray.getInt(attr, mSwipeDirection.ordinal());
+            if (swipeDirection == SwipeDirection.Right.ordinal()) {
+                mSwipeDirection = SwipeDirection.Right;
+            }
+        }
     }
 
     @Override
@@ -71,8 +97,13 @@ public class SwipeRecyclerViewItem extends ViewGroup {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         mDragRange = mBottomView.getWidth();
-        mTopView.layout(mTopViewLeft, 0, mTopViewLeft + mTopView.getMeasuredWidth(), mTopView.getMeasuredHeight());
-        mBottomView.layout(0, 0, mBottomView.getMeasuredWidth(), mBottomView.getMeasuredHeight());
+        if (mSwipeDirection == SwipeDirection.Left) {
+            mTopView.layout(mTopViewLeft, 0, mTopViewLeft + mTopView.getMeasuredWidth(), mTopView.getMeasuredHeight());
+            mBottomView.layout(r - mBottomView.getMeasuredWidth(), 0, r, mBottomView.getMeasuredHeight());
+        } else {
+            mTopView.layout(mTopViewLeft, 0, mTopViewLeft + mTopView.getMeasuredWidth(), mTopView.getMeasuredHeight());
+            mBottomView.layout(0, 0, mBottomView.getMeasuredWidth(), mBottomView.getMeasuredHeight());
+        }
     }
 
     @Override
@@ -99,7 +130,13 @@ public class SwipeRecyclerViewItem extends ViewGroup {
 
     public boolean smoothSlideTo(float slideOffset) {
         final int leftBound = getPaddingLeft();
-        int left = (int) (leftBound + slideOffset * mDragRange);
+        int left = leftBound;
+        if(mSwipeDirection == SwipeDirection.Left) {
+            left = (int) (leftBound - slideOffset * mDragRange);
+        } else {
+            left = (int) (leftBound + slideOffset * mDragRange);
+        }
+
         if (mDragHelper.smoothSlideViewTo(mTopView, left, mTopView.getTop())) {
             ViewCompat.postInvalidateOnAnimation(this);
             return true;
@@ -141,7 +178,11 @@ public class SwipeRecyclerViewItem extends ViewGroup {
 
         @Override
         public int clampViewPositionHorizontal(View child, int left, int dx) {
-            return Math.min(Math.max(getPaddingLeft(), left), mDragRange);
+            if (mSwipeDirection == SwipeDirection.Left) {
+                return Math.min(Math.max(-mDragRange, left), 0);
+            } else {
+                return Math.min(Math.max(getPaddingLeft(), left), mDragRange);
+            }
         }
 
         @Override
@@ -153,8 +194,8 @@ public class SwipeRecyclerViewItem extends ViewGroup {
              * mDragOffset = 1.0f * mTopViewLeft / mDragRange       0 -->  1.0
              */
 
+            mDragOffset = 1.0f * Math.abs(mTopViewLeft) / mDragRange;
             ViewCompat.setAlpha(mBottomView, mDragOffset);
-            mDragOffset = 1.0f * mTopViewLeft / mDragRange;
 
             requestLayout();
         }
@@ -162,10 +203,17 @@ public class SwipeRecyclerViewItem extends ViewGroup {
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             int finalLeft = getPaddingLeft();
-            if ((xvel > 0 && xvel > yvel) || (xvel == 0 && mDragOffset > 0.5f)) {
-                finalLeft += mDragRange;
+            if (mSwipeDirection == SwipeDirection.Left) {
+                if ((xvel < 0 && Math.abs(xvel) > Math.abs(yvel)) || (xvel == 0 && mDragOffset > 0.5f)) {
+                    finalLeft -= mDragRange;
+                }
+            } else {
+                if ((xvel > 0 && xvel > yvel) || (xvel == 0 && mDragOffset > 0.5f)) {
+                    finalLeft += mDragRange;
+                }
             }
             mDragHelper.settleCapturedViewAt(finalLeft, releasedChild.getTop());
+
 
             // 要执行下面的代码，不然不会自动收缩完毕或展开完毕
             ViewCompat.postInvalidateOnAnimation(SwipeRecyclerViewItem.this);
@@ -203,4 +251,7 @@ public class SwipeRecyclerViewItem extends ViewGroup {
         }
     };
 
+    public enum SwipeDirection {
+        Left, Right
+    }
 }

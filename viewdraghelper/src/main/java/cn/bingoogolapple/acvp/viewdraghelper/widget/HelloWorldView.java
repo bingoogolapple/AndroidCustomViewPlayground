@@ -153,8 +153,8 @@ public class HelloWorldView extends ViewGroup {
              * mDragOffset = 1.0f * mTopViewLeft / mDragRange       0 -->  1.0
              */
 
-            ViewCompat.setAlpha(mBottomView, mDragOffset);
             mDragOffset = 1.0f * mTopViewLeft / mDragRange;
+            ViewCompat.setAlpha(mBottomView, mDragOffset);
 
             requestLayout();
         }
