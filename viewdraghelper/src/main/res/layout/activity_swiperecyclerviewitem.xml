@@ -41,13 +41,13 @@
     </cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem>
 
     <Button
-        android:id="@+id/btn_swipeitem_open"
+        android:id="@+id/btn_swipeitem_openleft"
         style="@style/MatchWrap"
         android:onClick="onClick"
         android:text="打开" />
 
     <Button
-        android:id="@+id/btn_swipeitem_close"
+        android:id="@+id/btn_swipeitem_closeleft"
         style="@style/MatchWrap"
         android:onClick="onClick"
         android:text="关闭" />
@@ -71,6 +71,16 @@
             android:background="#FF00FF00"/>
 
     </cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem>
+    <Button
+        android:id="@+id/btn_swipeitem_openright"
+        style="@style/MatchWrap"
+        android:onClick="onClick"
+        android:text="打开" />
 
+    <Button
+        android:id="@+id/btn_swipeitem_closeright"
+        style="@style/MatchWrap"
+        android:onClick="onClick"
+        android:text="关闭" />
 
 </LinearLayout>

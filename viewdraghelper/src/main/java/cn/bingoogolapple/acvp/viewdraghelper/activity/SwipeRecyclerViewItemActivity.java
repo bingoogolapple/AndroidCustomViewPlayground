@@ -15,7 +15,9 @@ import cn.bingoogolapple.bgaannotation.BGAAView;
 public class SwipeRecyclerViewItemActivity extends ActionBarActivity {
 
     @BGAAView(R.id.swiperecyclerviewitem_left)
-    private SwipeRecyclerViewItem mSwipeRecyclerViewItem;
+    private SwipeRecyclerViewItem mLeftSrvi;
+    @BGAAView(R.id.swiperecyclerviewitem_right)
+    private SwipeRecyclerViewItem mRightSrvi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +33,18 @@ public class SwipeRecyclerViewItemActivity extends ActionBarActivity {
             case R.id.btn_swipeitem_bottomview:
                 Toast.makeText(this, "点击了BottomView", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.btn_swipeitem_open:
-                mSwipeRecyclerViewItem.open();
+            case R.id.btn_swipeitem_openleft:
+                mLeftSrvi.open();
                 break;
-            case R.id.btn_swipeitem_close:
-                mSwipeRecyclerViewItem.close();
+            case R.id.btn_swipeitem_closeleft:
+                mLeftSrvi.close();
+                break;
+
+            case R.id.btn_swipeitem_openright:
+                mRightSrvi.open();
+                break;
+            case R.id.btn_swipeitem_closeright:
+                mRightSrvi.close();
                 break;
         }
     }
