@@ -6,11 +6,15 @@ import android.view.View;
 import android.widget.Toast;
 
 import cn.bingoogolapple.acvp.viewdraghelper.R;
+import cn.bingoogolapple.acvp.viewdraghelper.widget.HelloWorldView;
 import cn.bingoogolapple.bgaannotation.BGAA;
 import cn.bingoogolapple.bgaannotation.BGAALayout;
+import cn.bingoogolapple.bgaannotation.BGAAView;
 
 @BGAALayout(R.layout.activity_helloworld)
 public class HelloWorldActivity extends ActionBarActivity {
+    @BGAAView(R.id.helloworldview)
+    private HelloWorldView mHelloWorldView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +29,12 @@ public class HelloWorldActivity extends ActionBarActivity {
                 break;
             case R.id.btn_helloworld_bottomview:
                 Toast.makeText(this, "点击了BottomView", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btn_helloworld_open:
+                mHelloWorldView.open();
+                break;
+            case R.id.btn_helloworld_close:
+                mHelloWorldView.close();
                 break;
         }
     }
