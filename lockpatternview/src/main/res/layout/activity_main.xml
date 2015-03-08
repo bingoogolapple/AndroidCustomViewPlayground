@@ -7,7 +7,7 @@
         android:gravity="center"
         style="@style/MatchWrap" />
 
-    <cn.acvp.bingoogolapple.lockpatternview.LockPatternView
+    <cn.bingoogolapple.acvp.lockpatternview.widget.LockPatternView
         android:id="@+id/lpv_main_content"
         style="@style/MatchMatch" />
 </LinearLayout>

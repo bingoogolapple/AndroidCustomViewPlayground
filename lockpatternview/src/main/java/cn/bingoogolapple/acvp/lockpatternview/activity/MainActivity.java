@@ -1,8 +1,11 @@
-package cn.acvp.bingoogolapple.lockpatternview;
+package cn.bingoogolapple.acvp.lockpatternview.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.TextView;
+
+import cn.bingoogolapple.acvp.lockpatternview.R;
+import cn.bingoogolapple.acvp.lockpatternview.widget.LockPatternView;
 
 public class MainActivity extends ActionBarActivity {
     private TextView mResultTv;

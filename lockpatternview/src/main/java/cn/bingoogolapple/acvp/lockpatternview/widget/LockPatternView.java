@@ -1,4 +1,4 @@
-package cn.acvp.bingoogolapple.lockpatternview;
+package cn.bingoogolapple.acvp.lockpatternview.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,6 +12,8 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.bingoogolapple.acvp.lockpatternview.R;
 
 public class LockPatternView extends View {
     private static final int POINT_SIZE = 5;

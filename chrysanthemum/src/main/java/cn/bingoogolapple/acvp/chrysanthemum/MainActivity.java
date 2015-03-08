@@ -1,4 +1,4 @@
-package cn.acvp.bingoogolapple.chrysanthemum;
+package cn.bingoogolapple.acvp.chrysanthemum;
 
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
