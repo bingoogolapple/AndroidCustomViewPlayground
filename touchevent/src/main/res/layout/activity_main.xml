@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch"
+    android:padding="70dp"
+    android:background="#00f">
+
+    <cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup1
+        style="@style/MatchMatch"
+        android:padding="70dp"
+        android:background="#f00">
+
+        <cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup2
+            style="@style/MatchMatch"
+            android:paddingTop="70dp"
+            android:paddingBottom="70dp"
+            android:background="#0f0">
+
+            <cn.bingoogolapple.acvp.touchevent.widget.ChildView
+                style="@style/MatchMatch"
+                android:background="#ccc" />
+
+        </cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup2>
+    </cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup1>
+
+</RelativeLayout>
