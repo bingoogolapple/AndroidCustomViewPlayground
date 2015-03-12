@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.bingoogolapple.acvp.recyclerview.R;
@@ -127,8 +126,8 @@ public class HeadindexActivity extends ActionBarActivity implements OnItemClickL
 
         protected OnItemClickListener mOnItemClickListener;
         protected OnItemLongClickListener mOnItemLongClickListener;
-        protected List<ItemMode> mDatas1 = new ArrayList<ItemMode>();
-        protected List<ItemMode> mDatas2 = new ArrayList<ItemMode>();
+        protected List<ItemMode> mDatas1;
+        protected List<ItemMode> mDatas2;
 
         public ItemModeAdapter(OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
             mOnItemClickListener = onItemClickListener;
