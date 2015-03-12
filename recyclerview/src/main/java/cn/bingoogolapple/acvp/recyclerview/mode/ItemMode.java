@@ -22,16 +22,16 @@ public class ItemMode {
 
     public static List<ItemMode> getHeadindexDatas1() {
         List<ItemMode> datas = new ArrayList<ItemMode>();
-        for (int i = 0; i < 6; i++) {
-            datas.add(new ItemMode("attr1 " + i, "attr2 " + i));
+        for (int i = 0; i < 20; i++) {
+            datas.add(new ItemMode("类型11- " + i, "类型12- " + i));
         }
         return datas;
     }
 
     public static List<ItemMode> getHeadindexDatas2() {
         List<ItemMode> datas = new ArrayList<ItemMode>();
-        for (int i = 0; i < 9; i++) {
-            datas.add(new ItemMode("attr1 " + i, "attr2 " + i));
+        for (int i = 0; i < 20; i++) {
+            datas.add(new ItemMode("类型21- " + i, "类型22- " + i));
         }
         return datas;
     }
