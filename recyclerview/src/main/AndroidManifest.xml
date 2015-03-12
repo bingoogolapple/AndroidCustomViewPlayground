@@ -16,6 +16,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.HelloworldActivity"
+            android:label="HelloWorldDemo" />
+
+        <activity
+            android:name=".activity.HeadindexActivity"
+            android:label="HeadindexDemo" />
+
+        <activity
+            android:name=".activity.IndexviewActivity"
+            android:label="IndexviewDemo" />
     </application>
 
 </manifest>

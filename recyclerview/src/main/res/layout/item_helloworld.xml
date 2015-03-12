@@ -4,10 +4,10 @@
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/tv_item_main_attr1"
+        android:id="@+id/tv_item_helloworld_attr1"
         style="@style/AutoWrap" />
 
     <TextView
-        android:id="@+id/tv_item_main_attr2"
+        android:id="@+id/tv_item_helloworld_attr2"
         style="@style/AutoWrap" />
 </LinearLayout>

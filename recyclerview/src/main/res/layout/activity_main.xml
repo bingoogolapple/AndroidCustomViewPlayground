@@ -1,40 +1,27 @@
-<cn.bingoogolapple.acvp.recyclerview.widget.BGAEmptyView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ev_main_root"
-    style="@style/MatchMatch">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch.Vertical"
+    android:gravity="center_vertical"
+    android:padding="10dp">
 
-    <LinearLayout style="@style/MatchMatch.Vertical">
+    <Button
+        android:id="@+id/btn_main_helloworld"
+        style="@style/MatchWrap"
+        android:onClick="onClick"
+        android:layout_marginTop="10dp"
+        android:text="HelloWorldDemo" />
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/srl_main_container"
-            style="@style/MatchAuto">
+    <Button
+        android:id="@+id/btn_main_headindex"
+        style="@style/MatchWrap"
+        android:onClick="onClick"
+        android:layout_marginTop="10dp"
+        android:text="HeadindexDemo" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_main_data"
-                style="@style/MatchMatch"
-                android:scrollbars="none" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+    <Button
+        android:id="@+id/btn_main_indexview"
+        style="@style/MatchWrap"
+        android:onClick="onClick"
+        android:layout_marginTop="10dp"
+        android:text="IndexviewDemo" />
 
-        <Button
-            android:id="@+id/btn_main_delete"
-            style="@style/MatchWrap"
-            android:text="删除"
-            android:onClick="onClick" />
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/MatchMatch.Vertical"
-        android:background="@android:color/white"
-        android:gravity="center">
-
-        <ImageView
-            style="@style/WrapWrap"
-            android:src="@mipmap/ic_launcher" />
-
-        <Button
-            android:id="@+id/btn_main_add"
-            style="@style/WrapWrap"
-            android:onClick="onClick"
-            android:layout_marginTop="30dp"
-            android:text="添加" />
-    </LinearLayout>
-</cn.bingoogolapple.acvp.recyclerview.widget.BGAEmptyView>
+</LinearLayout>

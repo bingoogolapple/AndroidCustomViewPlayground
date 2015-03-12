@@ -12,9 +12,25 @@ public class ItemMode {
         this.attr2 = attr2;
     }
 
-    public static List<ItemMode> getDatas() {
+    public static List<ItemMode> getHelloworldDatas() {
         List<ItemMode> datas = new ArrayList<ItemMode>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 100; i++) {
+            datas.add(new ItemMode("attr1 " + i, "attr2 " + i));
+        }
+        return datas;
+    }
+
+    public static List<ItemMode> getHeadindexDatas1() {
+        List<ItemMode> datas = new ArrayList<ItemMode>();
+        for (int i = 0; i < 6; i++) {
+            datas.add(new ItemMode("attr1 " + i, "attr2 " + i));
+        }
+        return datas;
+    }
+
+    public static List<ItemMode> getHeadindexDatas2() {
+        List<ItemMode> datas = new ArrayList<ItemMode>();
+        for (int i = 0; i < 9; i++) {
             datas.add(new ItemMode("attr1 " + i, "attr2 " + i));
         }
         return datas;
