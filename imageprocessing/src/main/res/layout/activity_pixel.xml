@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch.Vertical"
+    android:gravity="center_horizontal"
+    android:padding="10dp">
+
+    <LinearLayout style="@style/MatchAuto.Horizontal">
+
+        <ImageView
+            android:id="@+id/iv_pixel_icon1"
+            style="@style/AutoMatch" />
+
+        <ImageView
+            android:id="@+id/iv_pixel_icon2"
+            style="@style/AutoMatch" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/MatchAuto.Horizontal">
+
+        <ImageView
+            android:id="@+id/iv_pixel_icon3"
+            style="@style/AutoMatch" />
+
+        <ImageView
+            android:id="@+id/iv_pixel_icon4"
+            style="@style/AutoMatch" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,38 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/MatchMatch.Vertical"
+    android:gravity="center_horizontal"
+    android:padding="10dp">
+
+    <cn.bingoogolapple.acvp.imageprocessing.demo2.ImageMatrixView
+        android:id="@+id/imv_matrix_icon"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        tools:ignore="Suspicious0dp" />
+
+    <GridLayout
+        android:id="@+id/gl_matrix_group"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:rowCount="3"
+        android:columnCount="3"
+        tools:ignore="NewApi,Suspicious0dp">
+
+    </GridLayout>
+
+    <LinearLayout style="@style/MatchWrap">
+
+        <Button
+            style="@style/AutoWrap"
+            android:onClick="change"
+            android:text="change" />
+
+        <Button
+            style="@style/AutoWrap"
+            android:text="reset"
+            android:onClick="reset" />
+
+    </LinearLayout>
+</LinearLayout>

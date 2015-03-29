@@ -1,0 +1,19 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch.Vertical"
+    android:padding="10dp">
+
+    <Button
+        style="@style/MatchWrap"
+        android:text="PrimaryColor"
+        android:onClick="primaryColor" />
+
+    <Button
+        style="@style/MatchWrap"
+        android:text="ColorMatrix"
+        android:onClick="colorMatrix" />
+
+    <Button
+        style="@style/MatchWrap"
+        android:text="Pixel"
+        android:onClick="pixel" />
+</LinearLayout>

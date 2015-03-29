@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch.Vertical"
+    android:padding="10dp">
+
+    <Button
+        style="@style/MatchWrap"
+        android:text="Demo1"
+        android:onClick="demo1" />
+
+    <Button
+        style="@style/MatchWrap"
+        android:text="Demo2"
+        android:onClick="demo2" />
+
+</LinearLayout>
