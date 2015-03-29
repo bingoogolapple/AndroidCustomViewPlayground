@@ -12,4 +12,9 @@
         android:text="Demo2"
         android:onClick="demo2" />
 
+    <Button
+        style="@style/MatchWrap"
+        android:text="Demo3"
+        android:onClick="demo3" />
+
 </LinearLayout>

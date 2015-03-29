@@ -26,6 +26,8 @@
         <activity android:name=".demo2.XFermodeActivity" />
         <activity android:name=".demo2.ShaderActivity" />
         <activity android:name=".demo2.MeshActivity" />
+
+        <activity android:name=".demo3.Demo3Activity" />
     </application>
 
 </manifest>
