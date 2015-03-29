@@ -1,0 +1,8 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch.Vertical"
+    android:gravity="center_horizontal"
+    android:padding="10dp">
+
+    <cn.bingoogolapple.acvp.imageprocessing.demo2.MeshView style="@style/MatchWrap" />
+
+</LinearLayout>

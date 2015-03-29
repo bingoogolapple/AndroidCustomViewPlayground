@@ -22,4 +22,8 @@ public class Demo2Activity extends BaseActivity {
         startActivity(new Intent(this, ShaderActivity.class));
     }
 
+    public void mesh(View view) {
+        startActivity(new Intent(this, MeshActivity.class));
+    }
+
 }
