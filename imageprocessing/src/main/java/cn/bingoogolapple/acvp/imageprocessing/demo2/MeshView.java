@@ -32,7 +32,7 @@ public class MeshView extends View {
     }
 
     private void initView() {
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.primarycolor);
+        mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.img3);
         float bmWidth = mBitmap.getWidth();
         float bmHeight = mBitmap.getHeight();
         int index = 0;

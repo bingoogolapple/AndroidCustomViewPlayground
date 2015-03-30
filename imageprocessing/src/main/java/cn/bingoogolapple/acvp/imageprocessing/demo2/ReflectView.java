@@ -36,7 +36,7 @@ public class ReflectView extends View {
     }
 
     private void initView() {
-        mSrcBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.primarycolor);
+        mSrcBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.img3);
         Matrix matrix = new Matrix();
         // x轴对称
         matrix.setScale(1, -1);

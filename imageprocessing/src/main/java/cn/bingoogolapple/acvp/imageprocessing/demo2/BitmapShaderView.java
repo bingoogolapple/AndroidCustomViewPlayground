@@ -33,7 +33,7 @@ public class BitmapShaderView extends View {
 
     private void initView() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.primarycolor);
+        mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.img3);
         mBitmapShader = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         mPaint.setShader(mBitmapShader);
     }

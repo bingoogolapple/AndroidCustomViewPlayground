@@ -4,8 +4,8 @@
 
     <Button
         style="@style/MatchWrap"
-        android:text="PrimaryColor"
-        android:onClick="primaryColor" />
+        android:text="img3"
+        android:onClick="img3" />
 
     <Button
         style="@style/MatchWrap"

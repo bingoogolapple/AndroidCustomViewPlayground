@@ -10,7 +10,7 @@ import cn.bingoogolapple.bgaannotation.BGAALayout;
 @BGAALayout(R.layout.activity_demo1)
 public class Demo1Activity extends BaseActivity {
 
-    public void primaryColor(View view) {
+    public void img3(View view) {
         startActivity(new Intent(this, PrimaryColorActivity.class));
     }
 

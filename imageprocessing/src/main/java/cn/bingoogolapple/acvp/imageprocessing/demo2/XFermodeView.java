@@ -35,7 +35,7 @@ public class XFermodeView extends View {
         // 禁用硬件加速
         setLayerType(LAYER_TYPE_SOFTWARE, null);
         // 先画的是dst，后画的是src
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.primarycolor);
+        mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.img3);
         mOut = Bitmap.createBitmap(mBitmap.getWidth(), mBitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mOut);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

@@ -24,7 +24,7 @@ public class PixelActivity extends BaseActivity {
 
     @Override
     protected void processLogic() {
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.primarycolor);
+        mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.img3);
         mIcon1.setImageBitmap(mBitmap);
         mIcon2.setImageBitmap(ImageHelper.handleImagePixelNegative(mBitmap));
         mIcon3.setImageBitmap(ImageHelper.handleImagePixelOldPhoto(mBitmap));

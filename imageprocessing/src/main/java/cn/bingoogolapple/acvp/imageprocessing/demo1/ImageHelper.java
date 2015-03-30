@@ -29,7 +29,7 @@ public class ImageHelper {
 
     private static ColorMatrixColorFilter buildCMCF(float hue, float saturation, float lum) {
         ColorMatrix hueColorMatrix = new ColorMatrix();
-        // 设置三个颜色的色相，0、1、2分别表示红绿蓝
+        // 设置三个颜色的色相，0、img1、2分别表示红绿蓝
         hueColorMatrix.setRotate(0, hue);
         hueColorMatrix.setRotate(1, hue);
         hueColorMatrix.setRotate(2, hue);

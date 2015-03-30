@@ -63,8 +63,8 @@ public class ZoomImageView extends ImageView implements ViewTreeObserver.OnGloba
         mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                if(mIsAutoScale) {
-                    return  true;
+                if (mIsAutoScale) {
+                    return true;
                 }
                 float x = e.getX();
                 float y = e.getY();
@@ -275,6 +275,13 @@ public class ZoomImageView extends ImageView implements ViewTreeObserver.OnGloba
 
     }
 
+    private void handleIntercept() {
+        RectF rectF = getMatrixRectF();
+        if (rectF.width() > getWidth() + 0.01f || rectF.height() > getHeight() + 0.01f) {
+            getParent().requestDisallowInterceptTouchEvent(true);
+        }
+    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         // 双击的时候，不允许移动
@@ -300,7 +307,11 @@ public class ZoomImageView extends ImageView implements ViewTreeObserver.OnGloba
         }
         mLastPointerCount = pointerCount;
         switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                handleIntercept();
+                break;
             case MotionEvent.ACTION_MOVE:
+                handleIntercept();
                 float dx = x - mLastX;
                 float dy = y - mLastY;
                 if (!mIsCanDrag) {

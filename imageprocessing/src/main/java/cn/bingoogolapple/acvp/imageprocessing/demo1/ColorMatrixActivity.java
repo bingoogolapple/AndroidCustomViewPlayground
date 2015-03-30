@@ -33,7 +33,7 @@ public class ColorMatrixActivity extends BaseActivity {
 
     @Override
     protected void processLogic() {
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.primarycolor);
+        mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.img3);
         mIconIv.setImageBitmap(mBitmap);
         mGroupGl.post(new Runnable() {
             @Override
@@ -58,17 +58,17 @@ public class ColorMatrixActivity extends BaseActivity {
     /**
      * 通常用于初始化颜色矩阵
      *
-     * 1 0 0 0 0
-     * 0 1 0 0 0
-     * 0 0 1 0 0
-     * 0 0 0 1 0
+     * img1 0 0 0 0
+     * 0 img1 0 0 0
+     * 0 0 img1 0 0
+     * 0 0 0 img1 0
      *
      * 颜色矩阵分量
      * R
      * G
      * B
      * A
-     * 1
+     * img1
      */
     private void initMatrix() {
         for (int i = 0; i < 20; i++) {

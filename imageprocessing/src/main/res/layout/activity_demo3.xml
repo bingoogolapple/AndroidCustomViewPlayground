@@ -2,8 +2,7 @@
     style="@style/MatchMatch.Vertical"
     android:padding="10dp">
 
-    <cn.bingoogolapple.acvp.imageprocessing.demo3.ZoomImageView
-        style="@style/MatchMatch"
-        android:src="@mipmap/primarycolor" />
-
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_demo3_content"
+        style="@style/MatchMatch" />
 </LinearLayout>

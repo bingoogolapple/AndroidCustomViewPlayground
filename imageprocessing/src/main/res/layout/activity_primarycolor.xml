@@ -4,17 +4,17 @@
     android:padding="10dp">
 
     <ImageView
-        android:id="@+id/iv_primarycolor_icon"
+        android:id="@+id/iv_img3_icon"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:src="@mipmap/primarycolor"/>
+        android:src="@mipmap/img3"/>
 
     <TextView
         style="@style/MatchWrap"
         android:text="色调" />
 
     <SeekBar
-        android:id="@+id/sb_primarycolor_hue"
+        android:id="@+id/sb_img3_hue"
         style="@style/MatchWrap" />
 
     <TextView
@@ -22,7 +22,7 @@
         android:text="饱和度" />
 
     <SeekBar
-        android:id="@+id/sb_primarycolor_saturation"
+        android:id="@+id/sb_img3_saturation"
         style="@style/MatchWrap" />
 
     <TextView
@@ -30,6 +30,6 @@
         android:text="亮度" />
 
     <SeekBar
-        android:id="@+id/sb_primarycolor_lum"
+        android:id="@+id/sb_img3_lum"
         style="@style/MatchWrap" />
 </LinearLayout>

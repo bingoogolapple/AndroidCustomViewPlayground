@@ -46,13 +46,13 @@ public class MatrixActivity extends BaseActivity {
     }
 
     /**
-     * 1 0 0
-     * 0 1 0
-     * 0 0 1
+     * img1 0 0
+     * 0 img1 0
+     * 0 0 img1
      * <p/>
      * X
      * Y
-     * 1
+     * img1
      */
     private void initMatrix() {
         for (int i = 0; i < 9; i++) {

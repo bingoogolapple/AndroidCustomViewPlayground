@@ -14,13 +14,13 @@ import cn.bingoogolapple.bgaannotation.BGAAView;
 public class PrimaryColorActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener {
     private static final int MAX_VALUE = 255;
     private static final int MID_VALUE = 127;
-    @BGAAView(R.id.iv_primarycolor_icon)
+    @BGAAView(R.id.iv_img3_icon)
     private ImageView mIconIv;
-    @BGAAView(R.id.sb_primarycolor_hue)
+    @BGAAView(R.id.sb_img3_hue)
     private SeekBar mHueSb;
-    @BGAAView(R.id.sb_primarycolor_saturation)
+    @BGAAView(R.id.sb_img3_saturation)
     private SeekBar mSaturationSb;
-    @BGAAView(R.id.sb_primarycolor_lum)
+    @BGAAView(R.id.sb_img3_lum)
     private SeekBar mLumSb;
     private float mHue = 0.0f;
     private float mSaturation = 1.0f;
@@ -29,7 +29,7 @@ public class PrimaryColorActivity extends BaseActivity implements SeekBar.OnSeek
 
     @Override
     protected void processLogic() {
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.primarycolor);
+        mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.img3);
         mIconIv.setImageBitmap(mBitmap);
         mHueSb.setMax(MAX_VALUE);
         mSaturationSb.setMax(MAX_VALUE);
@@ -50,14 +50,14 @@ public class PrimaryColorActivity extends BaseActivity implements SeekBar.OnSeek
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         switch (seekBar.getId()) {
-            case R.id.sb_primarycolor_hue:
+            case R.id.sb_img3_hue:
                 // 表达式并不固定，此为经验值
                 mHue = (progress - MID_VALUE) * 1.0f / MID_VALUE * 180;
                 break;
-            case R.id.sb_primarycolor_saturation:
+            case R.id.sb_img3_saturation:
                 mSaturation = progress * 1.0f / MID_VALUE;
                 break;
-            case R.id.sb_primarycolor_lum:
+            case R.id.sb_img3_lum:
                 mLum = progress * 1.0f / MID_VALUE;
                 break;
         }
