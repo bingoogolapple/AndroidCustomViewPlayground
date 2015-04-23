@@ -36,6 +36,8 @@ public class HelloWorldView extends ViewGroup {
         }
         mTopView = getChildAt(1);
         mBottomView = getChildAt(0);
+        // 避免底部视图被隐藏时还能获取焦点被点击
+        mBottomView.setVisibility(INVISIBLE);
     }
 
     @Override
@@ -154,7 +156,8 @@ public class HelloWorldView extends ViewGroup {
              */
 
             mDragOffset = 1.0f * mTopViewLeft / mDragRange;
-            ViewCompat.setAlpha(mBottomView, mDragOffset);
+            float alpha = 0.3f + 0.8f * mDragOffset;
+            ViewCompat.setAlpha(mBottomView, alpha);
 
             requestLayout();
         }
@@ -184,7 +187,8 @@ public class HelloWorldView extends ViewGroup {
                      * A view is currently being dragged. The position is currently changing as a result
                      * of user input or simulated user input.
                      */
-                    Log.i(TAG, "正在拖动");
+                    Log.i(TAG, "开始拖动");
+                    mBottomView.setVisibility(VISIBLE);
                     break;
                 case ViewDragHelper.STATE_SETTLING:
                     /**
@@ -193,11 +197,17 @@ public class HelloWorldView extends ViewGroup {
                      */
                     // 此时还没移动到要被放置的位置
                     Log.i(TAG, "fling完毕后被放置到一个位置" + mTopView.getLeft());
-
+                    mBottomView.setVisibility(VISIBLE);
                     break;
                 case ViewDragHelper.STATE_IDLE:
                     // A view is not currently being dragged or animating as a result of a fling/snap.
                     Log.i(TAG, "view没有被拖拽或者fling/snap结束" + mTopView.getLeft());
+                    if (mTopView.getLeft() == 0) {
+                        mBottomView.setVisibility(INVISIBLE);
+                        Log.i(TAG, "处于关闭状态");
+                    } else {
+                        Log.i(TAG, "处于打开状态");
+                    }
                     break;
             }
         }

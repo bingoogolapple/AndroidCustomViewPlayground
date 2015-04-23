@@ -18,7 +18,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btn_swipeitem_bottomview"
+                android:id="@+id/btn_swipeitem_bottomview1"
                 style="@style/WrapWrap"
                 android:text="BottomView"
                 android:gravity="center"
@@ -32,7 +32,7 @@
             android:gravity="center">
 
             <Button
-                android:id="@+id/btn_swipeitem_topview"
+                android:id="@+id/btn_swipeitem_topview1"
                 style="@style/WrapWrap"
                 android:text="TopView"
                 android:gravity="center"
@@ -70,6 +70,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/btn_swipeitem_bottomview2"
                 style="@style/WrapWrap"
                 android:text="BottomView"
                 android:gravity="center"
@@ -83,6 +84,7 @@
             android:gravity="center">
 
             <Button
+                android:id="@+id/btn_swipeitem_topview2"
                 style="@style/WrapWrap"
                 android:text="TopView"
                 android:gravity="center"

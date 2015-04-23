@@ -25,14 +25,14 @@ public class SwipeRecyclerViewItemActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         BGAA.injectView2Activity(this);
 
-        findViewById(R.id.btn_swipeitem_topview).setOnLongClickListener(new View.OnLongClickListener() {
+        findViewById(R.id.btn_swipeitem_topview1).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 Toast.makeText(SwipeRecyclerViewItemActivity.this,"长按了TopView中的按钮",Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
-        findViewById(R.id.btn_swipeitem_bottomview).setOnLongClickListener(new View.OnLongClickListener() {
+        findViewById(R.id.btn_swipeitem_bottomview1).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 Toast.makeText(SwipeRecyclerViewItemActivity.this,"长按了BottomView中的按钮",Toast.LENGTH_SHORT).show();
@@ -43,11 +43,17 @@ public class SwipeRecyclerViewItemActivity extends ActionBarActivity {
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_swipeitem_topview:
-                Toast.makeText(this, "点击了TopView", Toast.LENGTH_SHORT).show();
+            case R.id.btn_swipeitem_topview1:
+                Toast.makeText(this, "点击了TopView1", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.btn_swipeitem_bottomview:
-                Toast.makeText(this, "点击了BottomView", Toast.LENGTH_SHORT).show();
+            case R.id.btn_swipeitem_bottomview1:
+                Toast.makeText(this, "点击了BottomView1", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btn_swipeitem_topview2:
+                Toast.makeText(this, "点击了TopView2", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btn_swipeitem_bottomview2:
+                Toast.makeText(this, "点击了BottomView2", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_swipeitem_openleft:
                 mLeftSrvi.open();

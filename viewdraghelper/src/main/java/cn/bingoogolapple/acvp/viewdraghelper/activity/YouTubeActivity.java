@@ -22,7 +22,7 @@ import cn.bingoogolapple.bgaannotation.BGAAView;
 
 @BGAALayout(R.layout.activity_youtube)
 public class YouTubeActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
-    @BGAAView(R.id.lv_youtube_movice)
+    @BGAAView(R.id.lv_youtube_movie)
     private ListView mMovieLv;
 
     @BGAAView(R.id.ytbl_youtube_movie)
@@ -79,7 +79,6 @@ public class YouTubeActivity extends ActionBarActivity implements AdapterView.On
         } else if (parent.equals(mCommentLv)) {
             Toast.makeText(this, "点击了" + mCommentDatas.get(position), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public void onClick(View view) {
