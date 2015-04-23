@@ -28,14 +28,14 @@ public class SwipeRecyclerViewItemActivity extends ActionBarActivity {
         findViewById(R.id.btn_swipeitem_topview1).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(SwipeRecyclerViewItemActivity.this,"长按了TopView中的按钮",Toast.LENGTH_SHORT).show();
+                Toast.makeText(SwipeRecyclerViewItemActivity.this, "长按了TopView中的按钮", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
         findViewById(R.id.btn_swipeitem_bottomview1).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(SwipeRecyclerViewItemActivity.this,"长按了BottomView中的按钮",Toast.LENGTH_SHORT).show();
+                Toast.makeText(SwipeRecyclerViewItemActivity.this, "长按了BottomView中的按钮", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
@@ -61,6 +61,9 @@ public class SwipeRecyclerViewItemActivity extends ActionBarActivity {
             case R.id.btn_swipeitem_closeleft:
                 mLeftSrvi.close();
                 break;
+            case R.id.btn_swipeitem_statusleft:
+                showStatus(mLeftSrvi.getStatus());
+                break;
 
             case R.id.btn_swipeitem_openright:
                 mRightSrvi.open();
@@ -68,6 +71,19 @@ public class SwipeRecyclerViewItemActivity extends ActionBarActivity {
             case R.id.btn_swipeitem_closeright:
                 mRightSrvi.close();
                 break;
+            case R.id.btn_swipeitem_statusright:
+                showStatus(mRightSrvi.getStatus());
+                break;
+        }
+    }
+
+    private void showStatus(SwipeRecyclerViewItem.Status status) {
+        if (status == SwipeRecyclerViewItem.Status.Opened) {
+            Toast.makeText(this, "打开状态", Toast.LENGTH_SHORT).show();
+        } else if(status == SwipeRecyclerViewItem.Status.Closed) {
+            Toast.makeText(this, "关闭状态", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "正在移动", Toast.LENGTH_SHORT).show();
         }
     }
 }

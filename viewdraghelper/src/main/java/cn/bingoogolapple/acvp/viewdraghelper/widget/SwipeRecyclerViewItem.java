@@ -18,9 +18,12 @@ public class SwipeRecyclerViewItem extends ViewGroup {
     private View mTopView;
     private View mBottomView;
     private int mDragRange;
+    // 拖动的弹簧距离
+    private int mSpringDistance = 0;
 
     private float mDragOffset;
     private int mTopViewLeft;
+    private Status mStatus = Status.Closed;
 
     // 默认向左滑动
     private SwipeDirection mSwipeDirection = SwipeDirection.Left;
@@ -36,6 +39,7 @@ public class SwipeRecyclerViewItem extends ViewGroup {
         initAttrs(context, attrs);
         mDragHelper = ViewDragHelper.create(this, 1.0f, mDragHelperCallback);
         mDragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
+        Log.i(TAG, "mSpringDistance = " + mSpringDistance);
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {
@@ -58,6 +62,11 @@ public class SwipeRecyclerViewItem extends ViewGroup {
             int bottomMode = typedArray.getInt(attr, mBottomModel.ordinal());
             if (bottomMode == BottomModel.PullOut.ordinal()) {
                 mBottomModel = BottomModel.PullOut;
+            }
+        } else if (attr == R.styleable.SwipeRecyclerViewItem_srvi_springDistance) {
+            mSpringDistance = typedArray.getDimensionPixelSize(attr, mSpringDistance);
+            if (mSpringDistance < 0) {
+                throw new RuntimeException("srvi_springDistance不能小于0");
             }
         }
     }
@@ -108,20 +117,26 @@ public class SwipeRecyclerViewItem extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         mDragRange = mBottomView.getWidth();
         if (mSwipeDirection == SwipeDirection.Left) {
-            mTopView.layout(mTopViewLeft, 0, mTopViewLeft + mTopView.getMeasuredWidth(), mTopView.getMeasuredHeight());
+            mTopView.layout(mTopViewLeft, getPaddingTop(), mTopViewLeft + mTopView.getMeasuredWidth(), mTopView.getMeasuredHeight());
 
             if (mBottomModel == BottomModel.LayDown) {
-                mBottomView.layout(r - mBottomView.getMeasuredWidth(), 0, r, mBottomView.getMeasuredHeight());
+                mBottomView.layout(r - mBottomView.getMeasuredWidth() - getPaddingRight(), getPaddingTop(), r, mBottomView.getMeasuredHeight());
             } else {
-                mBottomView.layout(mTopViewLeft + mTopView.getMeasuredWidth(), 0, mTopViewLeft + mTopView.getMeasuredWidth() + mBottomView.getMeasuredWidth(), mBottomView.getMeasuredHeight());
+                int bottomLeft = mTopViewLeft + mTopView.getMeasuredWidth();
+                int minBottomLeft = getMeasuredWidth() - getPaddingRight() - mBottomView.getMeasuredWidth();
+                bottomLeft = bottomLeft < minBottomLeft ? minBottomLeft : bottomLeft;
+                mBottomView.layout(bottomLeft, getPaddingTop(), bottomLeft + mBottomView.getMeasuredWidth(), mBottomView.getMeasuredHeight());
             }
         } else {
-            mTopView.layout(mTopViewLeft, 0, mTopViewLeft + mTopView.getMeasuredWidth(), mTopView.getMeasuredHeight());
+            mTopView.layout(mTopViewLeft, getPaddingTop(), mTopViewLeft + mTopView.getMeasuredWidth(), mTopView.getMeasuredHeight());
 
             if (mBottomModel == BottomModel.LayDown) {
-                mBottomView.layout(0, 0, mBottomView.getMeasuredWidth(), mBottomView.getMeasuredHeight());
+                mBottomView.layout(getPaddingLeft(), getPaddingTop(), mBottomView.getMeasuredWidth(), mBottomView.getMeasuredHeight());
             } else {
-                mBottomView.layout(mTopViewLeft - mBottomView.getMeasuredWidth(), 0, mTopViewLeft, mBottomView.getMeasuredHeight());
+                int bottomLeft = mTopViewLeft - mBottomView.getMeasuredWidth();
+                int maxBottomLeft = getPaddingLeft();
+                bottomLeft = bottomLeft > maxBottomLeft ? maxBottomLeft : bottomLeft;
+                mBottomView.layout(bottomLeft, getPaddingTop(), bottomLeft + mBottomView.getMeasuredWidth(), mBottomView.getMeasuredHeight());
             }
         }
     }
@@ -148,29 +163,41 @@ public class SwipeRecyclerViewItem extends ViewGroup {
         return true;
     }
 
-    public boolean smoothSlideTo(float slideOffset) {
-        final int leftBound = getPaddingLeft();
-        int left = leftBound;
-        if (mSwipeDirection == SwipeDirection.Left) {
-            left = (int) (leftBound - slideOffset * mDragRange);
-        } else {
-            left = (int) (leftBound + slideOffset * mDragRange);
-        }
-
-        if (mDragHelper.smoothSlideViewTo(mTopView, left, mTopView.getTop())) {
-            ViewCompat.postInvalidateOnAnimation(this);
-            return true;
-        }
-        return false;
-    }
-
     public void open() {
-        Log.i(TAG, "mBottomView.getWidth() = " + mBottomView.getWidth());
         smoothSlideTo(1.0f);
     }
 
     public void close() {
         smoothSlideTo(0.0f);
+    }
+
+    private void smoothSlideTo(float slideOffset) {
+        int left = getPaddingLeft();
+        if (mSwipeDirection == SwipeDirection.Left) {
+            left = (int) (left - slideOffset * mDragRange);
+        } else {
+            left = (int) (left + slideOffset * mDragRange);
+        }
+
+        if (mDragHelper.smoothSlideViewTo(mTopView, left, mTopView.getTop())) {
+            ViewCompat.postInvalidateOnAnimation(this);
+        }
+    }
+
+    public boolean isOpened() {
+        return getStatus() == Status.Opened;
+    }
+
+    public boolean isClose() {
+        return getStatus() == Status.Closed;
+    }
+
+    public boolean isMoving() {
+        return getStatus() == Status.Moving;
+    }
+
+    public Status getStatus() {
+        return mStatus;
     }
 
     private ViewDragHelper.Callback mDragHelperCallback = new ViewDragHelper.Callback() {
@@ -194,15 +221,15 @@ public class SwipeRecyclerViewItem extends ViewGroup {
 
         @Override
         public int getViewHorizontalDragRange(View child) {
-            return mDragRange;
+            return mDragRange + mSpringDistance;
         }
 
         @Override
         public int clampViewPositionHorizontal(View child, int left, int dx) {
             if (mSwipeDirection == SwipeDirection.Left) {
-                return Math.min(Math.max(-mDragRange, left), 0);
+                return Math.min(Math.max(-(mDragRange + mSpringDistance), left), 0);
             } else {
-                return Math.min(Math.max(getPaddingLeft(), left), mDragRange);
+                return Math.min(Math.max(getPaddingLeft(), left), (mDragRange + mSpringDistance));
             }
         }
 
@@ -215,9 +242,13 @@ public class SwipeRecyclerViewItem extends ViewGroup {
              * mDragOffset = 1.0f * mTopViewLeft / mDragRange       0 -->  1.0
              */
 
-            mDragOffset = 1.0f * Math.abs(mTopViewLeft) / mDragRange;
+            if (mTopViewLeft > mDragRange) {
+                mDragOffset = 1.0f;
+            } else {
+                mDragOffset = 1.0f * Math.abs(mTopViewLeft) / mDragRange;
+            }
 
-            float alpha = 0.3f + 0.8f * mDragOffset;
+            float alpha = 0.3f + 0.7f * mDragOffset;
             ViewCompat.setAlpha(mBottomView, alpha);
 
             requestLayout();
@@ -257,6 +288,7 @@ public class SwipeRecyclerViewItem extends ViewGroup {
                      */
                     Log.i(TAG, "开始拖动");
                     mBottomView.setVisibility(VISIBLE);
+                    mStatus = Status.Moving;
                     break;
                 case ViewDragHelper.STATE_SETTLING:
                     /**
@@ -266,15 +298,18 @@ public class SwipeRecyclerViewItem extends ViewGroup {
                     // 此时还没移动到要被放置的位置
                     Log.i(TAG, "fling完毕后被放置到一个位置" + mTopView.getLeft());
                     mBottomView.setVisibility(VISIBLE);
+                    mStatus = Status.Moving;
                     break;
                 case ViewDragHelper.STATE_IDLE:
                     // A view is not currently being dragged or animating as a result of a fling/snap.
                     Log.i(TAG, "view没有被拖拽或者fling/snap结束" + mTopView.getLeft());
-                    if (mTopView.getLeft() == 0) {
+                    if (mTopView.getLeft() == getPaddingLeft()) {
                         mBottomView.setVisibility(INVISIBLE);
+                        mStatus = Status.Closed;
                         Log.i(TAG, "处于关闭状态");
                     } else {
                         Log.i(TAG, "处于打开状态");
+                        mStatus = Status.Opened;
                     }
                     break;
             }
@@ -287,5 +322,9 @@ public class SwipeRecyclerViewItem extends ViewGroup {
 
     public enum BottomModel {
         PullOut, LayDown
+    }
+
+    public enum Status {
+        Opened, Closed, Moving
     }
 }

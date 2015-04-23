@@ -9,5 +9,6 @@
             <enum name="pullOut" value="0" />
             <enum name="layDown" value="1" />
         </attr>
+        <attr name="srvi_springDistance" format="dimension" />
     </declare-styleable>
 </resources>
