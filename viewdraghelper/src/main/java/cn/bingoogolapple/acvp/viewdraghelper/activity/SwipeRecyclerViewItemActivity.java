@@ -14,10 +14,8 @@ import cn.bingoogolapple.bgaannotation.BGAAView;
 @BGAALayout(R.layout.activity_swiperecyclerviewitem)
 public class SwipeRecyclerViewItemActivity extends ActionBarActivity {
 
-    @BGAAView(R.id.swiperecyclerviewitem_left)
-    private SwipeRecyclerViewItem mLeftSrvi;
-    @BGAAView(R.id.swiperecyclerviewitem_right)
-    private SwipeRecyclerViewItem mRightSrvi;
+    @BGAAView(R.id.swiperecyclerviewitem)
+    private SwipeRecyclerViewItem mSwipeItem;
 
 
     @Override
@@ -25,17 +23,17 @@ public class SwipeRecyclerViewItemActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         BGAA.injectView2Activity(this);
 
-        findViewById(R.id.btn_swipeitem_topview1).setOnLongClickListener(new View.OnLongClickListener() {
+        findViewById(R.id.iv_swipeitem_star).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(SwipeRecyclerViewItemActivity.this, "长按了TopView中的按钮", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SwipeRecyclerViewItemActivity.this, "长按了星星", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
-        findViewById(R.id.btn_swipeitem_bottomview1).setOnLongClickListener(new View.OnLongClickListener() {
+        findViewById(R.id.iv_swipeitem_delete).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(SwipeRecyclerViewItemActivity.this, "长按了BottomView中的按钮", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SwipeRecyclerViewItemActivity.this, "长按了删除", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
@@ -43,36 +41,20 @@ public class SwipeRecyclerViewItemActivity extends ActionBarActivity {
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_swipeitem_topview1:
-                Toast.makeText(this, "点击了TopView1", Toast.LENGTH_SHORT).show();
+            case R.id.iv_swipeitem_star:
+                Toast.makeText(this, "点击了星星", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.btn_swipeitem_bottomview1:
-                Toast.makeText(this, "点击了BottomView1", Toast.LENGTH_SHORT).show();
+            case R.id.iv_swipeitem_delete:
+                Toast.makeText(this, "点击了删除", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.btn_swipeitem_topview2:
-                Toast.makeText(this, "点击了TopView2", Toast.LENGTH_SHORT).show();
+            case R.id.btn_swipeitem_open:
+                mSwipeItem.open();
                 break;
-            case R.id.btn_swipeitem_bottomview2:
-                Toast.makeText(this, "点击了BottomView2", Toast.LENGTH_SHORT).show();
+            case R.id.btn_swipeitem_close:
+                mSwipeItem.close();
                 break;
-            case R.id.btn_swipeitem_openleft:
-                mLeftSrvi.open();
-                break;
-            case R.id.btn_swipeitem_closeleft:
-                mLeftSrvi.close();
-                break;
-            case R.id.btn_swipeitem_statusleft:
-                showStatus(mLeftSrvi.getStatus());
-                break;
-
-            case R.id.btn_swipeitem_openright:
-                mRightSrvi.open();
-                break;
-            case R.id.btn_swipeitem_closeright:
-                mRightSrvi.close();
-                break;
-            case R.id.btn_swipeitem_statusright:
-                showStatus(mRightSrvi.getStatus());
+            case R.id.btn_swipeitem_status:
+                showStatus(mSwipeItem.getStatus());
                 break;
         }
     }
