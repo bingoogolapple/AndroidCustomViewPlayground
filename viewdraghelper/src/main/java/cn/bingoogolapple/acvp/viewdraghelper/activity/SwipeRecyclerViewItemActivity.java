@@ -23,7 +23,7 @@ public class SwipeRecyclerViewItemActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         BGAA.injectView2Activity(this);
 
-        findViewById(R.id.iv_swipeitem_star).setOnLongClickListener(new View.OnLongClickListener() {
+        findViewById(R.id.iv_swipeitem_search).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 Toast.makeText(SwipeRecyclerViewItemActivity.this, "长按了星星", Toast.LENGTH_SHORT).show();
@@ -41,7 +41,7 @@ public class SwipeRecyclerViewItemActivity extends ActionBarActivity {
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_swipeitem_star:
+            case R.id.iv_swipeitem_search:
                 Toast.makeText(this, "点击了星星", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_swipeitem_delete:
