@@ -2,18 +2,22 @@ package cn.bingoogolapple.acvp.viewdraghelper.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import cn.bingoogolapple.acvp.viewdraghelper.R;
 
-public class SwipeRecyclerViewItem extends RelativeLayout {
+public class BGASwipeItemLayout extends RelativeLayout {
     private static final String TAG = HelloWorldView.class.getSimpleName();
+    private static final String INSTANCE_STATUS = "instance_status";
+    private static final String STATUS_OPEN_CLOSE = "status_open_close";
+    private static final int VEL_THRESHOLD = 600;
     private ViewDragHelper mDragHelper;
     // 顶部视图
     private View mTopView;
@@ -28,27 +32,32 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
     // 移动过程中，底部视图的移动方式（拉出，被顶部视图遮住），默认是被顶部视图遮住
     private BottomModel mBottomModel = BottomModel.PullOut;
     // 滑动控件当前的状态（打开，关闭，正在移动），默认是关闭状态
-    private Status mStatus = Status.Closed;
+    private Status mCurrentStatus = Status.Closed;
+    // 滑动控件滑动前的状态
+    private Status mPreStatus = mCurrentStatus;
     // 顶部视图下一次layout时的left
     private int mTopLeft;
-
+    // 顶部视图外边距
     private MarginLayoutParams mTopLp;
+    // 底部视图外边距
     private MarginLayoutParams mBottomLp;
+    // 滑动比例，【关闭->展开  =>  0->1】
+    private float mDragRatio;
+    // 手动拖动打开和关闭代理
+    private BGASwipeItemLayoutDelegate mDelegate;
 
-    private float mDragOffset;
-
-    public SwipeRecyclerViewItem(Context context, AttributeSet attrs) {
+    public BGASwipeItemLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SwipeRecyclerViewItem(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BGASwipeItemLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttrs(context, attrs);
         initProperty();
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {
-        final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SwipeRecyclerViewItem);
+        final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BGASwipeItemLayout);
         final int N = typedArray.getIndexCount();
         for (int i = 0; i < N; i++) {
             initAttr(typedArray.getIndex(i), typedArray);
@@ -58,7 +67,7 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
 
     private void initAttr(int attr, TypedArray typedArray) {
         switch (attr) {
-            case R.styleable.SwipeRecyclerViewItem_srvi_swipeDirection:
+            case R.styleable.BGASwipeItemLayout_bga_sil_swipeDirection:
                 // 默认向左滑动
                 int leftSwipeDirection = typedArray.getInt(attr, mSwipeDirection.ordinal());
 
@@ -66,7 +75,7 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
                     mSwipeDirection = SwipeDirection.Right;
                 }
                 break;
-            case R.styleable.SwipeRecyclerViewItem_srvi_bottomMode:
+            case R.styleable.BGASwipeItemLayout_bga_sil_bottomMode:
                 // 默认是拉出
                 int pullOutBottomMode = typedArray.getInt(attr, mBottomModel.ordinal());
 
@@ -74,11 +83,11 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
                     mBottomModel = BottomModel.LayDown;
                 }
                 break;
-            case R.styleable.SwipeRecyclerViewItem_srvi_springDistance:
+            case R.styleable.BGASwipeItemLayout_bga_sil_springDistance:
                 // 弹簧距离，不能小于0，默认值为0
                 mSpringDistance = typedArray.getDimensionPixelSize(attr, mSpringDistance);
                 if (mSpringDistance < 0) {
-                    throw new RuntimeException("srvi_springDistance不能小于0");
+                    throw new RuntimeException("bga_sil_springDistance不能小于0");
                 }
                 break;
             default:
@@ -89,9 +98,10 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
     private void initProperty() {
         mDragHelper = ViewDragHelper.create(this, 1.0f, mDragHelperCallback);
         mDragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
-        mTopLeft = getPaddingLeft();
+    }
 
-        Log.i(TAG, "mSpringDistance = " + mSpringDistance + " mTopLeft = " + mTopLeft);
+    public void setDelegate(BGASwipeItemLayoutDelegate delegate) {
+        mDelegate = delegate;
     }
 
     @Override
@@ -106,17 +116,8 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
 
         mTopLp = (MarginLayoutParams) mTopView.getLayoutParams();
         mBottomLp = (MarginLayoutParams) mBottomView.getLayoutParams();
-
-        Log.i(TAG, "onFinishInflate");
+        mTopLeft = getPaddingLeft() + mTopLp.leftMargin;
     }
-
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        measureChildren(widthMeasureSpec, heightMeasureSpec);
-//        int maxWidth = MeasureSpec.getSize(widthMeasureSpec);
-//        int maxHeight = MeasureSpec.getSize(heightMeasureSpec);
-//        setMeasuredDimension(ViewCompat.resolveSizeAndState(maxWidth, widthMeasureSpec, 0), ViewCompat.resolveSizeAndState(maxHeight, heightMeasureSpec, 0));
-//    }
 
     @Override
     public void computeScroll() {
@@ -142,10 +143,7 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        mDragRange = mBottomView.getWidth();
-
-
-
+        mDragRange = mBottomView.getMeasuredWidth() + mBottomLp.leftMargin + mBottomLp.rightMargin;
 
         int topTop = getPaddingTop() + mTopLp.topMargin;
         int topBottom = topTop + mTopView.getMeasuredHeight();
@@ -153,11 +151,8 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
 
         int bottomTop = getPaddingTop() + mBottomLp.topMargin;
         int bottomBottom = bottomTop + mBottomView.getMeasuredHeight();
-        int bottomLeft = 0;
-        int bottomRight = 0;
-
-        Log.i(TAG, "height  " + getMeasuredHeight() + "  ---  topTop " + topTop + "  ---  topBottom  " + topBottom + "  ---  topHeight  " + mTopView.getMeasuredHeight());
-        Log.i(TAG, "height  " + getMeasuredHeight() + "  ---  bottomTop " + bottomTop + "  ---  bottomBottom  " + bottomBottom + "  ---  bottomHeight  " + mBottomView.getMeasuredHeight());
+        int bottomLeft;
+        int bottomRight;
 
         if (mSwipeDirection == SwipeDirection.Left) {
             // 向左滑动
@@ -172,8 +167,9 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
 
                 // 根据顶部视图的left计算底部视图的left
                 bottomLeft = mTopLeft + mTopView.getMeasuredWidth() + mTopLp.rightMargin + mBottomLp.leftMargin;
+
                 // 底部视图的left被允许的最小值
-                int minBottomLeft = getMeasuredWidth() - getPaddingRight() - mBottomView.getMeasuredWidth();
+                int minBottomLeft = r - getPaddingRight() - mBottomView.getMeasuredWidth() - mBottomLp.rightMargin;
                 // 获取最终的left
                 bottomLeft = Math.max(bottomLeft, minBottomLeft);
                 // 根据left计算right
@@ -191,9 +187,9 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
                 // 拉出，位置随顶部视图的位置改变
 
                 // 根据顶部视图的left计算底部视图的left
-                bottomLeft = mTopLeft - mBottomView.getMeasuredWidth() - mTopLp.leftMargin - mBottomLp.rightMargin - mBottomLp.leftMargin;
+                bottomLeft = mTopLeft - mDragRange;
                 // 底部视图的left被允许的最大值
-                int maxBottomLeft = getPaddingLeft();
+                int maxBottomLeft = getPaddingLeft() + mBottomLp.leftMargin;
                 // 获取最终的left
                 bottomLeft = Math.min(maxBottomLeft, bottomLeft);
                 // 根据left计算right
@@ -205,32 +201,68 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
         mTopView.layout(mTopLeft, topTop, topRight, topBottom);
     }
 
+    public void openWithAnim() {
+        smoothSlideTo(1);
+    }
+
+    public void closeWithAnim() {
+        smoothSlideTo(0);
+    }
+
     public void open() {
-        smoothSlideTo(1.0f);
+        slideTo(1);
     }
 
     public void close() {
-        smoothSlideTo(0.0f);
+        slideTo(0);
     }
 
-    private void smoothSlideTo(float slideOffset) {
-        int left = getPaddingLeft();
-        if (mSwipeDirection == SwipeDirection.Left) {
-            left = (int) (left - slideOffset * mDragRange);
-        } else {
-            left = (int) (left + slideOffset * mDragRange);
-        }
 
-        if (mDragHelper.smoothSlideViewTo(mTopView, left, mTopView.getTop())) {
+    /**
+     * 打开或关闭滑动控件
+     *
+     * @param isOpen 1表示打开，0表示关闭
+     */
+    private void smoothSlideTo(int isOpen) {
+        if (mDragHelper.smoothSlideViewTo(mTopView, getCloseOrOpenTopViewFinalLeft(isOpen), getPaddingTop() + mTopLp.topMargin)) {
             ViewCompat.postInvalidateOnAnimation(this);
         }
+    }
+
+    /**
+     * 打开或关闭滑动控件
+     *
+     * @param isOpen 1表示打开，0表示关闭
+     */
+    private void slideTo(int isOpen) {
+        if (isOpen == 1) {
+            mBottomView.setVisibility(VISIBLE);
+            ViewCompat.setAlpha(mBottomView, 1.0f);
+            mCurrentStatus = Status.Opened;
+        } else {
+            mBottomView.setVisibility(INVISIBLE);
+            mCurrentStatus = Status.Closed;
+        }
+        mPreStatus = mCurrentStatus;
+        mTopLeft = getCloseOrOpenTopViewFinalLeft(isOpen);
+        requestLayout();
+    }
+
+    private int getCloseOrOpenTopViewFinalLeft(int isOpen) {
+        int left = getPaddingLeft() + mTopLp.leftMargin;
+        if (mSwipeDirection == SwipeDirection.Left) {
+            left = left - isOpen * mDragRange;
+        } else {
+            left = left + isOpen * mDragRange;
+        }
+        return left;
     }
 
     public boolean isOpened() {
         return getStatus() == Status.Opened;
     }
 
-    public boolean isClose() {
+    public boolean isClosed() {
         return getStatus() == Status.Closed;
     }
 
@@ -239,10 +271,35 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
     }
 
     public Status getStatus() {
-        return mStatus;
+        return mCurrentStatus;
+    }
+
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(INSTANCE_STATUS, super.onSaveInstanceState());
+        bundle.putInt(STATUS_OPEN_CLOSE, mCurrentStatus.ordinal());
+        return bundle;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            if (bundle.getInt(STATUS_OPEN_CLOSE) == Status.Opened.ordinal()) {
+                open();
+            } else {
+                close();
+            }
+            super.onRestoreInstanceState(bundle.getParcelable(INSTANCE_STATUS));
+        } else {
+            super.onRestoreInstanceState(state);
+        }
     }
 
     private ViewDragHelper.Callback mDragHelperCallback = new ViewDragHelper.Callback() {
+        // 在响应打开和关闭结束时，是否要通知代理（只有是手动拖动打开和关闭时才通知代理）
+        private boolean mIsNeedNotify = false;
 
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
@@ -256,7 +313,7 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
 
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
-            // 这里要返回控件的getPaddingTop() + mTopLp.topMargin，否则快速滑动松手时会上下跳动
+            // 这里要返回控件的getPaddingTop() + mTopLp.topMargin，否则有margin和padding快速滑动松手时会上下跳动
             return getPaddingTop() + mTopLp.topMargin;
         }
 
@@ -274,44 +331,41 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
          */
         @Override
         public int clampViewPositionHorizontal(View child, int left, int dx) {
-            int minTopLeft = 0;
-            int maxTopLeft = 0;
+            int minTopLeft;
+            int maxTopLeft;
             if (mSwipeDirection == SwipeDirection.Left) {
                 // 向左滑动
 
                 // 顶部视图的left被允许的最小值
-                minTopLeft = getPaddingLeft() - (mDragRange + mSpringDistance);
+                minTopLeft = getPaddingLeft() + mTopLp.leftMargin - (mDragRange + mSpringDistance);
                 // 顶部视图的left被允许的最大值
-                maxTopLeft = getPaddingLeft();
+                maxTopLeft = getPaddingLeft() + mTopLp.leftMargin;
             } else {
                 // 向右滑动
 
                 // 顶部视图的left被允许的最小值
-                minTopLeft = getPaddingLeft();
+                minTopLeft = getPaddingLeft() + mTopLp.leftMargin;
                 // 顶部视图的left被允许的最大值
-                maxTopLeft = getPaddingLeft() + (mDragRange + mSpringDistance);
+                maxTopLeft = getPaddingLeft() + mTopLp.leftMargin + (mDragRange + mSpringDistance);
             }
 
-            left = Math.min(Math.max(minTopLeft, left), maxTopLeft);
-            return left;
+            return Math.min(Math.max(minTopLeft, left), maxTopLeft);
         }
 
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             mTopLeft = left;
-            /**
-             * 打开过程
-             * mTopLeft                                         0 -->  mDragRange
-             * mDragOffset = 1.0f * mTopLeft / mDragRange       0 -->  1.0
-             */
 
-            if (Math.abs(mTopLeft - getPaddingLeft()) > mDragRange) {
-                mDragOffset = 1.0f;
+            // 此时顶部视图水平方向偏移量的绝对值
+            int topViewHorizontalOffset = Math.abs(mTopLeft - (getPaddingLeft() + mTopLp.leftMargin));
+            if (topViewHorizontalOffset > mDragRange) {
+                mDragRatio = 1.0f;
             } else {
-                mDragOffset = 1.0f * Math.abs(mTopLeft - getPaddingLeft()) / mDragRange;
+                mDragRatio = 1.0f * topViewHorizontalOffset / mDragRange;
             }
 
-            float alpha = 0.3f + 0.7f * mDragOffset;
+            // 处理底部视图的透明度
+            float alpha = 0.1f + 0.9f * mDragRatio;
             ViewCompat.setAlpha(mBottomView, alpha);
 
             requestLayout();
@@ -319,79 +373,63 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
 
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
-            int finalLeft = getPaddingLeft();
-            // 默认是关闭
+            // 默认关闭，接下来再判断为打开时的条件
+            int finalLeft = getPaddingLeft() + mTopLp.leftMargin;
+
             if (mSwipeDirection == SwipeDirection.Left) {
-                if ((xvel < 0 && Math.abs(xvel) > Math.abs(yvel)) || (xvel == 0 && mDragOffset > 0.5f)) {
+                // 向左滑动为打开，向右滑动为关闭
+
+                if (xvel < -VEL_THRESHOLD || (xvel < VEL_THRESHOLD && mDragRatio > 0.5f)) {
                     finalLeft -= mDragRange;
                 }
             } else {
-                if ((xvel > 0 && xvel > yvel) || (xvel == 0 && mDragOffset > 0.5f)) {
+                // 向左滑动为关闭，向右滑动为打开
+
+                if (xvel > VEL_THRESHOLD || (xvel > -VEL_THRESHOLD && mDragRatio > 0.5f)) {
                     finalLeft += mDragRange;
                 }
             }
             mDragHelper.settleCapturedViewAt(finalLeft, getPaddingTop() + mTopLp.topMargin);
 
             // 要执行下面的代码，不然不会自动收缩完毕或展开完毕
-            ViewCompat.postInvalidateOnAnimation(SwipeRecyclerViewItem.this);
+            ViewCompat.postInvalidateOnAnimation(BGASwipeItemLayout.this);
         }
 
-//        @Override
-//        public void onViewReleased(View releasedChild, float xvel, float yvel) {
-//            // 默认是关闭
-//            if (mSwipeDirection == SwipeDirection.Left) {
-//                if ((xvel < 0 && Math.abs(xvel) > Math.abs(yvel)) || (xvel == 0 && mDragOffset > 0.5f)) {
-//                    open();
-//                } else {
-//                    close();
-//                }
-//            } else {
-//                if ((xvel > 0 && xvel > yvel) || (xvel == 0 && mDragOffset > 0.5f)) {
-//                    open();
-//                } else {
-//                    close();
-//                }
-//            }
-//        }
-
         /**
-         * 当拖拽到状态改变时回调
+         * 当拖拽状态改变时回调
          *
          * @params 新的状态
          */
         @Override
         public void onViewDragStateChanged(int state) {
             switch (state) {
+                // 步骤1：开始拖动
                 case ViewDragHelper.STATE_DRAGGING:
-                    /**
-                     * A view is currently being dragged. The position is currently changing as a result
-                     * of user input or simulated user input.
-                     */
-                    Log.i(TAG, "开始拖动");
                     mBottomView.setVisibility(VISIBLE);
-                    mStatus = Status.Moving;
+                    mCurrentStatus = Status.Moving;
+                    mIsNeedNotify = true;
                     break;
+                // 步骤2：fling松开手或者直接设置视图到某个位置
                 case ViewDragHelper.STATE_SETTLING:
-                    /**
-                     * A view is currently settling into place as a result of a fling or
-                     * predefined non-interactive motion.
-                     */
-                    // 此时还没移动到要被放置的位置
-                    Log.i(TAG, "fling完毕后被放置到一个位置" + mTopView.getLeft());
                     mBottomView.setVisibility(VISIBLE);
-                    mStatus = Status.Moving;
+                    mCurrentStatus = Status.Moving;
                     break;
+                // 步骤3：视图完成移动到步骤2中设置的位置，并停止移动
                 case ViewDragHelper.STATE_IDLE:
-                    // A view is not currently being dragged or animating as a result of a fling/snap.
-                    Log.i(TAG, "view没有被拖拽或者fling/snap结束" + mTopView.getLeft());
-                    if (mTopView.getLeft() == getPaddingLeft()) {
+                    if (mTopView.getLeft() == getPaddingLeft() + mTopLp.leftMargin) {
                         mBottomView.setVisibility(INVISIBLE);
-                        mStatus = Status.Closed;
-                        Log.i(TAG, "处于关闭状态");
+                        mCurrentStatus = Status.Closed;
+                        if (mIsNeedNotify && mDelegate != null && mPreStatus != mCurrentStatus) {
+                            mDelegate.onClosed();
+                        }
                     } else {
-                        Log.i(TAG, "处于打开状态");
-                        mStatus = Status.Opened;
+                        mCurrentStatus = Status.Opened;
+                        if (mIsNeedNotify && mDelegate != null && mPreStatus != mCurrentStatus) {
+                            mDelegate.onOpened();
+                        }
                     }
+                    mPreStatus = mCurrentStatus;
+                    mIsNeedNotify = false;
                     break;
             }
         }
@@ -407,5 +445,11 @@ public class SwipeRecyclerViewItem extends RelativeLayout {
 
     public enum Status {
         Opened, Closed, Moving
+    }
+
+    public interface BGASwipeItemLayoutDelegate {
+        void onOpened();
+
+        void onClosed();
     }
 }

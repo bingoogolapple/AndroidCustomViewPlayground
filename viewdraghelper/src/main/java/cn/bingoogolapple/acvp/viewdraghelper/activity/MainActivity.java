@@ -27,7 +27,7 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(new Intent(this, YouTubeActivity.class));
                 break;
             case R.id.btn_main_swiperecyclerviewitem:
-                startActivity(new Intent(this, SwipeRecyclerViewItemActivity.class));
+                startActivity(new Intent(this, SwipeItemActivity.class));
                 break;
         }
     }

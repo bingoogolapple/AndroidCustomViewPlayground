@@ -23,7 +23,7 @@
             android:name=".activity.YouTubeActivity"
             android:label="YouTubeDemo" />
         <activity
-            android:name=".activity.SwipeRecyclerViewItemActivity"
+            android:name=".activity.SwipeItemActivity"
             android:label="SwipeRecyclerViewItemDemo" />
     </application>
 

@@ -5,88 +5,30 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         style="@style/MatchMatch.Vertical">
 
-        <cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem
-            android:id="@+id/swiperecyclerviewitem"
+        <cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout
+            android:id="@+id/sil_swipeitem_test"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@android:color/white"
-            android:padding="10dp"
-            app:srvi_bottomMode="layDown"
-            app:srvi_springDistance="20dp"
-            app:srvi_swipeDirection="left">
+            android:background="#ff00ff00"
+            android:padding="5dp"
+            app:bga_sil_bottomMode="pullOut"
+            app:bga_sil_springDistance="20dp"
+            app:bga_sil_swipeDirection="left">
 
             <LinearLayout
                 style="@style/WrapMatch.Horizontal"
                 android:background="#FFFF0000"
                 android:gravity="center_vertical"
-                android:padding="5dp">
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:layout_margin="5dp">
 
                 <ImageView
                     android:id="@+id/iv_swipeitem_delete"
                     style="@style/WrapWrap"
                     android:onClick="onClick"
-                    android:src="@mipmap/delete" />
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/MatchMatch.Horizontal"
-                android:background="@android:color/white"
-                android:gravity="center_vertical"
-                android:padding="5dp">
-
-                <ImageView
-                    android:id="@+id/iv_swipeitem_search"
-                    style="@style/WrapMatch"
-                    android:background="#FF00FF00"
-                    android:onClick="onClick"
-                    android:src="@mipmap/search" />
-
-                <TextView
-                    style="@style/MatchWrap"
-                    android:padding="5dp"
-                    android:text="我是顶部测试文案啦啦啦啦" />
-            </LinearLayout>
-        </cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem>
-
-        <LinearLayout style="@style/MatchWrap.Horizontal">
-
-            <Button
-                android:id="@+id/btn_swipeitem_open"
-                style="@style/AutoWrap"
-                android:onClick="onClick"
-                android:text="打开" />
-
-            <Button
-                android:id="@+id/btn_swipeitem_close"
-                style="@style/AutoWrap"
-                android:onClick="onClick"
-                android:text="关闭" />
-
-            <Button
-                android:id="@+id/btn_swipeitem_status"
-                style="@style/AutoWrap"
-                android:onClick="onClick"
-                android:text="获取状态" />
-        </LinearLayout>
-
-        <cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="5dp"
-            android:background="@android:color/white"
-            android:padding="10dp"
-            app:srvi_bottomMode="layDown"
-            app:srvi_springDistance="20dp"
-            app:srvi_swipeDirection="left">
-
-            <LinearLayout
-                style="@style/WrapMatch.Horizontal"
-                android:background="#FFFF0000"
-                android:gravity="center_vertical"
-                android:padding="5dp">
-
-                <ImageView
-                    style="@style/WrapWrap"
                     android:src="@mipmap/delete" />
             </LinearLayout>
 
@@ -98,32 +40,114 @@
                 android:padding="5dp">
 
                 <ImageView
+                    android:id="@+id/iv_swipeitem_avator"
                     style="@style/WrapMatch"
-                    android:background="#FF00FF00"
-                    android:src="@mipmap/search" />
+                    android:onClick="onClick"
+                    android:src="@mipmap/avator" />
+
+                <TextView
+                    style="@style/MatchWrap"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:text="Margin,Padding,PullOut,LayDown" />
+            </LinearLayout>
+        </cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout>
+
+        <LinearLayout style="@style/MatchWrap.Horizontal">
+
+            <Button
+                android:id="@+id/btn_swipeitem_open"
+                style="@style/AutoWrap"
+                android:onClick="onClick"
+                android:text="开" />
+
+            <Button
+                android:id="@+id/btn_swipeitem_close"
+                style="@style/AutoWrap"
+                android:onClick="onClick"
+                android:text="关" />
+
+
+            <Button
+                android:id="@+id/btn_swipeitem_openwithanim"
+                style="@style/AutoWrap"
+                android:onClick="onClick"
+                android:text="动画开" />
+
+            <Button
+                android:id="@+id/btn_swipeitem_closewithanim"
+                style="@style/AutoWrap"
+                android:onClick="onClick"
+                android:text="动画关" />
+
+            <Button
+                android:id="@+id/btn_swipeitem_status"
+                style="@style/AutoWrap"
+                android:onClick="onClick"
+                android:text="状态" />
+        </LinearLayout>
+
+        <cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/white"
+            android:padding="10dp"
+            app:bga_sil_bottomMode="layDown"
+            app:bga_sil_springDistance="20dp"
+            app:bga_sil_swipeDirection="left">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="#FFFF0000"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:layout_margin="5dp"
+                android:src="@mipmap/delete" />
+
+            <LinearLayout
+                style="@style/MatchMatch.Horizontal"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:padding="5dp">
+
+                <ImageView
+                    style="@style/WrapMatch"
+                    android:layout_margin="5dp"
+                    android:src="@mipmap/avator" />
 
                 <TextView
                     style="@style/MatchWrap"
                     android:padding="5dp"
                     android:text="向左滑  ---+---  遮罩  ---+---  弹簧" />
             </LinearLayout>
-        </cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem>
+        </cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout>
 
-        <cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem
+        <cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="5dp"
             android:background="@android:color/white"
             android:padding="10dp"
-            app:srvi_bottomMode="pullOut"
-            app:srvi_springDistance="20dp"
-            app:srvi_swipeDirection="left">
+            app:bga_sil_bottomMode="pullOut"
+            app:bga_sil_springDistance="20dp"
+            app:bga_sil_swipeDirection="left">
 
             <LinearLayout
                 style="@style/WrapMatch.Horizontal"
                 android:background="#FFFF0000"
                 android:gravity="center_vertical"
-                android:padding="5dp">
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+
+                <EditText
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent" />
 
                 <ImageView
                     style="@style/WrapWrap"
@@ -138,31 +162,34 @@
 
                 <ImageView
                     style="@style/WrapMatch"
-                    android:background="#FF00FF00"
-                    android:src="@mipmap/search" />
+                    android:layout_margin="5dp"
+                    android:src="@mipmap/avator" />
 
                 <TextView
                     style="@style/MatchWrap"
                     android:padding="5dp"
                     android:text="向左滑  ---+---  拉出  ---+---  弹簧" />
             </LinearLayout>
-        </cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem>
+        </cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout>
 
-        <cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem
+        <cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="5dp"
             android:background="@android:color/white"
             android:padding="10dp"
-            app:srvi_bottomMode="layDown"
-            app:srvi_springDistance="20dp"
-            app:srvi_swipeDirection="right">
+            app:bga_sil_bottomMode="layDown"
+            app:bga_sil_springDistance="20dp"
+            app:bga_sil_swipeDirection="right">
 
             <LinearLayout
                 style="@style/WrapMatch.Horizontal"
                 android:background="#FFFF0000"
                 android:gravity="center_vertical"
-                android:padding="5dp">
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
 
                 <ImageView
                     style="@style/WrapWrap"
@@ -177,31 +204,34 @@
 
                 <ImageView
                     style="@style/WrapMatch"
-                    android:background="#FF00FF00"
-                    android:src="@mipmap/search" />
+                    android:layout_margin="5dp"
+                    android:src="@mipmap/avator" />
 
                 <TextView
                     style="@style/MatchWrap"
                     android:padding="5dp"
                     android:text="向右滑  ---+--- 遮罩  ---+---  弹簧" />
             </LinearLayout>
-        </cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem>
+        </cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout>
 
-        <cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem
+        <cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="5dp"
             android:background="@android:color/white"
             android:padding="10dp"
-            app:srvi_bottomMode="pullOut"
-            app:srvi_springDistance="20dp"
-            app:srvi_swipeDirection="right">
+            app:bga_sil_bottomMode="pullOut"
+            app:bga_sil_springDistance="20dp"
+            app:bga_sil_swipeDirection="right">
 
             <LinearLayout
                 style="@style/WrapMatch.Horizontal"
                 android:background="#FFFF0000"
                 android:gravity="center_vertical"
-                android:padding="5dp">
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
 
                 <ImageView
                     style="@style/WrapWrap"
@@ -216,30 +246,33 @@
 
                 <ImageView
                     style="@style/WrapMatch"
-                    android:background="#FF00FF00"
-                    android:src="@mipmap/search" />
+                    android:layout_margin="5dp"
+                    android:src="@mipmap/avator" />
 
                 <TextView
                     style="@style/MatchWrap"
                     android:padding="5dp"
                     android:text="向右滑  ---+--- 拉出  ---+---  弹簧" />
             </LinearLayout>
-        </cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem>
+        </cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout>
 
-        <cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem
+        <cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="5dp"
             android:background="@android:color/white"
             android:padding="10dp"
-            app:srvi_bottomMode="layDown"
-            app:srvi_swipeDirection="right">
+            app:bga_sil_bottomMode="layDown"
+            app:bga_sil_swipeDirection="right">
 
             <LinearLayout
                 style="@style/WrapMatch.Horizontal"
                 android:background="#FFFF0000"
                 android:gravity="center_vertical"
-                android:padding="5dp">
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
 
                 <ImageView
                     style="@style/WrapWrap"
@@ -254,30 +287,33 @@
 
                 <ImageView
                     style="@style/WrapMatch"
-                    android:background="#FF00FF00"
-                    android:src="@mipmap/search" />
+                    android:layout_margin="5dp"
+                    android:src="@mipmap/avator" />
 
                 <TextView
                     style="@style/MatchWrap"
                     android:padding="5dp"
                     android:text="向右滑  ---+--- 遮罩" />
             </LinearLayout>
-        </cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem>
+        </cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout>
 
-        <cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem
+        <cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="5dp"
             android:background="@android:color/white"
             android:padding="10dp"
-            app:srvi_bottomMode="pullOut"
-            app:srvi_swipeDirection="right">
+            app:bga_sil_bottomMode="pullOut"
+            app:bga_sil_swipeDirection="right">
 
             <LinearLayout
                 style="@style/WrapMatch.Horizontal"
                 android:background="#FFFF0000"
                 android:gravity="center_vertical"
-                android:padding="5dp">
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
 
                 <ImageView
                     style="@style/WrapWrap"
@@ -292,15 +328,15 @@
 
                 <ImageView
                     style="@style/WrapMatch"
-                    android:background="#FF00FF00"
-                    android:src="@mipmap/search" />
+                    android:layout_margin="5dp"
+                    android:src="@mipmap/avator" />
 
                 <TextView
                     style="@style/MatchWrap"
                     android:padding="5dp"
                     android:text="向右滑  ---+--- 拉出" />
             </LinearLayout>
-        </cn.bingoogolapple.acvp.viewdraghelper.widget.SwipeRecyclerViewItem>
+        </cn.bingoogolapple.acvp.viewdraghelper.widget.BGASwipeItemLayout>
 
     </LinearLayout>
 </ScrollView>
