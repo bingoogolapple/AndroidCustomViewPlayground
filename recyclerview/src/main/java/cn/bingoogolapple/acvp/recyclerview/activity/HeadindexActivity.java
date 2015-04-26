@@ -13,8 +13,8 @@ import android.widget.Toast;
 import java.util.List;
 
 import cn.bingoogolapple.acvp.recyclerview.R;
-import cn.bingoogolapple.acvp.recyclerview.mode.ItemMode;
-import cn.bingoogolapple.acvp.recyclerview.widget.BGAViewHolder;
+import cn.bingoogolapple.acvp.recyclerview.mode.Mode;
+import cn.bingoogolapple.acvp.recyclerview.widget.BGARecyclerViewHolder;
 import cn.bingoogolapple.acvp.recyclerview.widget.ItemDivider;
 import cn.bingoogolapple.acvp.recyclerview.widget.OnItemClickListener;
 import cn.bingoogolapple.acvp.recyclerview.widget.OnItemLongClickListener;
@@ -33,8 +33,8 @@ public class HeadindexActivity extends ActionBarActivity implements OnItemClickL
     private ItemModeAdapter mItemModeAdapter;
     private LinearLayoutManager mLinearLayoutManager;
 
-    private List<ItemMode> mDatas1;
-    private List<ItemMode> mDatas2;
+    private List<Mode> mDatas1;
+    private List<Mode> mDatas2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +47,8 @@ public class HeadindexActivity extends ActionBarActivity implements OnItemClickL
         mItemModeAdapter = new ItemModeAdapter(this, this);
         mDataRv.setAdapter(mItemModeAdapter);
 
-        mDatas1 = ItemMode.getHeadindexDatas1();
-        mDatas2 = ItemMode.getHeadindexDatas2();
+        mDatas1 = Mode.getHeadindexDatas1();
+        mDatas2 = Mode.getHeadindexDatas2();
         mItemModeAdapter.setDatas(mDatas1, mDatas2);
 
         // 处理标题索引
@@ -83,42 +83,6 @@ public class HeadindexActivity extends ActionBarActivity implements OnItemClickL
         return true;
     }
 
-    private static class ItemModeViewHolder extends BGAViewHolder<ItemMode> {
-        @BGAAView(R.id.tv_item_helloworld_attr1)
-        private TextView mAttr1;
-        @BGAAView(R.id.tv_item_helloworld_attr2)
-        private TextView mAttr2;
-
-        public ItemModeViewHolder(View itemView, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
-            super(itemView, onItemClickListener, onItemLongClickListener);
-            BGAA.injectViewField2Obj(this, itemView);
-        }
-
-        @Override
-        public void fillData(ItemMode item, int position) {
-            mAttr1.setText(item.attr1);
-            mAttr2.setText(item.attr2);
-        }
-    }
-
-    private static class ItemTitleViewHolder extends RecyclerView.ViewHolder {
-        private TextView mTitleTv;
-
-        public ItemTitleViewHolder(View itemView) {
-            super(itemView);
-            mTitleTv = (TextView) itemView;
-        }
-
-        public void setTitle(String title) {
-            mTitleTv.setText(title);
-        }
-
-        public void setTitle(int titleResId) {
-            mTitleTv.setText(titleResId);
-        }
-    }
-
-
     private static class ItemModeAdapter extends RecyclerView.Adapter {
         private static final int VIEW_TYPE_ITEM = 1000;
         private static final int VIEW_TYPE_TITLE1 = 1001;
@@ -126,8 +90,8 @@ public class HeadindexActivity extends ActionBarActivity implements OnItemClickL
 
         protected OnItemClickListener mOnItemClickListener;
         protected OnItemLongClickListener mOnItemLongClickListener;
-        protected List<ItemMode> mDatas1;
-        protected List<ItemMode> mDatas2;
+        protected List<Mode> mDatas1;
+        protected List<Mode> mDatas2;
 
         public ItemModeAdapter(OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
             mOnItemClickListener = onItemClickListener;
@@ -138,10 +102,10 @@ public class HeadindexActivity extends ActionBarActivity implements OnItemClickL
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType == VIEW_TYPE_ITEM) {
                 View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_helloworld, parent, false);
-                return new ItemModeViewHolder(itemView, mOnItemClickListener, mOnItemLongClickListener);
+                return new BGARecyclerViewHolder(itemView, mOnItemClickListener, mOnItemLongClickListener);
             } else if (viewType == VIEW_TYPE_TITLE1 || viewType == VIEW_TYPE_TITLE2) {
                 View itemTitle = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_headindextitle, parent, false);
-                return new ItemTitleViewHolder(itemTitle);
+                return new BGARecyclerViewHolder(itemTitle, null, null);
             }
             return null;
         }
@@ -159,7 +123,7 @@ public class HeadindexActivity extends ActionBarActivity implements OnItemClickL
             }
         }
 
-        private ItemMode getItem(int position) {
+        private Mode getItem(int position) {
             if (mDatas1 != null && mDatas1.size() != 0 && mDatas2 != null && mDatas2.size() != 0) {
                 if (position <= mDatas1.size()) {
                     int newposition = position - 1;
@@ -220,20 +184,19 @@ public class HeadindexActivity extends ActionBarActivity implements OnItemClickL
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            BGARecyclerViewHolder viewHolder = (BGARecyclerViewHolder) holder;
             int itemType = getItemViewType(position);
             if (itemType == VIEW_TYPE_TITLE1) {
-                ItemTitleViewHolder itemTitleViewHolder = (ItemTitleViewHolder) holder;
-                itemTitleViewHolder.setTitle("类型1");
+                viewHolder.setText(R.id.tv_item_headindextitle_title, "类型1");
             } else if (itemType == VIEW_TYPE_TITLE2) {
-                ItemTitleViewHolder itemTitleViewHolder = (ItemTitleViewHolder) holder;
-                itemTitleViewHolder.setTitle("类型2");
+                viewHolder.setText(R.id.tv_item_headindextitle_title, "类型2");
             } else if (itemType == VIEW_TYPE_ITEM) {
-                ItemModeViewHolder itemModeViewHolder = (ItemModeViewHolder) holder;
-                itemModeViewHolder.fillData(getItem(position), position);
+                Mode mode = getItem(position);
+                viewHolder.setText(R.id.tv_item_helloworld_attr1, mode.attr1).setText(R.id.tv_item_helloworld_attr2, mode.attr2);
             }
         }
 
-        public void setDatas(List<ItemMode> datas1, List<ItemMode> datas2) {
+        public void setDatas(List<Mode> datas1, List<Mode> datas2) {
             mDatas1 = datas1;
             mDatas2 = datas2;
             notifyDataSetChanged();

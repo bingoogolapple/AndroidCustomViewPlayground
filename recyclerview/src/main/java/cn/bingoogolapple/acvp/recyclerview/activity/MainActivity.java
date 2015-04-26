@@ -23,11 +23,14 @@ public class MainActivity extends ActionBarActivity {
             case R.id.btn_main_helloworld:
                 startActivity(new Intent(this, HelloworldActivity.class));
                 break;
+            case R.id.btn_main_helloworld2:
+                startActivity(new Intent(this, Helloworld2Activity.class));
+                break;
             case R.id.btn_main_headindex:
                 startActivity(new Intent(this, HeadindexActivity.class));
                 break;
-            case R.id.btn_main_indexview:
-                startActivity(new Intent(this, IndexviewActivity.class));
+            case R.id.btn_main_download:
+                startActivity(new Intent(this, DownloadActivity.class));
                 break;
         }
     }

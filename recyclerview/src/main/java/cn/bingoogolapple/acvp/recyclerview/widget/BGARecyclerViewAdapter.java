@@ -1,14 +1,15 @@
 package cn.bingoogolapple.acvp.recyclerview.widget;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 
 import java.util.List;
 
 /**
- * @param <M>  适配的数据类型
- * @param <VH> ViewHolder的类型
+ * @param <M> 适配的数据类型
  */
-public abstract class BGARecyclerViewAdapter<M, VH extends BGAViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class BGARecyclerViewAdapter<M> extends RecyclerView.Adapter<BGARecyclerViewHolder> {
     protected OnItemClickListener mOnItemClickListener;
     protected OnItemLongClickListener mOnItemLongClickListener;
     protected List<M> mDatas;
@@ -35,14 +36,28 @@ public abstract class BGARecyclerViewAdapter<M, VH extends BGAViewHolder> extend
         mOnItemLongClickListener = onItemLongClickListener;
     }
 
+    @Override
+    public BGARecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        BGARecyclerViewHolder viewHolder = new BGARecyclerViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutId(), parent, false), mOnItemClickListener, mOnItemLongClickListener);
+        setListener(viewHolder);
+        return viewHolder;
+    }
+
+    protected void setListener(BGARecyclerViewHolder viewHolder) {
+    }
+
+    public abstract int getLayoutId();
+
     public M getItemMode(int position) {
         return mDatas.get(position);
     }
 
     @Override
-    public void onBindViewHolder(VH viewHolder, int position) {
-        viewHolder.fillData(mDatas.get(position), position);
+    public void onBindViewHolder(BGARecyclerViewHolder viewHolder, int position) {
+        fillData(viewHolder, position, getItemMode(position));
     }
+
+    public abstract void fillData(BGARecyclerViewHolder viewHolder, int position, M item);
 
     @Override
     public int getItemCount() {

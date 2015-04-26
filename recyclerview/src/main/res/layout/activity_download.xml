@@ -1,0 +1,19 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_download_data"
+        style="@style/MatchMatch"
+        android:scrollbars="none" />
+
+    <!--设置为可点击，避免底层覆盖的条目点击错乱-->
+    <TextView
+        android:id="@+id/tv_download_title"
+        style="@style/MatchWrap"
+        android:padding="15dp"
+        android:clickable="true"
+        android:background="#ccc"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:text="正在下载" />
+</FrameLayout>

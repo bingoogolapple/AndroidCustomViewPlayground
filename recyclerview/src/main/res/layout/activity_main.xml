@@ -8,20 +8,24 @@
         style="@style/MatchWrap"
         android:onClick="onClick"
         android:layout_marginTop="10dp"
-        android:text="HelloWorldDemo" />
-
+        android:text="HelloWorld" />
+    <Button
+        android:id="@+id/btn_main_helloworld2"
+        style="@style/MatchWrap"
+        android:onClick="onClick"
+        android:layout_marginTop="10dp"
+        android:text="HelloWorld2" />
     <Button
         android:id="@+id/btn_main_headindex"
         style="@style/MatchWrap"
         android:onClick="onClick"
         android:layout_marginTop="10dp"
-        android:text="HeadindexDemo" />
-
+        android:text="Headindex" />
     <Button
-        android:id="@+id/btn_main_indexview"
+        android:id="@+id/btn_main_download"
         style="@style/MatchWrap"
         android:onClick="onClick"
         android:layout_marginTop="10dp"
-        android:text="IndexviewDemo" />
+        android:text="下载" />
 
 </LinearLayout>
