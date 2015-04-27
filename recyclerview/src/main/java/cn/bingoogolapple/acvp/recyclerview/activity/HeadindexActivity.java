@@ -1,7 +1,7 @@
 package cn.bingoogolapple.acvp.recyclerview.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +15,7 @@ import java.util.List;
 import cn.bingoogolapple.acvp.recyclerview.R;
 import cn.bingoogolapple.acvp.recyclerview.mode.Mode;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGARecyclerViewHolder;
-import cn.bingoogolapple.acvp.recyclerview.widget.ItemDivider;
+import cn.bingoogolapple.acvp.recyclerview.widget.HorizontalDotDivider;
 import cn.bingoogolapple.acvp.recyclerview.widget.OnItemClickListener;
 import cn.bingoogolapple.acvp.recyclerview.widget.OnItemLongClickListener;
 import cn.bingoogolapple.bgaannotation.BGAA;
@@ -23,7 +23,7 @@ import cn.bingoogolapple.bgaannotation.BGAALayout;
 import cn.bingoogolapple.bgaannotation.BGAAView;
 
 @BGAALayout(R.layout.activity_headindex)
-public class HeadindexActivity extends ActionBarActivity implements OnItemClickListener, OnItemLongClickListener {
+public class HeadindexActivity extends AppCompatActivity implements OnItemClickListener, OnItemLongClickListener {
     private static final String TAG = HeadindexActivity.class.getSimpleName();
     @BGAAView(R.id.rv_headindex_data)
     private RecyclerView mDataRv;
@@ -43,7 +43,7 @@ public class HeadindexActivity extends ActionBarActivity implements OnItemClickL
 
         mLinearLayoutManager = new LinearLayoutManager(this);
         mDataRv.setLayoutManager(mLinearLayoutManager);
-        mDataRv.addItemDecoration(new ItemDivider(this, R.mipmap.list_divider));
+        mDataRv.addItemDecoration(new HorizontalDotDivider(this));
         mItemModeAdapter = new ItemModeAdapter(this, this);
         mDataRv.setAdapter(mItemModeAdapter);
 

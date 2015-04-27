@@ -3,29 +3,49 @@
     android:gravity="center_vertical"
     android:padding="10dp">
 
-    <Button
+    <cn.bingoogolapple.acvp.recyclerview.widget.MoocView
+        style="@style/WrapWrap"/>
+
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_main_helloworld"
         style="@style/MatchWrap"
-        android:onClick="onClick"
         android:layout_marginTop="10dp"
+        android:onClick="onClick"
         android:text="HelloWorld" />
+
     <Button
         android:id="@+id/btn_main_helloworld2"
         style="@style/MatchWrap"
-        android:onClick="onClick"
         android:layout_marginTop="10dp"
+        android:onClick="onClick"
         android:text="HelloWorld2" />
+
     <Button
         android:id="@+id/btn_main_headindex"
         style="@style/MatchWrap"
-        android:onClick="onClick"
         android:layout_marginTop="10dp"
+        android:onClick="onClick"
         android:text="Headindex" />
+
     <Button
         android:id="@+id/btn_main_download"
         style="@style/MatchWrap"
-        android:onClick="onClick"
         android:layout_marginTop="10dp"
+        android:onClick="onClick"
         android:text="下载" />
+
+    <Button
+        android:id="@+id/btn_main_decoration"
+        style="@style/MatchWrap"
+        android:layout_marginTop="10dp"
+        android:onClick="onClick"
+        android:text="decoration" />
+
+    <Button
+        android:id="@+id/btn_main_testdialog"
+        style="@style/MatchWrap"
+        android:layout_marginTop="10dp"
+        android:onClick="onClick"
+        android:text="testdialog" />
 
 </LinearLayout>

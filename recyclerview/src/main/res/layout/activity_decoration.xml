@@ -1,0 +1,31 @@
+<cn.bingoogolapple.acvp.recyclerview.widget.BGAEmptyView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ev_decoration_root"
+    style="@style/MatchMatch">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_decoration_container"
+        style="@style/MatchWrap">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_decoration_data"
+            style="@style/MatchWrap"
+            android:scrollbars="none" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        style="@style/MatchMatch.Vertical"
+        android:background="@android:color/white"
+        android:gravity="center">
+
+        <ImageView
+            style="@style/WrapWrap"
+            android:src="@mipmap/ic_launcher" />
+
+        <Button
+            android:id="@+id/btn_decoration_add"
+            style="@style/WrapWrap"
+            android:onClick="onClick"
+            android:layout_marginTop="30dp"
+            android:text="添加" />
+    </LinearLayout>
+</cn.bingoogolapple.acvp.recyclerview.widget.BGAEmptyView>

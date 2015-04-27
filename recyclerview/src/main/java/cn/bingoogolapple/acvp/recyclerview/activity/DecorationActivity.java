@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,26 +18,27 @@ import cn.bingoogolapple.acvp.recyclerview.mode.Mode;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGAEmptyView;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGARecyclerViewAdapter;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGARecyclerViewHolder;
-import cn.bingoogolapple.acvp.recyclerview.widget.HorizontalDotDivider;
-import cn.bingoogolapple.acvp.recyclerview.widget.OnItemChildClickListener;
+import cn.bingoogolapple.acvp.recyclerview.widget.GridDecoration;
 import cn.bingoogolapple.acvp.recyclerview.widget.OnItemClickListener;
 import cn.bingoogolapple.acvp.recyclerview.widget.OnItemLongClickListener;
 import cn.bingoogolapple.bgaannotation.BGAA;
 import cn.bingoogolapple.bgaannotation.BGAALayout;
 import cn.bingoogolapple.bgaannotation.BGAAView;
 
-@BGAALayout(R.layout.activity_helloworld2)
-public class Helloworld2Activity extends AppCompatActivity implements OnItemClickListener, OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener {
-    private static final String TAG = Helloworld2Activity.class.getSimpleName();
-    @BGAAView(R.id.ev_helloworld2_root)
+@BGAALayout(R.layout.activity_decoration)
+public class DecorationActivity extends AppCompatActivity implements OnItemClickListener, OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener {
+    private static final String TAG = DecorationActivity.class.getSimpleName();
+    @BGAAView(R.id.ev_decoration_root)
     private BGAEmptyView mRootEv;
-    @BGAAView(R.id.srl_helloworld2_container)
+    @BGAAView(R.id.srl_decoration_container)
     private SwipeRefreshLayout mContainerSrl;
-    @BGAAView(R.id.rv_helloworld2_data)
+    @BGAAView(R.id.rv_decoration_data)
     private RecyclerView mDataRv;
 
     private ItemModeAdapter mItemModeAdapter;
     private LinearLayoutManager mLinearLayoutManager;
+    private GridLayoutManager mGridLayoutManager;
+    private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
 
     private List<Mode> mDatas;
 
@@ -50,18 +53,22 @@ public class Helloworld2Activity extends AppCompatActivity implements OnItemClic
                 android.R.color.holo_red_light);
 
         mLinearLayoutManager = new LinearLayoutManager(this);
-        mDataRv.setLayoutManager(mLinearLayoutManager);
-        mDataRv.addItemDecoration(new HorizontalDotDivider(this));
+        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mGridLayoutManager = new GridLayoutManager(this, 3);
+        mGridLayoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+        mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
+        mDataRv.setLayoutManager(mStaggeredGridLayoutManager);
+        mDataRv.addItemDecoration(new GridDecoration(this));
         mItemModeAdapter = new ItemModeAdapter(this);
         mDataRv.setAdapter(mItemModeAdapter);
 
-        mDatas = Mode.getHelloworldDatas();
+        mDatas = Mode.getItemDecorationDatas();
         mItemModeAdapter.setDatas(mDatas);
     }
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_helloworld2_add:
+            case R.id.btn_decoration_add:
                 add();
                 break;
         }
@@ -96,34 +103,18 @@ public class Helloworld2Activity extends AppCompatActivity implements OnItemClic
     }
 
     private static class ItemModeAdapter extends BGARecyclerViewAdapter<Mode> {
-        private Helloworld2Activity mHelloworld2Activity;
-        public ItemModeAdapter(Helloworld2Activity helloworld2Activity) {
-            super(helloworld2Activity, helloworld2Activity);
-            mHelloworld2Activity = helloworld2Activity;
+        public ItemModeAdapter(DecorationActivity decorationActivity) {
+            super(decorationActivity, decorationActivity);
         }
 
         @Override
         public int getLayoutId() {
-            return R.layout.item_helloworld2;
-        }
-
-        @Override
-        protected void setListener(BGARecyclerViewHolder viewHolder) {
-            viewHolder.setOnClickListener(R.id.btn_item_helloworld2_delete);
-            viewHolder.setOnItemChildClickListener(new OnItemChildClickListener() {
-                @Override
-                public void onItemChildClick(View v, int position) {
-                    if (v.getId() == R.id.btn_item_helloworld2_delete) {
-                        Toast.makeText(mHelloworld2Activity, "删除" + getItemMode(position).attr1, Toast.LENGTH_SHORT).show();
-                        removeItem(position);
-                    }
-                }
-            });
+            return R.layout.item_decoration;
         }
 
         @Override
         public void fillData(BGARecyclerViewHolder viewHolder, int position, Mode item) {
-            viewHolder.setText(R.id.tv_item_helloworld2_attr1, item.attr1).setText(R.id.tv_item_helloworld2_attr2, item.attr2);
+            viewHolder.setText(R.id.tv_item_decoration_attr1, item.attr1).setText(R.id.tv_item_decoration_attr2, item.attr2);
         }
     }
 }

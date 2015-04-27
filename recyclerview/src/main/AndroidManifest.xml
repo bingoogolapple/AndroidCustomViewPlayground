@@ -21,13 +21,16 @@
             android:label="HelloWorldDemo" />
         <activity
             android:name=".activity.Helloworld2Activity"
-            android:label="HelloWorldDemo" />
+            android:label="HelloWorld2Demo" />
         <activity
             android:name=".activity.HeadindexActivity"
             android:label="HeadindexDemo" />
         <activity
             android:name=".activity.DownloadActivity"
-            android:label="HeadindexDemo" />
+            android:label="DownloadDemo" />
+        <activity
+            android:name=".activity.DecorationActivity"
+            android:label="DecorationDemo" />
 
     </application>
 

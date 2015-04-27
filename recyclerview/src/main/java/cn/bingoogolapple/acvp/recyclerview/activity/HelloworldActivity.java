@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,7 +19,7 @@ import cn.bingoogolapple.acvp.recyclerview.mode.Mode;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGAEmptyView;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGARecyclerViewAdapter;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGARecyclerViewHolder;
-import cn.bingoogolapple.acvp.recyclerview.widget.ItemDivider;
+import cn.bingoogolapple.acvp.recyclerview.widget.HorizontalDotDivider;
 import cn.bingoogolapple.acvp.recyclerview.widget.OnItemClickListener;
 import cn.bingoogolapple.acvp.recyclerview.widget.OnItemLongClickListener;
 import cn.bingoogolapple.bgaannotation.BGAA;
@@ -26,7 +27,7 @@ import cn.bingoogolapple.bgaannotation.BGAALayout;
 import cn.bingoogolapple.bgaannotation.BGAAView;
 
 @BGAALayout(R.layout.activity_helloworld)
-public class HelloworldActivity extends ActionBarActivity implements OnItemClickListener, OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class HelloworldActivity extends AppCompatActivity implements OnItemClickListener, OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = HelloworldActivity.class.getSimpleName();
     @BGAAView(R.id.ev_helloworld_root)
     private BGAEmptyView mRootEv;
@@ -54,7 +55,7 @@ public class HelloworldActivity extends ActionBarActivity implements OnItemClick
 
         mLinearLayoutManager = new LinearLayoutManager(this);
         mDataRv.setLayoutManager(mLinearLayoutManager);
-        mDataRv.addItemDecoration(new ItemDivider(this, R.mipmap.list_divider));
+        mDataRv.addItemDecoration(new HorizontalDotDivider(this));
         mItemModeAdapter = new ItemModeAdapter(this);
         mDataRv.setAdapter(mItemModeAdapter);
 

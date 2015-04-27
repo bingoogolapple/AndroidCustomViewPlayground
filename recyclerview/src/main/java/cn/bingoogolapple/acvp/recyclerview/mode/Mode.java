@@ -20,6 +20,14 @@ public class Mode {
         return datas;
     }
 
+    public static List<Mode> getItemDecorationDatas() {
+        List<Mode> datas = new ArrayList<Mode>();
+        for (int i = 0; i < 50; i++) {
+            datas.add(new Mode("attr1 " + i, "attr2 " + i));
+        }
+        return datas;
+    }
+
     public static List<Mode> getHeadindexDatas1() {
         List<Mode> datas = new ArrayList<Mode>();
         for (int i = 0; i < 20; i++) {
