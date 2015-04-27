@@ -59,4 +59,12 @@ public class Mode {
         }
         return datas;
     }
+
+    public static List<Mode> getSwipeDatas() {
+        List<Mode> datas = new ArrayList<Mode>();
+        for (int i = 0; i < 20; i++) {
+            datas.add(new Mode("参数A-" + i, "参数B-" + i));
+        }
+        return datas;
+    }
 }

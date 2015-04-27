@@ -45,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
                 builder.setIcon(R.mipmap.ic_launcher);
                 builder.show();
                 break;
+            case R.id.btn_main_swipe:
+                startActivity(new Intent(this, SwipeActivity.class));
+                break;
 
         }
     }

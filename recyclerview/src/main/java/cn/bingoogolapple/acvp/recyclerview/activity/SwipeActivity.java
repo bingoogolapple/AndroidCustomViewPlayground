@@ -18,21 +18,22 @@ import cn.bingoogolapple.acvp.recyclerview.mode.Mode;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGAEmptyView;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGARecyclerViewAdapter;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGARecyclerViewHolder;
-import cn.bingoogolapple.acvp.recyclerview.widget.HorizontalDotDivider;
+import cn.bingoogolapple.acvp.recyclerview.widget.BGASwipeItemLayout;
+import cn.bingoogolapple.acvp.recyclerview.widget.Divider;
 import cn.bingoogolapple.acvp.recyclerview.widget.OnItemClickListener;
 import cn.bingoogolapple.acvp.recyclerview.widget.OnItemLongClickListener;
 import cn.bingoogolapple.bgaannotation.BGAA;
 import cn.bingoogolapple.bgaannotation.BGAALayout;
 import cn.bingoogolapple.bgaannotation.BGAAView;
 
-@BGAALayout(R.layout.activity_helloworld)
-public class HelloworldActivity extends AppCompatActivity implements OnItemClickListener, OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener {
-    private static final String TAG = HelloworldActivity.class.getSimpleName();
-    @BGAAView(R.id.ev_helloworld_root)
+@BGAALayout(R.layout.activity_swipe)
+public class SwipeActivity extends AppCompatActivity implements OnItemClickListener, OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener {
+    private static final String TAG = SwipeActivity.class.getSimpleName();
+    @BGAAView(R.id.ev_swipe_root)
     private BGAEmptyView mRootEv;
-    @BGAAView(R.id.srl_helloworld_container)
+    @BGAAView(R.id.srl_swipe_container)
     private SwipeRefreshLayout mContainerSrl;
-    @BGAAView(R.id.rv_helloworld_data)
+    @BGAAView(R.id.rv_swipe_data)
     private RecyclerView mDataRv;
 
     private ItemModeAdapter mItemModeAdapter;
@@ -40,7 +41,7 @@ public class HelloworldActivity extends AppCompatActivity implements OnItemClick
 
     private List<Mode> mDatas;
     private int mSelectedItemIndex = -1;
-    private View mSelectedItemView;
+    private BGASwipeItemLayout mSelectedItemView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +55,11 @@ public class HelloworldActivity extends AppCompatActivity implements OnItemClick
 
         mLinearLayoutManager = new LinearLayoutManager(this);
         mDataRv.setLayoutManager(mLinearLayoutManager);
-        mDataRv.addItemDecoration(new HorizontalDotDivider(this));
+        mDataRv.addItemDecoration(new Divider(this));
         mItemModeAdapter = new ItemModeAdapter(this);
         mDataRv.setAdapter(mItemModeAdapter);
 
-        mDatas = Mode.getHelloworldDatas();
+        mDatas = Mode.getSwipeDatas();
         mItemModeAdapter.setDatas(mDatas);
         mDataRv.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -86,10 +87,10 @@ public class HelloworldActivity extends AppCompatActivity implements OnItemClick
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_helloworld_add:
+            case R.id.btn_swipe_add:
                 add();
                 break;
-            case R.id.btn_helloworld_delete:
+            case R.id.btn_swipe_delete:
                 delete();
                 break;
         }
@@ -105,8 +106,8 @@ public class HelloworldActivity extends AppCompatActivity implements OnItemClick
         Toast.makeText(this, "长按了条目" + mItemModeAdapter.getItemMode(position).attr1, Toast.LENGTH_SHORT).show();
         resetDeleteItemStatus();
         mSelectedItemIndex = position;
-        mSelectedItemView = v;
-        mSelectedItemView.setBackgroundColor(Color.RED);
+        mSelectedItemView = (BGASwipeItemLayout) v;
+        mSelectedItemView.getTopView().setBackgroundColor(Color.RED);
         return true;
     }
 
@@ -132,7 +133,7 @@ public class HelloworldActivity extends AppCompatActivity implements OnItemClick
     private void resetDeleteItemStatus() {
         mSelectedItemIndex = -1;
         if (mSelectedItemView != null) {
-            mSelectedItemView.setBackgroundColor(Color.WHITE);
+            mSelectedItemView.getTopView().setBackgroundColor(Color.WHITE);
             mSelectedItemView = null;
         }
     }
@@ -158,18 +159,18 @@ public class HelloworldActivity extends AppCompatActivity implements OnItemClick
     }
 
     private static class ItemModeAdapter extends BGARecyclerViewAdapter<Mode> {
-        public ItemModeAdapter(HelloworldActivity helloworldActivity) {
-            super(helloworldActivity, helloworldActivity);
+        public ItemModeAdapter(SwipeActivity swipeActivity) {
+            super(swipeActivity, swipeActivity);
         }
 
         @Override
         public int getLayoutId() {
-            return R.layout.item_helloworld;
+            return R.layout.item_swipe;
         }
 
         @Override
         public void fillData(BGARecyclerViewHolder viewHolder, int position, Mode item) {
-            viewHolder.setText(R.id.tv_item_helloworld_attr1, item.attr1).setText(R.id.tv_item_helloworld_attr2, item.attr2);
+            viewHolder.setText(R.id.tv_item_swipe_attr1, item.attr1).setText(R.id.tv_item_swipe_attr2, item.attr2).setText(R.id.et_item_swipe_attr1, item.attr1);
         }
     }
 }

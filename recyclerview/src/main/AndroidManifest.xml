@@ -31,7 +31,9 @@
         <activity
             android:name=".activity.DecorationActivity"
             android:label="DecorationDemo" />
-
+        <activity
+            android:name=".activity.SwipeActivity"
+            android:label="SwipeDemo" />
     </application>
 
 </manifest>

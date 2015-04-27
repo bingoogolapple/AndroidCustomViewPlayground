@@ -1,4 +1,4 @@
-package cn.bingoogolapple.acvp.viewdraghelper.widget;
+package cn.bingoogolapple.acvp.recyclerview.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import cn.bingoogolapple.acvp.viewdraghelper.R;
+import cn.bingoogolapple.acvp.recyclerview.R;
 
 public class BGASwipeItemLayout extends RelativeLayout {
     private static final String TAG = BGASwipeItemLayout.class.getSimpleName();
