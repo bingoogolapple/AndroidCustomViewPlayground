@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/MatchMatch.Vertical">
+
+    <LinearLayout style="@style/MatchWrap.Horizontal">
+
+        <cn.bingoogolapple.acvp.selectview.widget.SelectView
+            android:id="@+id/sv_main_province"
+            style="@style/AutoWrap"
+            android:padding="5dp"
+            app:sv_defaultValue="请选择省份" />
+
+        <cn.bingoogolapple.acvp.selectview.widget.SelectView
+            android:id="@+id/sv_main_city"
+            style="@style/AutoWrap"
+            android:padding="5dp"
+            app:sv_defaultValue="请选择城市" />
+
+        <cn.bingoogolapple.acvp.selectview.widget.SelectView
+            android:id="@+id/sv_main_district"
+            style="@style/AutoWrap"
+            android:padding="5dp"
+            app:sv_defaultValue="请选择区" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_main_address"
+        style="@style/MatchWrap"
+        android:text="请选择地址"
+        android:layout_marginTop="100dp" />
+</LinearLayout>
