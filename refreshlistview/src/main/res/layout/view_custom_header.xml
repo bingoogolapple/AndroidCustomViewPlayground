@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchWrap.Vertical"
+    android:gravity="center_horizontal"
+    android:padding="5dp"
+    android:background="#f00">
+
+    <TextView
+        style="@style/WrapWrap"
+        android:background="#0f0"
+        android:text="自定义头部视图" />
+</LinearLayout>
