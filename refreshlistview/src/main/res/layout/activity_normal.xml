@@ -1,0 +1,6 @@
+<cn.bingoogolapple.acvp.refreshlistview.widget.BGANormalRefreshListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nrlv_normal_list"
+    android:divider="@mipmap/dotted_line"
+    android:listSelector="@null"
+    android:background="#ccc"
+    style="@style/MatchMatch.Vertical" />

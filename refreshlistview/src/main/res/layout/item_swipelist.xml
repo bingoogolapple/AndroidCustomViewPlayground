@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sl_item_swipelist_root"
+    style="@style/MatchWrap.Horizontal">
+
+    <TextView
+        android:id="@+id/tv_item_swipelist_delete"
+        android:clickable="true"
+        style="@style/WrapWrap"
+        android:background="#f00"
+        android:padding="20dp"
+        android:text="删除" />
+
+    <TextView
+        android:id="@+id/tv_item_swipelist_name"
+        android:text="内容"
+        android:padding="20dp"
+        android:background="@drawable/selector_item"
+        style="@style/MatchWrap" />
+
+</com.daimajia.swipe.SwipeLayout>

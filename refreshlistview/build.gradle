@@ -15,4 +15,6 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'cn.bingoogolapple:bga-annotation:1.0.0@aar'
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
+    compile 'cn.bingoogolapple:bga-banner:1.0.0@aar'
 }

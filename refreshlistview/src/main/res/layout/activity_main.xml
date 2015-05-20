@@ -1,3 +1,15 @@
-<cn.bingoogolapple.acvp.refreshlistview.widget.BGANormalRefreshListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/lv_main_list"
-    style="@style/MatchMatch.Vertical" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch.Vertical"
+    android:gravity="center_vertical"
+    android:padding="10dp">
+
+    <Button
+        style="@style/MatchWrap"
+        android:onClick="changeToNormal"
+        android:text="changeToNormal" />
+
+    <Button
+        style="@style/MatchWrap"
+        android:onClick="changeToNormalSwipe"
+        android:text="changeToNormalSwipe" />
+</LinearLayout>

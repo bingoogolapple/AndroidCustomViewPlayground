@@ -10,9 +10,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import cn.bingoogolapple.acvp.refreshlistview.R;
 
 /**
@@ -22,7 +19,6 @@ import cn.bingoogolapple.acvp.refreshlistview.R;
  */
 public class BGANormalRefreshListView extends BGARefreshListView {
     private TextView mStatusTv;
-    private TextView mTimeTv;
     private ImageView mArrowIv;
     private ProgressBar mProgressPb;
 
@@ -51,11 +47,9 @@ public class BGANormalRefreshListView extends BGARefreshListView {
     protected View getRefreshHeaderView() {
         View refreshView = View.inflate(getContext(), R.layout.view_normal_refresh_header, null);
         mStatusTv = (TextView) refreshView.findViewById(R.id.tv_normal_refresh_header_status);
-        mTimeTv = (TextView) refreshView.findViewById(R.id.tv_normal_refresh_header_time);
         mArrowIv = (ImageView) refreshView.findViewById(R.id.iv_normal_refresh_header_arrow);
         mProgressPb = (ProgressBar) refreshView.findViewById(R.id.pb_normal_refresh_header_progress);
 
-        mTimeTv.setText("最后刷新时间：" + getCurrentTime());
         initAnimation();
         return refreshView;
     }
@@ -77,7 +71,7 @@ public class BGANormalRefreshListView extends BGARefreshListView {
 
     @Override
     protected void handleScale(float scale) {
-        printLog("scale = " + scale);
+//        printLog("scale = " + scale);
         ViewCompat.setAlpha(mStatusTv, scale);
     }
 
@@ -100,6 +94,7 @@ public class BGANormalRefreshListView extends BGARefreshListView {
     @Override
     protected void changeToRefreshing() {
         mStatusTv.setText("正在刷新");
+        // 必须把动画清空才能隐藏成功
         mArrowIv.clearAnimation();
         mArrowIv.setVisibility(View.INVISIBLE);
         mProgressPb.setVisibility(View.VISIBLE);
@@ -113,11 +108,6 @@ public class BGANormalRefreshListView extends BGARefreshListView {
     @Override
     protected void onEndRefreshing() {
         printLog("结束正在刷新");
-    }
-
-    private String getCurrentTime() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return format.format(new Date());
     }
 
 }

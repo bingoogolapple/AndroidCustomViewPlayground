@@ -116,7 +116,7 @@ public abstract class BGARefreshListView extends ListView implements AbsListView
             mRefreshHeaderView.measure(0, 0);
             mRefreshHeaderViewHeight = mRefreshHeaderView.getMeasuredHeight();
             mMinWholeHeaderViewPaddingTop = -mRefreshHeaderViewHeight;
-            mMaxWholeHeaderViewPaddingTop = mRefreshHeaderViewHeight * 1 / 5;
+            mMaxWholeHeaderViewPaddingTop = mRefreshHeaderViewHeight * 2 / 5;
             printLog("refreshHeaderViewHeight = " + mRefreshHeaderViewHeight);
 
             hiddenRefreshHeaderView();
@@ -191,10 +191,8 @@ public abstract class BGARefreshListView extends ListView implements AbsListView
                 break;
         }
 
-        if (scrollState == SCROLL_STATE_IDLE || scrollState == SCROLL_STATE_FLING) {
-            if (getLastVisiblePosition() == getCount() - 1 && !mIsLoadingMore) {
-                beginLoadingMore();
-            }
+        if ((scrollState == SCROLL_STATE_IDLE || scrollState == SCROLL_STATE_FLING) && getLastVisiblePosition() == getCount() - 1 && !mIsLoadingMore) {
+            beginLoadingMore();
         }
 
         if (mCustomOnScrollListener != null) {
@@ -218,6 +216,7 @@ public abstract class BGARefreshListView extends ListView implements AbsListView
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                printLog("按下");
                 mDownY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -274,6 +273,8 @@ public abstract class BGARefreshListView extends ListView implements AbsListView
                 if (mCurrentRefreshStatus == RefreshStatus.PULL_DOWN) {
                     // 处于下拉刷新状态，松手时隐藏下拉刷新控件
                     hiddenRefreshHeaderView();
+
+//                    return true;
                 } else if (mCurrentRefreshStatus == RefreshStatus.RELEASE_REFRESH) {
                     // 处于松开进入刷新状态，松手时完全显示下拉刷新控件，进入正在刷新状态
                     mWholeHeaderView.setPadding(0, 0, 0, 0);
@@ -283,6 +284,7 @@ public abstract class BGARefreshListView extends ListView implements AbsListView
                     if (mDelegate != null) {
                         mDelegate.onBGARefreshListViewBeginRefreshing();
                     }
+
                     return true;
                 }
                 break;
