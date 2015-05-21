@@ -197,6 +197,7 @@ public class BGARefreshListView extends ListView implements AbsListView.OnScroll
                     }
                     break;
                 case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
                     if (handleActionUp(event)) {
                         return true;
                     }

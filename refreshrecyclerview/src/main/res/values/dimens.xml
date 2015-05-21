@@ -1,0 +1,7 @@
+<resources>
+
+    <!-- PullWidget -->
+    <dimen name="minimum_height">40dip</dimen>
+    <dimen name="minimum_content_height">30dip</dimen>
+
+</resources>

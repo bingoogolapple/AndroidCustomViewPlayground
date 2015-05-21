@@ -22,7 +22,6 @@ public class AdapterViewAdapter extends BGAAdapterViewAdapter<RefreshModel> {
 
     @Override
     public void convert(BGAAdapterViewHolder viewHolder, RefreshModel model) {
-        viewHolder.setText(R.id.tv_item_list_title, model.mTitle);
-        viewHolder.setText(R.id.tv_item_list_detail, model.mDetail);
+        viewHolder.setText(R.id.tv_item_list_title, model.mTitle).setText(R.id.tv_item_list_detail, model.mDetail);
     }
 }
