@@ -167,8 +167,8 @@ public class MoocView extends View {
 
         mBezierControlX = mIsBezierControlXIncrease ? mBezierControlX + 10 : mBezierControlX - 10;
         if (mBezierControlY >= 0) {
-            mBezierControlY -= 1;
-            mWaveY -= 1;
+            mBezierControlY -= 2;
+            mWaveY -= 2;
         } else {
             mWaveY = mWaveOriginalY;
             mBezierControlY = mBezierControlOriginalY;

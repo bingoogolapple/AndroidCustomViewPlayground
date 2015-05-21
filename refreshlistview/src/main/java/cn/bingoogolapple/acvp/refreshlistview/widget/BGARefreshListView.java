@@ -290,7 +290,7 @@ public class BGARefreshListView extends ListView implements AbsListView.OnScroll
             hiddenRefreshHeaderView();
         } else if (mCurrentRefreshStatus == RefreshStatus.RELEASE_REFRESH) {
             // 处于松开进入刷新状态，松手时完全显示下拉刷新控件，进入正在刷新状态
-            mWholeHeaderView.setPadding(0, 0, 0, 0);
+            changeRefreshHeaderViewToZero();
             mCurrentRefreshStatus = RefreshStatus.REFRESHING;
             handleRefreshStatusChanged();
 
@@ -361,7 +361,7 @@ public class BGARefreshListView extends ListView implements AbsListView.OnScroll
     }
 
     /**
-     * 隐藏下拉刷新控件
+     * 隐藏下拉刷新控件，带动画
      */
     private void hiddenRefreshHeaderView() {
         ViewCompat.postOnAnimation(mWholeHeaderView, new Runnable() {
@@ -372,6 +372,23 @@ public class BGARefreshListView extends ListView implements AbsListView.OnScroll
                     hiddenRefreshHeaderView();
                 } else {
                     mWholeHeaderView.setPadding(0, mMinWholeHeaderViewPaddingTop, 0, 0);
+                }
+            }
+        });
+    }
+
+    /**
+     * 设置下拉刷新控件的paddingTop到0，带动画
+     */
+    private void changeRefreshHeaderViewToZero() {
+        ViewCompat.postOnAnimation(mWholeHeaderView, new Runnable() {
+            @Override
+            public void run() {
+                if (mWholeHeaderView.getPaddingTop() > 0) {
+                    mWholeHeaderView.setPadding(0, mWholeHeaderView.getPaddingTop() - 8, 0, 0);
+                    changeRefreshHeaderViewToZero();
+                } else {
+                    mWholeHeaderView.setPadding(0, 0, 0, 0);
                 }
             }
         });
