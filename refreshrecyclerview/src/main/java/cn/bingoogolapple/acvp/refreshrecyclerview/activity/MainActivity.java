@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import cn.bingoogolapple.acvp.refreshrecyclerview.util.OnItemClickListener;
 import cn.bingoogolapple.acvp.refreshrecyclerview.util.OnItemLongClickListener;
 
 public class MainActivity extends AppCompatActivity implements OnItemClickListener, OnItemLongClickListener, BGARefreshLayout.BGARefreshLayoutDelegate {
+    private static final String TAG = MainActivity.class.getSimpleName();
     private BGARefreshLayout mRefreshRl;
     private RecyclerView mDataRv;
     protected List<RefreshModel> mDatas;
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     @Override
     public void onBGARefreshLayoutBeginRefreshing() {
-        Toast.makeText(this, "开始刷新", Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "开始刷新");
         new AsyncTask<Void, Void, Void>() {
 
             @Override

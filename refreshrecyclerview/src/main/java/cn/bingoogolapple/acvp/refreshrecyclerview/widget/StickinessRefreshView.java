@@ -17,14 +17,12 @@ import android.view.ViewGroup.LayoutParams;
 import cn.bingoogolapple.acvp.refreshrecyclerview.R;
 
 /**
- * @hide
- * 
- * @author caifangmao8@gmail.com
- *
+ * 作者:王浩 邮件:bingoogolapple@gmail.com
+ * 创建时间:15/5/21 22:34
+ * 描述:
  */
 public class StickinessRefreshView extends View{
-	
-	private static final String TAG = "PullWidget";
+	private static final String TAG = StickinessRefreshView.class.getSimpleName();
 	
 	private int width,height;
 	private RectF topBound;
@@ -42,7 +40,7 @@ public class StickinessRefreshView extends View{
 	private float minimumContentHeight;
 	private float minimumBottomHeight;
 	
-	private Handler handler;
+	private Handler mHandler;
 	private PullRunnable pullRunnable;
 	private CirclingRunnable circlingRunnable;
 	private BackRunnable backRunnable;
@@ -51,78 +49,6 @@ public class StickinessRefreshView extends View{
 	
 	private boolean isInRotateMode;
 	private float degree;
-	
-	public interface OnStateChangedListener{
-		public void onCirclingFullyStop();
-		public void onPullFullyStop();
-	}
-	
-	private class PullRunnable implements Runnable{
-		private int movingHeight;
-		
-		public PullRunnable(int movingHeight){
-			this.movingHeight = movingHeight;
-		}
-		
-		@Override
-		public void run(){
-			movingHeight += -movingHeight * 0.5F;
-			setHeight(movingHeight);
-			
-			if(movingHeight > 0){
-				handler.postDelayed(pullRunnable, 20);
-			}else{
-				if(null != onStateChangeListener) onStateChangeListener.onPullFullyStop();
-			}
-		}
-	}
-	
-	private class CirclingRunnable implements Runnable{
-		
-		public CirclingRunnable(){
-			isInRotateMode = true;
-			handler.removeCallbacks(pullRunnable);
-			handler.removeCallbacks(backRunnable);
-			setHeight(0);
-		}
-		
-		@Override
-		public void run(){
-			if(degree < 360){
-				degree += 20;
-			}else{
-				degree = 0;
-			}
-			
-			invalidate();
-			
-			handler.postDelayed(circlingRunnable, 20);
-		}
-	}
-	
-	private class BackRunnable implements Runnable{
-		
-		public BackRunnable(){
-			isInRotateMode = true;
-			handler.removeCallbacks(pullRunnable);
-			handler.removeCallbacks(circlingRunnable);
-			setHeight(0);
-		}
-		
-		@Override
-		public void run(){
-			degree += (359 - degree) * 0.5F;
-			if(degree < 359){
-				handler.postDelayed(backRunnable, 20);
-			}else{
-				degree = 0;
-				isInRotateMode = false;
-				if(null != onStateChangeListener) onStateChangeListener.onCirclingFullyStop();
-			}
-			
-			invalidate();
-		}
-	}
 
 	public StickinessRefreshView(Context context){
 		this(context, null);
@@ -153,7 +79,7 @@ public class StickinessRefreshView extends View{
 		
 		isInRotateMode = false;
 		degree = 0;
-		handler = new Handler();
+		mHandler = new Handler();
 	}
 	
 	public void setMinimumHeight(int minimumHeight){
@@ -182,18 +108,18 @@ public class StickinessRefreshView extends View{
 	
 	public void smoothToOriginalSpot(){
 		pullRunnable = new PullRunnable(height);
-		handler.post(pullRunnable);
+		mHandler.post(pullRunnable);
 	}
 	
 	public void circling(){
 		circlingRunnable = new CirclingRunnable();
-		handler.post(circlingRunnable);
+		mHandler.post(circlingRunnable);
 		Log.d(TAG, "circling");
 	}
 	
 	public void stopCirclingAndReturn(){
 		backRunnable = new BackRunnable();
-		handler.post(backRunnable);
+		mHandler.post(backRunnable);
 	}
 	
 	public void setOnStateChangeListener(OnStateChangedListener onStateChangeListener){
@@ -270,4 +196,77 @@ public class StickinessRefreshView extends View{
 			iconDrawable.draw(canvas);
 		}
 	}
+
+	public interface OnStateChangedListener{
+		void onCirclingFullyStop();
+		void onPullFullyStop();
+	}
+
+	private class PullRunnable implements Runnable{
+		private int movingHeight;
+
+		public PullRunnable(int movingHeight){
+			this.movingHeight = movingHeight;
+		}
+
+		@Override
+		public void run(){
+			movingHeight += -movingHeight * 0.5F;
+			setHeight(movingHeight);
+
+			if(movingHeight > 0){
+				mHandler.postDelayed(pullRunnable, 20);
+			}else{
+				if(null != onStateChangeListener) onStateChangeListener.onPullFullyStop();
+			}
+		}
+	}
+
+	private class CirclingRunnable implements Runnable{
+
+		public CirclingRunnable(){
+			isInRotateMode = true;
+			mHandler.removeCallbacks(pullRunnable);
+			mHandler.removeCallbacks(backRunnable);
+			setHeight(0);
+		}
+
+		@Override
+		public void run(){
+			if(degree < 360){
+				degree += 10;
+			}else{
+				degree = 0;
+			}
+
+			invalidate();
+
+			mHandler.postDelayed(circlingRunnable, 20);
+		}
+	}
+
+	private class BackRunnable implements Runnable{
+
+		public BackRunnable(){
+			isInRotateMode = true;
+			mHandler.removeCallbacks(pullRunnable);
+			mHandler.removeCallbacks(circlingRunnable);
+			setHeight(0);
+		}
+
+		@Override
+		public void run(){
+			degree += (359 - degree) * 0.5F;
+			if(degree < 359){
+				mHandler.postDelayed(backRunnable, 20);
+			}else{
+				degree = 0;
+				isInRotateMode = false;
+				if(null != onStateChangeListener) onStateChangeListener.onCirclingFullyStop();
+			}
+
+			invalidate();
+		}
+	}
+
 }

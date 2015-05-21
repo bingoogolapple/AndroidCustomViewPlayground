@@ -2,6 +2,8 @@ package cn.bingoogolapple.acvp.refreshrecyclerview.widget;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,315 +16,328 @@ import android.widget.ScrollView;
 
 import cn.bingoogolapple.acvp.refreshrecyclerview.R;
 
+/**
+ * 作者:王浩 邮件:bingoogolapple@gmail.com
+ * 创建时间:15/5/21 22:35
+ * 描述:
+ */
 public class BGARefreshLayout extends LinearLayout implements StickinessRefreshView.OnStateChangedListener {
-	private static final String TAG = BGARefreshLayout.class.getSimpleName();
-	
-	private static final int MODE_REFRESHING = 0;
-	private static final int MODE_IDLE = 1;
-	private static final int MODE_DRAGGING = 2;
-	private static final int MODE_REFRESH_START = 3;
-	
-	private int mCurrentRefreshStatus = MODE_IDLE;
+    private static final String TAG = BGARefreshLayout.class.getSimpleName();
 
-	private View mHeadView;
-	private StickinessRefreshView mStickinessRefreshView;
+    private View mRefreshHeaderView;
+    private StickinessRefreshView mStickinessRefreshView;
 
-	private AdapterView<?> mAdapterView;
-	private ScrollView mScrollView;
-	private View mNormalView;
+    private AdapterView<?> mAdapterView;
+    private ScrollView mScrollView;
+    private RecyclerView mRecyclerView;
+    private View mNormalView;
 
-	private float dx,dy;
-	private int moveDistance;
-	private int headOriginalHeight;
-	
-	private Handler handler;
-	private MoveRunnable moveRunnable;
-	private HeadMoveRunnable headMoveRunnable;
-	
-	private BGARefreshLayoutDelegate mDelegate;
-//	private RefreshStatus mCurrentRefreshStatus = RefreshStatus.IDLE;
+    private float dx, dy;
+    private int moveDistance;
+    private int headOriginalHeight;
 
-	private class MoveRunnable implements Runnable{
-		int startY;
-		
-		public MoveRunnable(int startY){
-			stopMovement();
-			this.startY = startY;
-		}
-		
-		@Override
-		public void run(){
-			startY += (headOriginalHeight - startY) * 0.5F;
-			
-			mStickinessRefreshView.setHeight(startY - headOriginalHeight);
-			setChildHeight(mHeadView, startY);
-			
-			if(startY != headOriginalHeight){
-				handler.postDelayed(moveRunnable, 20);
-			}else{
-				switch(mCurrentRefreshStatus){
-				case MODE_REFRESHING:
-				case MODE_REFRESH_START:
-					mStickinessRefreshView.circling();
-					break;
-				case MODE_DRAGGING:
-					smoothHideHeadView();
-					break;
-				}
-			}
-		}
-	}
-	
-	public class HeadMoveRunnable implements Runnable{
-		LayoutParams params;
-		
-		public HeadMoveRunnable(){
-			params = (LayoutParams) mHeadView.getLayoutParams();
-		}
-		
-		@Override
-		public void run(){
-			params.topMargin += (-headOriginalHeight - params.topMargin) * 0.5F;
-			
-			mHeadView.setLayoutParams(params);
-			
-			if(params.topMargin != -headOriginalHeight){
-				handler.postDelayed(headMoveRunnable, 20);
-			}else{
-				mCurrentRefreshStatus = MODE_IDLE;
-			}
-		}
-	}
+    private Handler handler;
+    private MoveRunnable moveRunnable;
+    private HeadMoveRunnable headMoveRunnable;
 
-	public BGARefreshLayout(Context context){
-		super(context);
-		init(context);
-	}
-	
-	public BGARefreshLayout(Context context, AttributeSet attrs){
-		super(context, attrs);
-		init(context);
-	}
-	
-	private void init(Context context){
-		setOrientation(LinearLayout.VERTICAL);
-		LayoutInflater inflater = LayoutInflater.from(context);
-		mHeadView = inflater.inflate(R.layout.head_pullrefresh, this, false);
-		measureChild(mHeadView);
-		mStickinessRefreshView = (StickinessRefreshView) mHeadView.findViewById(R.id.pull_widget);
-		mStickinessRefreshView.setOnStateChangeListener(this);
-		
-		headOriginalHeight = mHeadView.getMeasuredHeight();
-		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, headOriginalHeight);
-		params.topMargin = -headOriginalHeight;
-		addView(mHeadView, params);
-		
-		handler = new Handler();
-	}
-	
-	@Override
-	public void onFinishInflate(){
-		super.onFinishInflate();
-		
-		initContent();
-	}
-	
-	private void initContent(){
-		int count = getChildCount();
-		if(count != 2) throw new ArrayIndexOutOfBoundsException("this widget contain one child view at most and must contain one.");
-		
-		View view = getChildAt(1);
-		if(view instanceof AdapterView<?>){
-			mAdapterView = (AdapterView<?>) view;
-		}else if(view instanceof ScrollView){
-			mScrollView = (ScrollView) view;
-		}else{
-			mNormalView = view;
-		}
-	}
-	
-	private void measureChild(View child){
-		ViewGroup.LayoutParams params = child.getLayoutParams();
-		if(null == params){
-			params = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		}
-		
-		int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0, params.width);
-		int childHeightSpec;
-		if(params.height > 0){
-			childHeightSpec = MeasureSpec.makeMeasureSpec(params.height, MeasureSpec.EXACTLY);
-		}else{
-			childHeightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-		}
-		
-		child.measure(childWidthSpec, childHeightSpec);
-	}
-	
-	private void setChildHeight(View child, int height){
-		ViewGroup.LayoutParams params = child.getLayoutParams();
-		params.height = height;
-		child.setLayoutParams(params);
-	}
-	
-	private void setHeadMargin(int height){
-		LayoutParams params = (LayoutParams) mHeadView.getLayoutParams();
-		params.topMargin = height - headOriginalHeight;
-		
-		mHeadView.setLayoutParams(params);
-	}
-	
-	private boolean shouldRefreshStart(){
-		if(null != mNormalView) return true;
-		if(null != mScrollView){
-			if(mScrollView.getChildAt(0).getScrollY() == 0) return true;
-		}
-		if(null != mAdapterView){
-			int top = mAdapterView.getChildAt(0).getTop();
-			int padding = mAdapterView.getPaddingTop();
-			if(mAdapterView.getFirstVisiblePosition() == 0){
-				if(top == 0 || Math.abs(top - padding) <= 3){
-					Log.d(TAG, "top-padding:" + Math.abs(top - padding));
-					return true;
-				}
-			}
-		}
-		
-		return false;
-	}
-	
-	private void smoothToOriginalSpot(int y){
-		moveRunnable = new MoveRunnable(y);
-		
-		handler.post(moveRunnable);
-	}
-	
-	private void stopMovement(){
-		handler.removeCallbacks(moveRunnable);
-		handler.removeCallbacks(headMoveRunnable);
-	}
-	
-	private void smoothHideHeadView(){
-		headMoveRunnable = new HeadMoveRunnable();
-		
-		handler.post(headMoveRunnable);
-	}
-	
-	@Override
-	public boolean onInterceptTouchEvent(MotionEvent event){
-		dx = event.getRawX();
-		dy = event.getRawY();
-		switch(event.getAction() & MotionEvent.ACTION_MASK){
-		case MotionEvent.ACTION_DOWN:
-			moveDistance = (int) dy;
-			break;
-		case MotionEvent.ACTION_MOVE:
-			moveDistance = (int) (event.getRawY() - moveDistance);
-			if(Math.abs(event.getRawX() - dx) < Math.abs(moveDistance)){
-				if(shouldRefreshStart() && moveDistance > 0){
-					Log.d(TAG, "shouldRefreshStart");
-					return true;
-				}
-			}
-			break;
-		case MotionEvent.ACTION_CANCEL:
-		case MotionEvent.ACTION_UP:
-			break;
-		}
-		
-		return super.onInterceptTouchEvent(event);
-	}
-	
-	@Override
-	public boolean onTouchEvent(MotionEvent event){
-		Log.d(TAG, "MODE:" + mCurrentRefreshStatus);
-		Log.d(TAG, "TOUCH:" + event.toString());
-		switch(event.getAction() & MotionEvent.ACTION_MASK){
-		case MotionEvent.ACTION_DOWN:
-			stopMovement();
-			moveDistance = 0;
-			dx = event.getX();
-			dy = event.getY();
-			break;
-		case MotionEvent.ACTION_MOVE:
-			moveDistance = (int) (event.getY() - dy);
-			switch(mCurrentRefreshStatus){
-			case MODE_IDLE:
-				Log.d(TAG, "IDLE");
-				if(shouldRefreshStart() && mCurrentRefreshStatus != MODE_REFRESHING && moveDistance > 0) mCurrentRefreshStatus = MODE_DRAGGING;
-			    break;
-			case MODE_DRAGGING:
-				if(moveDistance < 0){
-					moveDistance = 0;
-				}
-				Log.d(TAG, "DRAGGING");
-				if(moveDistance <= headOriginalHeight){
-					setHeadMargin((int) moveDistance);
-					mStickinessRefreshView.setHeight(0);
-					setChildHeight(mHeadView, headOriginalHeight);
-				}else{
-					setHeadMargin(headOriginalHeight);
-					mStickinessRefreshView.setHeight((int) moveDistance - headOriginalHeight);
-					setChildHeight(mHeadView, (int) moveDistance);
-					if(mStickinessRefreshView.isExceedMaximumHeight()){
-						mCurrentRefreshStatus = MODE_REFRESH_START;
-					}
-				}
-				break;
-			case MODE_REFRESH_START:
-				smoothToOriginalSpot(moveDistance);
-				mCurrentRefreshStatus = MODE_REFRESHING;
-				break;
-			case MODE_REFRESHING:
-				if(null != mDelegate) mDelegate.onBGARefreshLayoutBeginRefreshing();
-				break;
-			}
-			break;
-		case MotionEvent.ACTION_CANCEL:
-		case MotionEvent.ACTION_UP:
-			if(mCurrentRefreshStatus == MODE_DRAGGING) {
-				if(moveDistance > headOriginalHeight){
-					smoothToOriginalSpot(moveDistance);
-				}else{
-					smoothHideHeadView();
-				}
-			}
-			break;
-		}
-		return true;
-	}
+    private BGARefreshLayoutDelegate mDelegate;
+    private RefreshStatus mCurrentRefreshStatus = RefreshStatus.IDLE;
 
-	@Override
-	public void onCirclingFullyStop() {
-		smoothHideHeadView();
-	}
+    private class MoveRunnable implements Runnable {
+        int startY;
 
-	@Override
-	public void onPullFullyStop() {
-		
-	}
+        public MoveRunnable(int startY) {
+            stopMovement();
+            this.startY = startY;
+        }
 
-	public void endRefreshing() {
-		smoothHideHeadView();
-		mStickinessRefreshView.stopCirclingAndReturn();
-	}
+        @Override
+        public void run() {
+            startY += (headOriginalHeight - startY) * 0.5F;
 
-	public void setDelegate(BGARefreshLayoutDelegate delegate){
-		mDelegate = delegate;
-	}
+            mStickinessRefreshView.setHeight(startY - headOriginalHeight);
+            setChildHeight(mRefreshHeaderView, startY);
 
-	public interface BGARefreshLayoutDelegate {
-		/**
-		 * 开始刷新
-		 */
-		void onBGARefreshLayoutBeginRefreshing();
+            if (startY != headOriginalHeight) {
+                handler.postDelayed(moveRunnable, 20);
+            } else {
+                switch (mCurrentRefreshStatus) {
+                    case REFRESHING:
+                    case RELEASE_REFRESH:
+                        mStickinessRefreshView.circling();
+                        break;
+                    case PULL_DOWN:
+                        smoothHideHeadView();
+                        break;
+                }
+            }
+        }
+    }
 
-		/**
-		 * 开始加载更多
-		 */
-		void onBGARefreshLayoutBeginLoadingMore();
-	}
+    public class HeadMoveRunnable implements Runnable {
+        LayoutParams params;
 
-	public enum RefreshStatus {
-		IDLE, PULL_DOWN, RELEASE_REFRESH, REFRESHING
-	}
+        public HeadMoveRunnable() {
+            params = (LayoutParams) mRefreshHeaderView.getLayoutParams();
+        }
+
+        @Override
+        public void run() {
+            params.topMargin += (-headOriginalHeight - params.topMargin) * 0.5F;
+
+            mRefreshHeaderView.setLayoutParams(params);
+
+            if (params.topMargin != -headOriginalHeight) {
+                handler.postDelayed(headMoveRunnable, 20);
+            } else {
+                mCurrentRefreshStatus = RefreshStatus.IDLE;
+            }
+        }
+    }
+
+    public BGARefreshLayout(Context context) {
+        super(context);
+        init(context);
+    }
+
+    public BGARefreshLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+    }
+
+    private void init(Context context) {
+        setOrientation(LinearLayout.VERTICAL);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        mRefreshHeaderView = inflater.inflate(R.layout.head_pullrefresh, this, false);
+        measureChild(mRefreshHeaderView);
+        mStickinessRefreshView = (StickinessRefreshView) mRefreshHeaderView.findViewById(R.id.pull_widget);
+        mStickinessRefreshView.setOnStateChangeListener(this);
+
+        headOriginalHeight = mRefreshHeaderView.getMeasuredHeight();
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, headOriginalHeight);
+        params.topMargin = -headOriginalHeight;
+        addView(mRefreshHeaderView, params);
+
+        handler = new Handler();
+    }
+
+    @Override
+    public void onFinishInflate() {
+        super.onFinishInflate();
+
+        initContent();
+    }
+
+    private void initContent() {
+        int count = getChildCount();
+        if (count != 2)
+            throw new ArrayIndexOutOfBoundsException("this widget contain one child view at most and must contain one.");
+
+        View view = getChildAt(1);
+        if (view instanceof AdapterView<?>) {
+            mAdapterView = (AdapterView<?>) view;
+        } else if (view instanceof RecyclerView) {
+            mRecyclerView = (RecyclerView) view;
+        } else if (view instanceof ScrollView) {
+            mScrollView = (ScrollView) view;
+        } else {
+            mNormalView = view;
+        }
+    }
+
+    private void measureChild(View child) {
+        ViewGroup.LayoutParams params = child.getLayoutParams();
+        if (null == params) {
+            params = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        }
+
+        int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0, params.width);
+        int childHeightSpec;
+        if (params.height > 0) {
+            childHeightSpec = MeasureSpec.makeMeasureSpec(params.height, MeasureSpec.EXACTLY);
+        } else {
+            childHeightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        }
+
+        child.measure(childWidthSpec, childHeightSpec);
+    }
+
+    private void setChildHeight(View child, int height) {
+        ViewGroup.LayoutParams params = child.getLayoutParams();
+        params.height = height;
+        child.setLayoutParams(params);
+    }
+
+    private void setHeadMargin(int height) {
+        LayoutParams params = (LayoutParams) mRefreshHeaderView.getLayoutParams();
+        params.topMargin = height - headOriginalHeight;
+
+        mRefreshHeaderView.setLayoutParams(params);
+    }
+
+    private boolean shouldRefreshStart() {
+        if (null != mNormalView) {
+            return true;
+        }
+        if (null != mScrollView) {
+            if (mScrollView.getChildAt(0).getScrollY() == 0) return true;
+        }
+        if (null != mAdapterView) {
+            int top = mAdapterView.getChildAt(0).getTop();
+            int padding = mAdapterView.getPaddingTop();
+            if (mAdapterView.getFirstVisiblePosition() == 0) {
+                if (top == 0 || Math.abs(top - padding) <= 3) {
+                    return true;
+                }
+            }
+        }
+        if (null != mRecyclerView) {
+            int top = mRecyclerView.getChildAt(0).getTop();
+            int padding = mRecyclerView.getPaddingTop();
+            LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+            if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
+                if (top == 0 || Math.abs(top - padding) <= 3) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void smoothToOriginalSpot(int y) {
+        moveRunnable = new MoveRunnable(y);
+
+        handler.post(moveRunnable);
+    }
+
+    private void stopMovement() {
+        handler.removeCallbacks(moveRunnable);
+        handler.removeCallbacks(headMoveRunnable);
+    }
+
+    private void smoothHideHeadView() {
+        headMoveRunnable = new HeadMoveRunnable();
+
+        handler.post(headMoveRunnable);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        dx = event.getRawX();
+        dy = event.getRawY();
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+                moveDistance = (int) dy;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                moveDistance = (int) (event.getRawY() - moveDistance);
+                if (Math.abs(event.getRawX() - dx) < Math.abs(moveDistance)) {
+                    if (shouldRefreshStart() && moveDistance > 0) {
+                        Log.d(TAG, "shouldRefreshStart");
+                        return true;
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                break;
+        }
+
+        return super.onInterceptTouchEvent(event);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        Log.d(TAG, "MODE:" + mCurrentRefreshStatus);
+        Log.d(TAG, "TOUCH:" + event.toString());
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+                stopMovement();
+                moveDistance = 0;
+                dx = event.getX();
+                dy = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                moveDistance = (int) (event.getY() - dy);
+                switch (mCurrentRefreshStatus) {
+                    case IDLE:
+                        Log.d(TAG, "IDLE");
+                        if (shouldRefreshStart() && mCurrentRefreshStatus != RefreshStatus.REFRESHING && moveDistance > 0)
+                            mCurrentRefreshStatus = RefreshStatus.PULL_DOWN;
+                        break;
+                    case PULL_DOWN:
+                        if (moveDistance < 0) {
+                            moveDistance = 0;
+                        }
+                        Log.d(TAG, "DRAGGING");
+                        if (moveDistance <= headOriginalHeight) {
+                            setHeadMargin((int) moveDistance);
+                            mStickinessRefreshView.setHeight(0);
+                            setChildHeight(mRefreshHeaderView, headOriginalHeight);
+                        } else {
+                            setHeadMargin(headOriginalHeight);
+                            mStickinessRefreshView.setHeight((int) moveDistance - headOriginalHeight);
+                            setChildHeight(mRefreshHeaderView, (int) moveDistance);
+                            if (mStickinessRefreshView.isExceedMaximumHeight()) {
+                                mCurrentRefreshStatus = RefreshStatus.RELEASE_REFRESH;
+                            }
+                        }
+                        break;
+                    case RELEASE_REFRESH:
+                        smoothToOriginalSpot(moveDistance);
+                        mCurrentRefreshStatus = RefreshStatus.REFRESHING;
+                        break;
+                    case REFRESHING:
+                        if (null != mDelegate) mDelegate.onBGARefreshLayoutBeginRefreshing();
+                        break;
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                if (mCurrentRefreshStatus == RefreshStatus.PULL_DOWN) {
+                    if (moveDistance > headOriginalHeight) {
+                        smoothToOriginalSpot(moveDistance);
+                    } else {
+                        smoothHideHeadView();
+                    }
+                }
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onCirclingFullyStop() {
+        smoothHideHeadView();
+    }
+
+    @Override
+    public void onPullFullyStop() {
+
+    }
+
+    public void endRefreshing() {
+        smoothHideHeadView();
+        mStickinessRefreshView.stopCirclingAndReturn();
+    }
+
+    public void setDelegate(BGARefreshLayoutDelegate delegate) {
+        mDelegate = delegate;
+    }
+
+    public interface BGARefreshLayoutDelegate {
+        /**
+         * 开始刷新
+         */
+        void onBGARefreshLayoutBeginRefreshing();
+
+        /**
+         * 开始加载更多
+         */
+        void onBGARefreshLayoutBeginLoadingMore();
+    }
+
+    public enum RefreshStatus {
+        IDLE, PULL_DOWN, RELEASE_REFRESH, REFRESHING
+    }
 }
