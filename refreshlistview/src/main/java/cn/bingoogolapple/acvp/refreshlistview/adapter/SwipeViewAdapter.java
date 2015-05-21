@@ -6,6 +6,7 @@ import android.view.View;
 import java.util.List;
 
 import cn.bingoogolapple.acvp.refreshlistview.R;
+import cn.bingoogolapple.acvp.refreshlistview.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlistview.util.BGASwipeViewAdapter;
 import cn.bingoogolapple.acvp.refreshlistview.util.BGASwipeViewHolder;
 
@@ -14,10 +15,10 @@ import cn.bingoogolapple.acvp.refreshlistview.util.BGASwipeViewHolder;
  * 创建时间:15/5/21 上午12:41
  * 描述:
  */
-public class SwipeViewAdapter extends BGASwipeViewAdapter<String> {
+public class SwipeViewAdapter extends BGASwipeViewAdapter<RefreshModel> {
     private View.OnClickListener mOnClickListener;
 
-    public SwipeViewAdapter(Context context, View.OnClickListener onClickListener, List<String> datas) {
+    public SwipeViewAdapter(Context context, View.OnClickListener onClickListener, List<RefreshModel> datas) {
         super(context, datas, R.layout.item_swipelist, R.id.sl_item_swipelist_root);
         mOnClickListener = onClickListener;
     }
@@ -30,10 +31,11 @@ public class SwipeViewAdapter extends BGASwipeViewAdapter<String> {
     }
 
     @Override
-    protected void fillData(BGASwipeViewHolder viewHolder, String mode) {
-        viewHolder.getView(R.id.tv_item_swipelist_delete).setTag(mode);
+    protected void fillData(BGASwipeViewHolder viewHolder, RefreshModel model) {
+        viewHolder.getView(R.id.tv_item_swipelist_delete).setTag(model);
 
-        viewHolder.setText(R.id.tv_item_swipelist_name, mode);
+        viewHolder.setText(R.id.tv_item_swipelist_title, model.mTitle);
+        viewHolder.setText(R.id.tv_item_swipelist_detail, model.mDetail);
     }
 
 }

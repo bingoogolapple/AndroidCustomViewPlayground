@@ -20,9 +20,6 @@
             android:name=".activity.NormalActivity"
             android:label="Normal" />
         <activity
-            android:name=".activity.NormalSwipeActivity"
-            android:label="NormalSwipe" />
-        <activity
             android:name=".activity.MoocActivity"
             android:label="Mooc" />
     </application>

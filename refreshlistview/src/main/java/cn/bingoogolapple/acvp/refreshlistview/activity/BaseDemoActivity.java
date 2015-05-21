@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bingoogolapple.acvp.refreshlistview.R;
-import cn.bingoogolapple.acvp.refreshlistview.widget.BGANormalRefreshListView;
+import cn.bingoogolapple.acvp.refreshlistview.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlistview.widget.BGARefreshListView;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
@@ -20,27 +20,25 @@ import cn.bingoogolapple.bgabanner.BGABanner;
  * 创建时间:15/5/21 上午1:22
  * 描述:
  */
-public abstract class BaseNormalActivity extends AppCompatActivity implements BGARefreshListView.BGARefreshListViewDelegate, AdapterView.OnItemClickListener, View.OnClickListener {
-    protected BGANormalRefreshListView mRefreshListView;
-    protected List<String> mDatas;
+public abstract class BaseDemoActivity extends AppCompatActivity implements BGARefreshListView.BGARefreshListViewDelegate, AdapterView.OnItemClickListener, View.OnClickListener {
+    protected BGARefreshListView mRefreshListView;
+    protected List<RefreshModel> mDatas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_normal);
-        mRefreshListView = (BGANormalRefreshListView) findViewById(R.id.nrlv_normal_list);
+        setContentView(R.layout.activity_demo);
+        mRefreshListView = (BGARefreshListView) findViewById(R.id.rlv_demo_list);
+        mRefreshListView.setDelegate(this);
+        mRefreshListView.setOnItemClickListener(this);
+
         initDatas();
         initListView();
     }
 
-    private void initListView() {
-        initCustomHeaderView();
-        mRefreshListView.setDelegate(this);
-        mRefreshListView.setOnItemClickListener(this);
-        setAdapter();
-    }
+    protected abstract void initListView();
 
-    private void initCustomHeaderView() {
+    protected void initCustomHeaderView() {
         List<View> datas = new ArrayList<>();
         datas.add(getLayoutInflater().inflate(R.layout.view_one, null));
         datas.add(getLayoutInflater().inflate(R.layout.view_two, null));
@@ -53,12 +51,10 @@ public abstract class BaseNormalActivity extends AppCompatActivity implements BG
         mRefreshListView.addCustomHeaderView(customHeaderView);
     }
 
-    protected abstract void setAdapter();
-
     private void initDatas() {
         mDatas = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            mDatas.add("name" + i);
+        for (int i = 0; i < 3; i++) {
+            mDatas.add(new RefreshModel("title" + i, "detail" + i));
         }
     }
 
@@ -71,7 +67,7 @@ public abstract class BaseNormalActivity extends AppCompatActivity implements BG
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -81,16 +77,16 @@ public abstract class BaseNormalActivity extends AppCompatActivity implements BG
             @Override
             protected void onPostExecute(Void aVoid) {
                 mRefreshListView.endRefreshing();
-                List<String> datas = new ArrayList<>();
+                List<RefreshModel> datas = new ArrayList<>();
                 for (int i = 0; i < 3; i++) {
-                    datas.add("NewLoadMoreData" + i);
+                    datas.add(new RefreshModel("newTitle" + i, "newDetail" + i));
                 }
                 onEndRefreshing(datas);
             }
         }.execute();
     }
 
-    protected abstract void onEndRefreshing(List<String> datas);
+    protected abstract void onEndRefreshing(List<RefreshModel> datas);
 
     @Override
     public void onBGARefreshListViewBeginLoadingMore() {
@@ -112,22 +108,24 @@ public abstract class BaseNormalActivity extends AppCompatActivity implements BG
             protected void onPostExecute(Void aVoid) {
                 mRefreshListView.endRefreshing();
 
-                List<String> datas = new ArrayList<>();
+                List<RefreshModel> datas = new ArrayList<>();
                 for (int i = 0; i < 3; i++) {
-                    datas.add("NewLoadMoreData" + i);
+                    datas.add(new RefreshModel("moreTitle" + i, "moreDetail" + i));
                 }
                 onEndLoadingMore(datas);
             }
         }.execute();
     }
 
-    protected abstract void onEndLoadingMore(List<String> datas);
+    protected abstract void onEndLoadingMore(List<RefreshModel> datas);
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // 因为加了HeaderView，position需要减一
         int newPosition = position - 1;
         if (mDatas != null && mDatas.size() > 0 && newPosition > -1 && newPosition < mDatas.size()) {
-            Toast.makeText(this, "点击了" + mDatas.get(newPosition), Toast.LENGTH_SHORT).show();
+            RefreshModel refreshModel = mDatas.get(newPosition);
+            Toast.makeText(this, "点击了" + refreshModel.mTitle, Toast.LENGTH_SHORT).show();
         }
     }
 }
