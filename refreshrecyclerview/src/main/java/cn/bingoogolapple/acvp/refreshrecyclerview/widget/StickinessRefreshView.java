@@ -45,7 +45,7 @@ public class StickinessRefreshView extends View{
 	private CirclingRunnable circlingRunnable;
 	private BackRunnable backRunnable;
 	
-	private OnStateChangedListener onStateChangeListener;
+	private StickinessRefreshViewDelegate mDelegate;
 	
 	private boolean isInRotateMode;
 	private float degree;
@@ -122,14 +122,6 @@ public class StickinessRefreshView extends View{
 		mHandler.post(backRunnable);
 	}
 	
-	public void setOnStateChangeListener(OnStateChangedListener onStateChangeListener){
-		this.onStateChangeListener = onStateChangeListener;
-	}
-	
-	public OnStateChangedListener getOnStateChangeListener(){
-		return onStateChangeListener;
-	}
-	
 	public void setColor(int color){
 		paint.setColor(color);
 	}
@@ -197,11 +189,6 @@ public class StickinessRefreshView extends View{
 		}
 	}
 
-	public interface OnStateChangedListener{
-		void onCirclingFullyStop();
-		void onPullFullyStop();
-	}
-
 	private class PullRunnable implements Runnable{
 		private int movingHeight;
 
@@ -217,7 +204,7 @@ public class StickinessRefreshView extends View{
 			if(movingHeight > 0){
 				mHandler.postDelayed(pullRunnable, 20);
 			}else{
-				if(null != onStateChangeListener) onStateChangeListener.onPullFullyStop();
+				if(null != mDelegate) mDelegate.onPullFullyStop();
 			}
 		}
 	}
@@ -262,11 +249,20 @@ public class StickinessRefreshView extends View{
 			}else{
 				degree = 0;
 				isInRotateMode = false;
-				if(null != onStateChangeListener) onStateChangeListener.onCirclingFullyStop();
+				if(null != mDelegate) mDelegate.onCirclingFullyStop();
 			}
 
 			invalidate();
 		}
+	}
+
+	public void setDelegate(StickinessRefreshViewDelegate delegate){
+		mDelegate = delegate;
+	}
+
+	public interface StickinessRefreshViewDelegate {
+		void onCirclingFullyStop();
+		void onPullFullyStop();
 	}
 
 }

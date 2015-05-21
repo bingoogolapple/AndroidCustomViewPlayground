@@ -5,7 +5,7 @@
     android:orientation="vertical" >
     
     <cn.bingoogolapple.acvp.refreshrecyclerview.widget.StickinessRefreshView
-        android:id="@+id/pull_widget"
+        android:id="@+id/stickinessRefreshView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -21,8 +21,9 @@ import cn.bingoogolapple.acvp.refreshrecyclerview.R;
  * 创建时间:15/5/21 22:35
  * 描述:
  */
-public class BGARefreshLayout extends LinearLayout implements StickinessRefreshView.OnStateChangedListener {
+public class BGARefreshLayout extends LinearLayout implements StickinessRefreshView.StickinessRefreshViewDelegate {
     private static final String TAG = BGARefreshLayout.class.getSimpleName();
+    private Handler mHandler;
 
     private View mRefreshHeaderView;
     private StickinessRefreshView mStickinessRefreshView;
@@ -32,93 +33,43 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
     private RecyclerView mRecyclerView;
     private View mNormalView;
 
-    private float dx, dy;
-    private int moveDistance;
-    private int headOriginalHeight;
+    private float mDownX;
+    private float mDownY;
+    private int mMoveDistanceY;
 
-    private Handler handler;
+    private int mRefreshHeaderViewHeight;
+
+
     private MoveRunnable moveRunnable;
     private HeadMoveRunnable headMoveRunnable;
 
     private BGARefreshLayoutDelegate mDelegate;
     private RefreshStatus mCurrentRefreshStatus = RefreshStatus.IDLE;
 
-    private class MoveRunnable implements Runnable {
-        int startY;
-
-        public MoveRunnable(int startY) {
-            stopMovement();
-            this.startY = startY;
-        }
-
-        @Override
-        public void run() {
-            startY += (headOriginalHeight - startY) * 0.5F;
-
-            mStickinessRefreshView.setHeight(startY - headOriginalHeight);
-            setChildHeight(mRefreshHeaderView, startY);
-
-            if (startY != headOriginalHeight) {
-                handler.postDelayed(moveRunnable, 20);
-            } else {
-                switch (mCurrentRefreshStatus) {
-                    case REFRESHING:
-                    case RELEASE_REFRESH:
-                        mStickinessRefreshView.circling();
-                        break;
-                    case PULL_DOWN:
-                        smoothHideHeadView();
-                        break;
-                }
-            }
-        }
-    }
-
-    public class HeadMoveRunnable implements Runnable {
-        LayoutParams params;
-
-        public HeadMoveRunnable() {
-            params = (LayoutParams) mRefreshHeaderView.getLayoutParams();
-        }
-
-        @Override
-        public void run() {
-            params.topMargin += (-headOriginalHeight - params.topMargin) * 0.5F;
-
-            mRefreshHeaderView.setLayoutParams(params);
-
-            if (params.topMargin != -headOriginalHeight) {
-                handler.postDelayed(headMoveRunnable, 20);
-            } else {
-                mCurrentRefreshStatus = RefreshStatus.IDLE;
-            }
-        }
-    }
 
     public BGARefreshLayout(Context context) {
-        super(context);
-        init(context);
+        this(context, null);
     }
 
     public BGARefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+
+        setOrientation(LinearLayout.VERTICAL);
+        mHandler = new Handler();
+
+        initRefreshHeaderView();
     }
 
-    private void init(Context context) {
-        setOrientation(LinearLayout.VERTICAL);
-        LayoutInflater inflater = LayoutInflater.from(context);
-        mRefreshHeaderView = inflater.inflate(R.layout.head_pullrefresh, this, false);
+    private void initRefreshHeaderView() {
+        mRefreshHeaderView = LayoutInflater.from(getContext()).inflate(R.layout.view_refresh_header_stickiness, this, false);
         measureChild(mRefreshHeaderView);
-        mStickinessRefreshView = (StickinessRefreshView) mRefreshHeaderView.findViewById(R.id.pull_widget);
-        mStickinessRefreshView.setOnStateChangeListener(this);
+        mStickinessRefreshView = (StickinessRefreshView) mRefreshHeaderView.findViewById(R.id.stickinessRefreshView);
+        mStickinessRefreshView.setDelegate(this);
 
-        headOriginalHeight = mRefreshHeaderView.getMeasuredHeight();
-        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, headOriginalHeight);
-        params.topMargin = -headOriginalHeight;
+        mRefreshHeaderViewHeight = mRefreshHeaderView.getMeasuredHeight();
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, mRefreshHeaderViewHeight);
+        params.topMargin = -mRefreshHeaderViewHeight;
         addView(mRefreshHeaderView, params);
-
-        handler = new Handler();
     }
 
     @Override
@@ -170,7 +121,7 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
 
     private void setHeadMargin(int height) {
         LayoutParams params = (LayoutParams) mRefreshHeaderView.getLayoutParams();
-        params.topMargin = height - headOriginalHeight;
+        params.topMargin = height - mRefreshHeaderViewHeight;
 
         mRefreshHeaderView.setLayoutParams(params);
     }
@@ -207,32 +158,32 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
     private void smoothToOriginalSpot(int y) {
         moveRunnable = new MoveRunnable(y);
 
-        handler.post(moveRunnable);
+        mHandler.post(moveRunnable);
     }
 
     private void stopMovement() {
-        handler.removeCallbacks(moveRunnable);
-        handler.removeCallbacks(headMoveRunnable);
+        mHandler.removeCallbacks(moveRunnable);
+        mHandler.removeCallbacks(headMoveRunnable);
     }
 
     private void smoothHideHeadView() {
         headMoveRunnable = new HeadMoveRunnable();
 
-        handler.post(headMoveRunnable);
+        mHandler.post(headMoveRunnable);
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        dx = event.getRawX();
-        dy = event.getRawY();
+        mDownX = event.getRawX();
+        mDownY = event.getRawY();
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                moveDistance = (int) dy;
+                mMoveDistanceY = (int) mDownY;
                 break;
             case MotionEvent.ACTION_MOVE:
-                moveDistance = (int) (event.getRawY() - moveDistance);
-                if (Math.abs(event.getRawX() - dx) < Math.abs(moveDistance)) {
-                    if (shouldRefreshStart() && moveDistance > 0) {
+                mMoveDistanceY = (int) (event.getRawY() - mMoveDistanceY);
+                if (Math.abs(event.getRawX() - mDownX) < Math.abs(mMoveDistanceY)) {
+                    if (shouldRefreshStart() && mMoveDistanceY > 0) {
                         Log.d(TAG, "shouldRefreshStart");
                         return true;
                     }
@@ -248,43 +199,40 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.d(TAG, "MODE:" + mCurrentRefreshStatus);
-        Log.d(TAG, "TOUCH:" + event.toString());
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 stopMovement();
-                moveDistance = 0;
-                dx = event.getX();
-                dy = event.getY();
+                mMoveDistanceY = 0;
+                mDownX = event.getX();
+                mDownY = event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                moveDistance = (int) (event.getY() - dy);
+                mMoveDistanceY = (int) (event.getY() - mDownY);
                 switch (mCurrentRefreshStatus) {
                     case IDLE:
                         Log.d(TAG, "IDLE");
-                        if (shouldRefreshStart() && mCurrentRefreshStatus != RefreshStatus.REFRESHING && moveDistance > 0)
+                        if (shouldRefreshStart() && mCurrentRefreshStatus != RefreshStatus.REFRESHING && mMoveDistanceY > 0)
                             mCurrentRefreshStatus = RefreshStatus.PULL_DOWN;
                         break;
                     case PULL_DOWN:
-                        if (moveDistance < 0) {
-                            moveDistance = 0;
+                        if (mMoveDistanceY < 0) {
+                            mMoveDistanceY = 0;
                         }
-                        Log.d(TAG, "DRAGGING");
-                        if (moveDistance <= headOriginalHeight) {
-                            setHeadMargin((int) moveDistance);
+                        if (mMoveDistanceY <= mRefreshHeaderViewHeight) {
+                            setHeadMargin(mMoveDistanceY);
                             mStickinessRefreshView.setHeight(0);
-                            setChildHeight(mRefreshHeaderView, headOriginalHeight);
+                            setChildHeight(mRefreshHeaderView, mRefreshHeaderViewHeight);
                         } else {
-                            setHeadMargin(headOriginalHeight);
-                            mStickinessRefreshView.setHeight((int) moveDistance - headOriginalHeight);
-                            setChildHeight(mRefreshHeaderView, (int) moveDistance);
+                            setHeadMargin(mRefreshHeaderViewHeight);
+                            mStickinessRefreshView.setHeight(mMoveDistanceY - mRefreshHeaderViewHeight);
+                            setChildHeight(mRefreshHeaderView, mMoveDistanceY);
                             if (mStickinessRefreshView.isExceedMaximumHeight()) {
                                 mCurrentRefreshStatus = RefreshStatus.RELEASE_REFRESH;
                             }
                         }
                         break;
                     case RELEASE_REFRESH:
-                        smoothToOriginalSpot(moveDistance);
+                        smoothToOriginalSpot(mMoveDistanceY);
                         mCurrentRefreshStatus = RefreshStatus.REFRESHING;
                         break;
                     case REFRESHING:
@@ -295,8 +243,8 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
                 if (mCurrentRefreshStatus == RefreshStatus.PULL_DOWN) {
-                    if (moveDistance > headOriginalHeight) {
-                        smoothToOriginalSpot(moveDistance);
+                    if (mMoveDistanceY > mRefreshHeaderViewHeight) {
+                        smoothToOriginalSpot(mMoveDistanceY);
                     } else {
                         smoothHideHeadView();
                     }
@@ -323,6 +271,58 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
 
     public void setDelegate(BGARefreshLayoutDelegate delegate) {
         mDelegate = delegate;
+    }
+
+    private class MoveRunnable implements Runnable {
+        int startY;
+
+        public MoveRunnable(int startY) {
+            stopMovement();
+            this.startY = startY;
+        }
+
+        @Override
+        public void run() {
+            startY += (mRefreshHeaderViewHeight - startY) * 0.5F;
+
+            mStickinessRefreshView.setHeight(startY - mRefreshHeaderViewHeight);
+            setChildHeight(mRefreshHeaderView, startY);
+
+            if (startY != mRefreshHeaderViewHeight) {
+                mHandler.postDelayed(moveRunnable, 20);
+            } else {
+                switch (mCurrentRefreshStatus) {
+                    case REFRESHING:
+                    case RELEASE_REFRESH:
+                        mStickinessRefreshView.circling();
+                        break;
+                    case PULL_DOWN:
+                        smoothHideHeadView();
+                        break;
+                }
+            }
+        }
+    }
+
+    public class HeadMoveRunnable implements Runnable {
+        LayoutParams params;
+
+        public HeadMoveRunnable() {
+            params = (LayoutParams) mRefreshHeaderView.getLayoutParams();
+        }
+
+        @Override
+        public void run() {
+            params.topMargin += (-mRefreshHeaderViewHeight - params.topMargin) * 0.5F;
+
+            mRefreshHeaderView.setLayoutParams(params);
+
+            if (params.topMargin != -mRefreshHeaderViewHeight) {
+                mHandler.postDelayed(headMoveRunnable, 20);
+            } else {
+                mCurrentRefreshStatus = RefreshStatus.IDLE;
+            }
+        }
     }
 
     public interface BGARefreshLayoutDelegate {
