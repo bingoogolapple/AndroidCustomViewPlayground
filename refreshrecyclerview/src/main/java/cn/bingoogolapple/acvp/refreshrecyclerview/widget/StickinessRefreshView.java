@@ -22,7 +22,7 @@ import cn.bingoogolapple.acvp.refreshrecyclerview.R;
  * @author caifangmao8@gmail.com
  *
  */
-public class PullWidget extends View{
+public class StickinessRefreshView extends View{
 	
 	private static final String TAG = "PullWidget";
 	
@@ -124,15 +124,15 @@ public class PullWidget extends View{
 		}
 	}
 
-	public PullWidget(Context context){
+	public StickinessRefreshView(Context context){
 		this(context, null);
 	}
 	
-	public PullWidget(Context context, AttributeSet attrs){
+	public StickinessRefreshView(Context context, AttributeSet attrs){
 		this(context, attrs, 0);
 	}
 	
-	public PullWidget(Context context, AttributeSet attrs, int defStyle){
+	public StickinessRefreshView(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
 		
 		topBound = new RectF();

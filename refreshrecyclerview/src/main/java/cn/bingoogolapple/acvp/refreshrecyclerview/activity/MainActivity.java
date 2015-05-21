@@ -15,9 +15,9 @@ import cn.bingoogolapple.acvp.refreshrecyclerview.R;
 import cn.bingoogolapple.acvp.refreshrecyclerview.adapter.RefreshModeAdapter;
 import cn.bingoogolapple.acvp.refreshrecyclerview.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshrecyclerview.widget.BGARefreshLayout;
-import cn.bingoogolapple.acvp.refreshrecyclerview.widget.Divider;
-import cn.bingoogolapple.acvp.refreshrecyclerview.widget.OnItemClickListener;
-import cn.bingoogolapple.acvp.refreshrecyclerview.widget.OnItemLongClickListener;
+import cn.bingoogolapple.acvp.refreshrecyclerview.util.Divider;
+import cn.bingoogolapple.acvp.refreshrecyclerview.util.OnItemClickListener;
+import cn.bingoogolapple.acvp.refreshrecyclerview.util.OnItemLongClickListener;
 
 public class MainActivity extends AppCompatActivity implements OnItemClickListener, OnItemLongClickListener, BGARefreshLayout.BGARefreshLayoutDelegate {
     private BGARefreshLayout mRefreshRl;

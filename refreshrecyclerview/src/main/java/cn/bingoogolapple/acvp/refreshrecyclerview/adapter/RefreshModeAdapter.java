@@ -3,8 +3,8 @@ package cn.bingoogolapple.acvp.refreshrecyclerview.adapter;
 import cn.bingoogolapple.acvp.refreshrecyclerview.R;
 import cn.bingoogolapple.acvp.refreshrecyclerview.activity.MainActivity;
 import cn.bingoogolapple.acvp.refreshrecyclerview.mode.RefreshModel;
-import cn.bingoogolapple.acvp.refreshrecyclerview.widget.BGARecyclerViewAdapter;
-import cn.bingoogolapple.acvp.refreshrecyclerview.widget.BGARecyclerViewHolder;
+import cn.bingoogolapple.acvp.refreshrecyclerview.util.BGARecyclerViewAdapter;
+import cn.bingoogolapple.acvp.refreshrecyclerview.util.BGARecyclerViewHolder;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com

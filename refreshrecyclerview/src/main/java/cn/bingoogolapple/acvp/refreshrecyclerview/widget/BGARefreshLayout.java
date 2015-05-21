@@ -14,7 +14,7 @@ import android.widget.ScrollView;
 
 import cn.bingoogolapple.acvp.refreshrecyclerview.R;
 
-public class BGARefreshLayout extends LinearLayout implements PullWidget.OnStateChangedListener {
+public class BGARefreshLayout extends LinearLayout implements StickinessRefreshView.OnStateChangedListener {
 	private static final String TAG = BGARefreshLayout.class.getSimpleName();
 	
 	private static final int MODE_REFRESHING = 0;
@@ -22,14 +22,15 @@ public class BGARefreshLayout extends LinearLayout implements PullWidget.OnState
 	private static final int MODE_DRAGGING = 2;
 	private static final int MODE_REFRESH_START = 3;
 	
-	private int mode = MODE_IDLE;
-	
+	private int mCurrentRefreshStatus = MODE_IDLE;
+
 	private View mHeadView;
+	private StickinessRefreshView mStickinessRefreshView;
+
 	private AdapterView<?> mAdapterView;
 	private ScrollView mScrollView;
 	private View mNormalView;
-	private PullWidget mPullWidget;
-	
+
 	private float dx,dy;
 	private int moveDistance;
 	private int headOriginalHeight;
@@ -39,6 +40,7 @@ public class BGARefreshLayout extends LinearLayout implements PullWidget.OnState
 	private HeadMoveRunnable headMoveRunnable;
 	
 	private BGARefreshLayoutDelegate mDelegate;
+//	private RefreshStatus mCurrentRefreshStatus = RefreshStatus.IDLE;
 
 	private class MoveRunnable implements Runnable{
 		int startY;
@@ -52,16 +54,16 @@ public class BGARefreshLayout extends LinearLayout implements PullWidget.OnState
 		public void run(){
 			startY += (headOriginalHeight - startY) * 0.5F;
 			
-			mPullWidget.setHeight(startY - headOriginalHeight);
+			mStickinessRefreshView.setHeight(startY - headOriginalHeight);
 			setChildHeight(mHeadView, startY);
 			
 			if(startY != headOriginalHeight){
 				handler.postDelayed(moveRunnable, 20);
 			}else{
-				switch(mode){
+				switch(mCurrentRefreshStatus){
 				case MODE_REFRESHING:
 				case MODE_REFRESH_START:
-					mPullWidget.circling();
+					mStickinessRefreshView.circling();
 					break;
 				case MODE_DRAGGING:
 					smoothHideHeadView();
@@ -87,7 +89,7 @@ public class BGARefreshLayout extends LinearLayout implements PullWidget.OnState
 			if(params.topMargin != -headOriginalHeight){
 				handler.postDelayed(headMoveRunnable, 20);
 			}else{
-				mode = MODE_IDLE;
+				mCurrentRefreshStatus = MODE_IDLE;
 			}
 		}
 	}
@@ -107,8 +109,8 @@ public class BGARefreshLayout extends LinearLayout implements PullWidget.OnState
 		LayoutInflater inflater = LayoutInflater.from(context);
 		mHeadView = inflater.inflate(R.layout.head_pullrefresh, this, false);
 		measureChild(mHeadView);
-		mPullWidget = (PullWidget) mHeadView.findViewById(R.id.pull_widget);
-		mPullWidget.setOnStateChangeListener(this);
+		mStickinessRefreshView = (StickinessRefreshView) mHeadView.findViewById(R.id.pull_widget);
+		mStickinessRefreshView.setOnStateChangeListener(this);
 		
 		headOriginalHeight = mHeadView.getMeasuredHeight();
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, headOriginalHeight);
@@ -205,14 +207,6 @@ public class BGARefreshLayout extends LinearLayout implements PullWidget.OnState
 		handler.post(headMoveRunnable);
 	}
 	
-	public void setDelegate(BGARefreshLayoutDelegate delegate){
-		mDelegate = delegate;
-	}
-
-	public void onRefreshComplete(){
-		mPullWidget.stopCirclingAndReturn();
-	}
-	
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent event){
 		dx = event.getRawX();
@@ -240,7 +234,7 @@ public class BGARefreshLayout extends LinearLayout implements PullWidget.OnState
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
-		Log.d(TAG, "MODE:" + mode);
+		Log.d(TAG, "MODE:" + mCurrentRefreshStatus);
 		Log.d(TAG, "TOUCH:" + event.toString());
 		switch(event.getAction() & MotionEvent.ACTION_MASK){
 		case MotionEvent.ACTION_DOWN:
@@ -251,10 +245,10 @@ public class BGARefreshLayout extends LinearLayout implements PullWidget.OnState
 			break;
 		case MotionEvent.ACTION_MOVE:
 			moveDistance = (int) (event.getY() - dy);
-			switch(mode){
+			switch(mCurrentRefreshStatus){
 			case MODE_IDLE:
 				Log.d(TAG, "IDLE");
-				if(shouldRefreshStart() && mode != MODE_REFRESHING && moveDistance > 0) mode = MODE_DRAGGING;
+				if(shouldRefreshStart() && mCurrentRefreshStatus != MODE_REFRESHING && moveDistance > 0) mCurrentRefreshStatus = MODE_DRAGGING;
 			    break;
 			case MODE_DRAGGING:
 				if(moveDistance < 0){
@@ -263,20 +257,20 @@ public class BGARefreshLayout extends LinearLayout implements PullWidget.OnState
 				Log.d(TAG, "DRAGGING");
 				if(moveDistance <= headOriginalHeight){
 					setHeadMargin((int) moveDistance);
-					mPullWidget.setHeight(0);
+					mStickinessRefreshView.setHeight(0);
 					setChildHeight(mHeadView, headOriginalHeight);
 				}else{
 					setHeadMargin(headOriginalHeight);
-					mPullWidget.setHeight((int) moveDistance - headOriginalHeight);
+					mStickinessRefreshView.setHeight((int) moveDistance - headOriginalHeight);
 					setChildHeight(mHeadView, (int) moveDistance);
-					if(mPullWidget.isExceedMaximumHeight()){
-						mode = MODE_REFRESH_START;
+					if(mStickinessRefreshView.isExceedMaximumHeight()){
+						mCurrentRefreshStatus = MODE_REFRESH_START;
 					}
 				}
 				break;
 			case MODE_REFRESH_START:
 				smoothToOriginalSpot(moveDistance);
-				mode = MODE_REFRESHING;
+				mCurrentRefreshStatus = MODE_REFRESHING;
 				break;
 			case MODE_REFRESHING:
 				if(null != mDelegate) mDelegate.onBGARefreshLayoutBeginRefreshing();
@@ -285,7 +279,7 @@ public class BGARefreshLayout extends LinearLayout implements PullWidget.OnState
 			break;
 		case MotionEvent.ACTION_CANCEL:
 		case MotionEvent.ACTION_UP:
-			if(mode == MODE_DRAGGING) {
+			if(mCurrentRefreshStatus == MODE_DRAGGING) {
 				if(moveDistance > headOriginalHeight){
 					smoothToOriginalSpot(moveDistance);
 				}else{
@@ -309,6 +303,11 @@ public class BGARefreshLayout extends LinearLayout implements PullWidget.OnState
 
 	public void endRefreshing() {
 		smoothHideHeadView();
+		mStickinessRefreshView.stopCirclingAndReturn();
+	}
+
+	public void setDelegate(BGARefreshLayoutDelegate delegate){
+		mDelegate = delegate;
 	}
 
 	public interface BGARefreshLayoutDelegate {
@@ -321,5 +320,9 @@ public class BGARefreshLayout extends LinearLayout implements PullWidget.OnState
 		 * 开始加载更多
 		 */
 		void onBGARefreshLayoutBeginLoadingMore();
+	}
+
+	public enum RefreshStatus {
+		IDLE, PULL_DOWN, RELEASE_REFRESH, REFRESHING
 	}
 }

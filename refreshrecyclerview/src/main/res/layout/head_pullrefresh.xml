@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
     
-    <cn.bingoogolapple.acvp.refreshrecyclerview.widget.PullWidget
+    <cn.bingoogolapple.acvp.refreshrecyclerview.widget.StickinessRefreshView
         android:id="@+id/pull_widget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

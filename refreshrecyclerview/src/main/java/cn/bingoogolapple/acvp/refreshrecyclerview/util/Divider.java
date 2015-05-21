@@ -1,4 +1,4 @@
-package cn.bingoogolapple.acvp.refreshrecyclerview.widget;
+package cn.bingoogolapple.acvp.refreshrecyclerview.util;
 
 import android.content.Context;
 import android.graphics.Canvas;
