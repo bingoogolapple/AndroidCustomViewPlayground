@@ -198,7 +198,7 @@ public class BGARefreshListView extends ListView implements AbsListView.OnScroll
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-                    if (handleActionUp(event)) {
+                    if (handleActionUp()) {
                         return true;
                     }
                     break;
@@ -228,8 +228,7 @@ public class BGARefreshListView extends ListView implements AbsListView.OnScroll
         if (mDownY == -1) {
             mDownY = (int) event.getY();
         }
-        int moveY = (int) event.getY();
-        int diffY = moveY - mDownY;
+        int diffY = (int) event.getY() - mDownY;
 
         diffY = (int) (diffY / mRefreshViewHolder.getPaddingTopScale());
 
@@ -274,10 +273,9 @@ public class BGARefreshListView extends ListView implements AbsListView.OnScroll
     /**
      * 处理手指抬起事件
      *
-     * @param event
      * @return true表示自己消耗掉该事件，false表示不消耗该事件
      */
-    private boolean handleActionUp(MotionEvent event) {
+    private boolean handleActionUp() {
         mDownY = -1;
 
         boolean isReturnTrue = false;

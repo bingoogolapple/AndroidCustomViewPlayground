@@ -33,15 +33,21 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
     private RecyclerView mRecyclerView;
     private View mNormalView;
 
-    private float mDownX;
-    private float mDownY;
-    private int mMoveDistanceY;
+    private int mTouchDownY = -1;
+
+    private float mInterceptTouchDownX;
+    private float mInterceptTouchDownY;
+
+    private int mMinRefreshHeaderViewMarginTop;
+    private int mMaxRefreshHeaderViewMarginTop;
+
+
 
     private StickinessRefreshViewMoveTask mStickinessRefreshViewMoveTask;
     private RefreshHeaderViewMoveTask mRefreshHeaderViewMoveTask;
 
     private BGARefreshLayoutDelegate mDelegate;
-    private RefreshStatus mCurrentRefreshStatus = RefreshStatus.IDLE;
+    private RefreshStatus mCurrentRefreshStatus = RefreshStatus.PULL_DOWN;
 
     public BGARefreshLayout(Context context) {
         this(context, null);
@@ -60,12 +66,13 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
         mRefreshHeaderView = LayoutInflater.from(getContext()).inflate(R.layout.view_refresh_header_stickiness, this, false);
         mRefreshHeaderView.measure(0, 0);
         mRefreshHeaderViewHeight = mRefreshHeaderView.getMeasuredHeight();
+        mMinRefreshHeaderViewMarginTop = -mRefreshHeaderViewHeight;
 
         mStickinessRefreshView = (StickinessRefreshView) mRefreshHeaderView.findViewById(R.id.stickinessRefreshView);
         mStickinessRefreshView.setDelegate(this);
 
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, mRefreshHeaderViewHeight);
-        params.topMargin = -mRefreshHeaderViewHeight;
+        params.topMargin = mMinRefreshHeaderViewMarginTop;
         addView(mRefreshHeaderView, params);
     }
 
@@ -91,16 +98,15 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        mDownX = event.getRawX();
-        mDownY = event.getRawY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mMoveDistanceY = (int) mDownY;
+                mInterceptTouchDownX = event.getRawX();
+                mInterceptTouchDownY = event.getRawY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                mMoveDistanceY = (int) (event.getRawY() - mMoveDistanceY);
-                if (Math.abs(event.getRawX() - mDownX) < Math.abs(mMoveDistanceY)) {
-                    if (shouldHandleRefresh() && mMoveDistanceY > 0) {
+                int interceptTouchMoveDistanceY = (int) (event.getRawY() - mInterceptTouchDownY);
+                if (Math.abs(event.getRawX() - mInterceptTouchDownX) < Math.abs(interceptTouchMoveDistanceY)) {
+                    if (shouldHandleRefresh() && interceptTouchMoveDistanceY > 0) {
                         return true;
                     }
                 }
@@ -151,56 +157,84 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 stopMovement();
-                mMoveDistanceY = 0;
-                mDownX = event.getX();
-                mDownY = event.getY();
+                mTouchDownY = (int)event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                mMoveDistanceY = (int) (event.getY() - mDownY);
-                switch (mCurrentRefreshStatus) {
-                    case IDLE:
-                        if (shouldHandleRefresh() && mCurrentRefreshStatus != RefreshStatus.REFRESHING && mMoveDistanceY > 0) {
-                            mCurrentRefreshStatus = RefreshStatus.PULL_DOWN;
-                        }
-                        break;
-                    case PULL_DOWN:
-                        if (mMoveDistanceY < 0) {
-                            mMoveDistanceY = 0;
-                        }
-                        if (mMoveDistanceY <= mRefreshHeaderViewHeight) {
-                            setRefreshHeaderViewMarginTop(mMoveDistanceY);
-                            mStickinessRefreshView.setHeight(0);
-                            setChildHeight(mRefreshHeaderView, mRefreshHeaderViewHeight);
-                        } else {
-                            setRefreshHeaderViewMarginTop(mRefreshHeaderViewHeight);
-                            mStickinessRefreshView.setHeight(mMoveDistanceY - mRefreshHeaderViewHeight);
-                            setChildHeight(mRefreshHeaderView, mMoveDistanceY);
-                            if (mStickinessRefreshView.isExceedMaximumHeight()) {
-                                mCurrentRefreshStatus = RefreshStatus.RELEASE_REFRESH;
-                            }
-                        }
-                        break;
-                    case RELEASE_REFRESH:
-                        smoothToOriginalSpot(mMoveDistanceY);
-                        mCurrentRefreshStatus = RefreshStatus.REFRESHING;
-                        break;
-                    case REFRESHING:
-                        if (null != mDelegate) mDelegate.onBGARefreshLayoutBeginRefreshing();
-                        break;
+                if (handleActionMove(event)) {
+                    return true;
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-                if (mCurrentRefreshStatus == RefreshStatus.PULL_DOWN) {
-                    if (mMoveDistanceY > mRefreshHeaderViewHeight) {
-                        smoothToOriginalSpot(mMoveDistanceY);
-                    } else {
-                        smoothHideHeadView();
-                    }
+                if (handleActionUp()) {
+                    return true;
                 }
+//                if (mCurrentRefreshStatus == RefreshStatus.PULL_DOWN) {
+//                    int diffY = (int) (event.getY() - mTouchDownY);
+//                    if (diffY > mRefreshHeaderViewHeight) {
+//                        smoothToOriginalSpot(diffY);
+//                    } else {
+//                        smoothHideHeadView();
+//                    }
+//                }
                 break;
         }
         return true;
+    }
+
+    private boolean handleActionMove(MotionEvent event) {
+        // 如果处于正在刷新状态，则跳出switch语句，执行父控件的touch事件
+        if (mCurrentRefreshStatus == RefreshStatus.REFRESHING) {
+            return false;
+        }
+
+        if (mTouchDownY == -1) {
+            mTouchDownY = (int) event.getY();
+        }
+        int diffY = (int) event.getY() - mTouchDownY;
+
+        if (diffY > 0 && shouldHandleRefresh()) {
+
+            switch (mCurrentRefreshStatus) {
+                case PULL_DOWN:
+                    if (diffY < 0) {
+                        diffY = 0;
+                    }
+                    if (diffY <= mRefreshHeaderViewHeight) {
+                        setRefreshHeaderViewMarginTop(diffY);
+                        mStickinessRefreshView.setHeight(0);
+                        setChildHeight(mRefreshHeaderView, mRefreshHeaderViewHeight);
+                    } else {
+                        setRefreshHeaderViewMarginTop(mRefreshHeaderViewHeight);
+                        mStickinessRefreshView.setHeight(diffY - mRefreshHeaderViewHeight);
+                        setChildHeight(mRefreshHeaderView, diffY);
+                        if (mStickinessRefreshView.isExceedMaximumHeight()) {
+                            mCurrentRefreshStatus = RefreshStatus.RELEASE_REFRESH;
+                        }
+                    }
+                    break;
+                case RELEASE_REFRESH:
+                    smoothToOriginalSpot(diffY);
+                    mCurrentRefreshStatus = RefreshStatus.REFRESHING;
+                    break;
+                case REFRESHING:
+                    if (null != mDelegate) mDelegate.onBGARefreshLayoutBeginRefreshing();
+                    break;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean handleActionUp() {
+        mTouchDownY = -1;
+        boolean isReturnTrue = false;
+        // 如果当前头部刷新控件没有完全隐藏，则需要返回true，自己消耗ACTION_UP事件
+
+
+
+        return isReturnTrue;
     }
 
     private void setRefreshHeaderViewMarginTop(int height) {
@@ -296,7 +330,7 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
             if (params.topMargin != -mRefreshHeaderViewHeight) {
                 mHandler.postDelayed(mRefreshHeaderViewMoveTask, 20);
             } else {
-                mCurrentRefreshStatus = RefreshStatus.IDLE;
+                mCurrentRefreshStatus = RefreshStatus.PULL_DOWN;
             }
         }
     }
@@ -314,6 +348,6 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
     }
 
     public enum RefreshStatus {
-        IDLE, PULL_DOWN, RELEASE_REFRESH, REFRESHING
+        PULL_DOWN, RELEASE_REFRESH, REFRESHING
     }
 }
