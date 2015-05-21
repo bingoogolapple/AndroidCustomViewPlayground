@@ -117,7 +117,8 @@ public abstract class BGARefreshListView extends ListView implements AbsListView
             mRefreshHeaderViewHeight = mRefreshHeaderView.getMeasuredHeight();
             mMinWholeHeaderViewPaddingTop = -mRefreshHeaderViewHeight;
             mMaxWholeHeaderViewPaddingTop = mRefreshHeaderViewHeight * 2 / 5;
-            printLog("refreshHeaderViewHeight = " + mRefreshHeaderViewHeight);
+            printLog("mMinWholeHeaderViewPaddingTop = " + mMinWholeHeaderViewPaddingTop);
+            printLog("mMaxWholeHeaderViewPaddingTop = " + mMaxWholeHeaderViewPaddingTop);
 
             hiddenRefreshHeaderView();
         }
@@ -216,7 +217,6 @@ public abstract class BGARefreshListView extends ListView implements AbsListView
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                printLog("按下");
                 mDownY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -262,7 +262,6 @@ public abstract class BGARefreshListView extends ListView implements AbsListView
                     }
 
                     paddingTop = Math.min(paddingTop, mMaxWholeHeaderViewPaddingTop);
-
                     mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
                     return true;
                 }
@@ -270,11 +269,16 @@ public abstract class BGARefreshListView extends ListView implements AbsListView
             case MotionEvent.ACTION_UP:
                 mDownY = -1;
 
+                printLog("mWholeHeaderView.getPaddingTop() = " + mWholeHeaderView.getPaddingTop());
+                boolean isReturnTrue = false;
+                // 如果当前头部刷新控件没有完全隐藏，则需要返回true，自己消费手指抬起事件
+                if (mWholeHeaderView.getPaddingTop() != mMinWholeHeaderViewPaddingTop) {
+                    isReturnTrue = true;
+                }
+
                 if (mCurrentRefreshStatus == RefreshStatus.PULL_DOWN) {
                     // 处于下拉刷新状态，松手时隐藏下拉刷新控件
                     hiddenRefreshHeaderView();
-
-//                    return true;
                 } else if (mCurrentRefreshStatus == RefreshStatus.RELEASE_REFRESH) {
                     // 处于松开进入刷新状态，松手时完全显示下拉刷新控件，进入正在刷新状态
                     mWholeHeaderView.setPadding(0, 0, 0, 0);
@@ -284,7 +288,9 @@ public abstract class BGARefreshListView extends ListView implements AbsListView
                     if (mDelegate != null) {
                         mDelegate.onBGARefreshListViewBeginRefreshing();
                     }
+                }
 
+                if (isReturnTrue) {
                     return true;
                 }
                 break;
