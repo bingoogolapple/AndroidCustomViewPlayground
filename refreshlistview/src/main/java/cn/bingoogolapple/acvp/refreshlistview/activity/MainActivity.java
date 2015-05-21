@@ -31,4 +31,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, NormalSwipeActivity.class));
     }
 
+    public void changeToMooc(View v) {
+        startActivity(new Intent(this, MoocActivity.class));
+    }
+
 }

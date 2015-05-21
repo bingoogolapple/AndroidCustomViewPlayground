@@ -12,4 +12,8 @@
         style="@style/MatchWrap"
         android:onClick="changeToNormalSwipe"
         android:text="changeToNormalSwipe" />
+    <Button
+        style="@style/MatchWrap"
+        android:onClick="changeToMooc"
+        android:text="changeToMooc" />
 </LinearLayout>

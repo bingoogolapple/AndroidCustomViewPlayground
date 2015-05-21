@@ -16,6 +16,7 @@ import android.widget.ListView;
  */
 public abstract class BGARefreshListView extends ListView implements AbsListView.OnScrollListener {
     private static final String TAG = BGARefreshListView.class.getSimpleName();
+    private static final float OFFSET_RADIO = 1.8f;
     /**
      * 整个头部控件，下拉刷新控件mRefreshHeaderView和下拉刷新控件下方的自定义组件mCustomHeaderView的父控件
      */
@@ -235,6 +236,8 @@ public abstract class BGARefreshListView extends ListView implements AbsListView
                 int moveY = (int) event.getY();
                 int diffY = moveY - mDownY;
 
+                diffY = (int)(diffY / OFFSET_RADIO);
+
                 // 如果是向下拉，并且当前可见的第一个条目的索引等于0，才处理整个头部控件的padding
                 if (diffY > 0 && getFirstVisiblePosition() == 0) {
                     int paddingTop = mMinWholeHeaderViewPaddingTop + diffY;
@@ -263,6 +266,11 @@ public abstract class BGARefreshListView extends ListView implements AbsListView
 
                     paddingTop = Math.min(paddingTop, mMaxWholeHeaderViewPaddingTop);
                     mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
+
+                    // 设置ACTION_CANCEL，使ListView取消按下状态
+                    event.setAction(MotionEvent.ACTION_CANCEL);
+                    super.onTouchEvent(event);
+
                     return true;
                 }
                 break;
