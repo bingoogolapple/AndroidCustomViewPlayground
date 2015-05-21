@@ -82,6 +82,6 @@ public abstract class BGASwipeViewAdapter<T> extends BaseSwipeAdapter {
 
     protected abstract void setListener(BGASwipeViewHolder viewHolder);
 
-    protected abstract void fillData(BGASwipeViewHolder viewHolder, T mode);
+    protected abstract void fillData(BGASwipeViewHolder viewHolder, T model);
 
 }

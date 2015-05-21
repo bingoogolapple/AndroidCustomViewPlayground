@@ -2,7 +2,6 @@ package cn.bingoogolapple.acvp.refreshlistview.widget;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -14,14 +13,13 @@ import cn.bingoogolapple.acvp.refreshlistview.R;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
- * 创建时间:15/5/20 11:00
+ * 创建时间:15/5/21 13:05
  * 描述:
  */
-public class BGANormalRefreshListView extends BGARefreshListView {
+public class BGANormalRefreshViewHolder extends BGARefreshViewHolder {
     private TextView mStatusTv;
     private ImageView mArrowIv;
     private ProgressBar mProgressPb;
-
     /**
      * 向上旋转的动画
      */
@@ -31,27 +29,9 @@ public class BGANormalRefreshListView extends BGARefreshListView {
      */
     private RotateAnimation mDownAnim;
 
-    public BGANormalRefreshListView(Context context) {
+    public BGANormalRefreshViewHolder(Context context) {
         super(context);
-    }
-
-    public BGANormalRefreshListView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public BGANormalRefreshListView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    protected View getRefreshHeaderView() {
-        View refreshView = View.inflate(getContext(), R.layout.view_normal_refresh_header, null);
-        mStatusTv = (TextView) refreshView.findViewById(R.id.tv_normal_refresh_header_status);
-        mArrowIv = (ImageView) refreshView.findViewById(R.id.iv_normal_refresh_header_arrow);
-        mProgressPb = (ProgressBar) refreshView.findViewById(R.id.pb_normal_refresh_header_progress);
-
         initAnimation();
-        return refreshView;
     }
 
     private void initAnimation() {
@@ -65,34 +45,47 @@ public class BGANormalRefreshListView extends BGARefreshListView {
     }
 
     @Override
-    protected View getWholeFooterView() {
-        return View.inflate(getContext(), R.layout.view_normal_refresh_footer, null);
+    public View getLoadMoreFooterView() {
+        if(mLoadMoreFooterView == null) {
+            mLoadMoreFooterView = View.inflate(mContext, R.layout.view_normal_refresh_footer, null);
+        }
+        return mLoadMoreFooterView;
     }
 
     @Override
-    protected void handleScale(float scale) {
-//        printLog("scale = " + scale);
+    public View getRefreshHeaderView() {
+        if(mRefreshHeaderView == null) {
+            mRefreshHeaderView = View.inflate(mContext, R.layout.view_refresh_header_normal, null);
+            mStatusTv = (TextView) mRefreshHeaderView.findViewById(R.id.tv_normal_refresh_header_status);
+            mArrowIv = (ImageView) mRefreshHeaderView.findViewById(R.id.iv_normal_refresh_header_arrow);
+            mProgressPb = (ProgressBar) mRefreshHeaderView.findViewById(R.id.pb_normal_refresh_header_progress);
+        }
+        return mRefreshHeaderView;
+    }
+
+    @Override
+    public void handleScale(float scale) {
         ViewCompat.setAlpha(mStatusTv, scale);
     }
 
     @Override
-    protected void changeToPullDown() {
+    public void changeToPullDown() {
         mStatusTv.setText("下拉刷新");
-        mProgressPb.setVisibility(INVISIBLE);
-        mArrowIv.setVisibility(VISIBLE);
+        mProgressPb.setVisibility(View.INVISIBLE);
+        mArrowIv.setVisibility(View.VISIBLE);
         mArrowIv.startAnimation(mDownAnim);
     }
 
     @Override
-    protected void changeToReleaseRefresh() {
+    public void changeToReleaseRefresh() {
         mStatusTv.setText("释放刷新");
-        mProgressPb.setVisibility(INVISIBLE);
-        mArrowIv.setVisibility(VISIBLE);
+        mProgressPb.setVisibility(View.INVISIBLE);
+        mArrowIv.setVisibility(View.VISIBLE);
         mArrowIv.startAnimation(mUpAnim);
     }
 
     @Override
-    protected void changeToRefreshing() {
+    public void changeToRefreshing() {
         mStatusTv.setText("正在刷新");
         // 必须把动画清空才能隐藏成功
         mArrowIv.clearAnimation();
@@ -101,13 +94,10 @@ public class BGANormalRefreshListView extends BGARefreshListView {
     }
 
     @Override
-    protected void onEndLoadingMore() {
-        printLog("结束上拉加载更多");
+    public void onEndLoadingMore() {
     }
 
     @Override
-    protected void onEndRefreshing() {
-        printLog("结束正在刷新");
+    public void onEndRefreshing() {
     }
-
 }

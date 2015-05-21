@@ -62,6 +62,6 @@ public abstract class BGAAdapterViewAdapter<T> extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public abstract void convert(BGAAdapterViewHolder viewHolder, T mode);
+    public abstract void convert(BGAAdapterViewHolder viewHolder, T model);
 
 }

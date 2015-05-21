@@ -152,6 +152,9 @@ public class MoocView extends View {
         }
     }
 
+    /**
+     * 绘制最终的图片
+     */
     private void drawUltimateBitmap() {
         mBezierPath.reset();
         mUltimateBitmap.eraseColor(Color.parseColor("#00ffffff"));
@@ -171,14 +174,10 @@ public class MoocView extends View {
             mBezierControlY = mBezierControlOriginalY;
         }
 
-        // 贝塞尔曲线的生成
         mBezierPath.moveTo(0, mWaveY);
-        // 两个控制点通过controlX，controlY生成
         mBezierPath.cubicTo(mBezierControlX / 2, mWaveY - (mBezierControlY - mWaveY), (mBezierControlX + mOriginalBitmapWidth) / 2, mBezierControlY, mOriginalBitmapWidth, mWaveY);
-        // 与下下边界闭合
         mBezierPath.lineTo(mOriginalBitmapWidth, mOriginalBitmapHeight);
         mBezierPath.lineTo(0, mOriginalBitmapHeight);
-        // 进行闭合
         mBezierPath.close();
 
         mCanvas.drawBitmap(mOriginalBitmap, 0, 0, mPaint);
@@ -229,7 +228,7 @@ public class MoocView extends View {
         if (heightMode == MeasureSpec.EXACTLY) {
             height = heightSize + getPaddingTop() + getPaddingBottom();
         } else {
-            height = this.mOriginalBitmapHeight + getPaddingTop() + getPaddingBottom();
+            height = mOriginalBitmapHeight + getPaddingTop() + getPaddingBottom();
             if (heightMode == MeasureSpec.AT_MOST) {
                 height = Math.min(height, heightSize);
             }
