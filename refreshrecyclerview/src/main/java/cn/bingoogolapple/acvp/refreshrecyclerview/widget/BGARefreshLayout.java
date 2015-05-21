@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,6 +25,7 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
     private Handler mHandler;
 
     private View mRefreshHeaderView;
+    private int mRefreshHeaderViewHeight;
     private StickinessRefreshView mStickinessRefreshView;
 
     private AdapterView<?> mAdapterView;
@@ -37,15 +37,11 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
     private float mDownY;
     private int mMoveDistanceY;
 
-    private int mRefreshHeaderViewHeight;
-
-
-    private MoveRunnable moveRunnable;
-    private HeadMoveRunnable headMoveRunnable;
+    private StickinessRefreshViewMoveTask mStickinessRefreshViewMoveTask;
+    private RefreshHeaderViewMoveTask mRefreshHeaderViewMoveTask;
 
     private BGARefreshLayoutDelegate mDelegate;
     private RefreshStatus mCurrentRefreshStatus = RefreshStatus.IDLE;
-
 
     public BGARefreshLayout(Context context) {
         this(context, null);
@@ -62,11 +58,12 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
 
     private void initRefreshHeaderView() {
         mRefreshHeaderView = LayoutInflater.from(getContext()).inflate(R.layout.view_refresh_header_stickiness, this, false);
-        measureChild(mRefreshHeaderView);
+        mRefreshHeaderView.measure(0, 0);
+        mRefreshHeaderViewHeight = mRefreshHeaderView.getMeasuredHeight();
+
         mStickinessRefreshView = (StickinessRefreshView) mRefreshHeaderView.findViewById(R.id.stickinessRefreshView);
         mStickinessRefreshView.setDelegate(this);
 
-        mRefreshHeaderViewHeight = mRefreshHeaderView.getMeasuredHeight();
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, mRefreshHeaderViewHeight);
         params.topMargin = -mRefreshHeaderViewHeight;
         addView(mRefreshHeaderView, params);
@@ -76,115 +73,34 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
     public void onFinishInflate() {
         super.onFinishInflate();
 
-        initContent();
-    }
+        if (getChildCount() != 2) {
+            throw new RuntimeException(BGARefreshLayout.class.getSimpleName() + "必须有且只有一个子控件");
+        }
 
-    private void initContent() {
-        int count = getChildCount();
-        if (count != 2)
-            throw new ArrayIndexOutOfBoundsException("this widget contain one child view at most and must contain one.");
-
-        View view = getChildAt(1);
-        if (view instanceof AdapterView<?>) {
-            mAdapterView = (AdapterView<?>) view;
-        } else if (view instanceof RecyclerView) {
-            mRecyclerView = (RecyclerView) view;
-        } else if (view instanceof ScrollView) {
-            mScrollView = (ScrollView) view;
+        View contentView = getChildAt(1);
+        if (contentView instanceof AdapterView<?>) {
+            mAdapterView = (AdapterView<?>) contentView;
+        } else if (contentView instanceof RecyclerView) {
+            mRecyclerView = (RecyclerView) contentView;
+        } else if (contentView instanceof ScrollView) {
+            mScrollView = (ScrollView) contentView;
         } else {
-            mNormalView = view;
+            mNormalView = contentView;
         }
-    }
-
-    private void measureChild(View child) {
-        ViewGroup.LayoutParams params = child.getLayoutParams();
-        if (null == params) {
-            params = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        }
-
-        int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0, params.width);
-        int childHeightSpec;
-        if (params.height > 0) {
-            childHeightSpec = MeasureSpec.makeMeasureSpec(params.height, MeasureSpec.EXACTLY);
-        } else {
-            childHeightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-        }
-
-        child.measure(childWidthSpec, childHeightSpec);
-    }
-
-    private void setChildHeight(View child, int height) {
-        ViewGroup.LayoutParams params = child.getLayoutParams();
-        params.height = height;
-        child.setLayoutParams(params);
-    }
-
-    private void setHeadMargin(int height) {
-        LayoutParams params = (LayoutParams) mRefreshHeaderView.getLayoutParams();
-        params.topMargin = height - mRefreshHeaderViewHeight;
-
-        mRefreshHeaderView.setLayoutParams(params);
-    }
-
-    private boolean shouldRefreshStart() {
-        if (null != mNormalView) {
-            return true;
-        }
-        if (null != mScrollView) {
-            if (mScrollView.getChildAt(0).getScrollY() == 0) return true;
-        }
-        if (null != mAdapterView) {
-            int top = mAdapterView.getChildAt(0).getTop();
-            int padding = mAdapterView.getPaddingTop();
-            if (mAdapterView.getFirstVisiblePosition() == 0) {
-                if (top == 0 || Math.abs(top - padding) <= 3) {
-                    return true;
-                }
-            }
-        }
-        if (null != mRecyclerView) {
-            int top = mRecyclerView.getChildAt(0).getTop();
-            int padding = mRecyclerView.getPaddingTop();
-            LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-            if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
-                if (top == 0 || Math.abs(top - padding) <= 3) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private void smoothToOriginalSpot(int y) {
-        moveRunnable = new MoveRunnable(y);
-
-        mHandler.post(moveRunnable);
-    }
-
-    private void stopMovement() {
-        mHandler.removeCallbacks(moveRunnable);
-        mHandler.removeCallbacks(headMoveRunnable);
-    }
-
-    private void smoothHideHeadView() {
-        headMoveRunnable = new HeadMoveRunnable();
-
-        mHandler.post(headMoveRunnable);
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         mDownX = event.getRawX();
         mDownY = event.getRawY();
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mMoveDistanceY = (int) mDownY;
                 break;
             case MotionEvent.ACTION_MOVE:
                 mMoveDistanceY = (int) (event.getRawY() - mMoveDistanceY);
                 if (Math.abs(event.getRawX() - mDownX) < Math.abs(mMoveDistanceY)) {
-                    if (shouldRefreshStart() && mMoveDistanceY > 0) {
-                        Log.d(TAG, "shouldRefreshStart");
+                    if (shouldHandleRefresh() && mMoveDistanceY > 0) {
                         return true;
                     }
                 }
@@ -197,9 +113,42 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
         return super.onInterceptTouchEvent(event);
     }
 
+    private boolean shouldHandleRefresh() {
+        if (null != mNormalView) {
+            return true;
+        }
+
+        if (null != mScrollView && mScrollView.getChildAt(0).getScrollY() == 0) {
+            return true;
+        }
+
+        if (null != mAdapterView) {
+            int firstChildTop = mAdapterView.getChildAt(0).getTop();
+            int contentViewPaddingTop = mAdapterView.getPaddingTop();
+            if (mAdapterView.getFirstVisiblePosition() == 0) {
+                if (firstChildTop == 0 || Math.abs(firstChildTop - contentViewPaddingTop) <= 3) {
+                    return true;
+                }
+            }
+        }
+
+        if (null != mRecyclerView) {
+            int firstChildTop = mRecyclerView.getChildAt(0).getTop();
+            int contentViewPaddingTop = mRecyclerView.getPaddingTop();
+            LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+            if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
+                if (firstChildTop == 0 || Math.abs(firstChildTop - contentViewPaddingTop) <= 3) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 stopMovement();
                 mMoveDistanceY = 0;
@@ -210,20 +159,20 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
                 mMoveDistanceY = (int) (event.getY() - mDownY);
                 switch (mCurrentRefreshStatus) {
                     case IDLE:
-                        Log.d(TAG, "IDLE");
-                        if (shouldRefreshStart() && mCurrentRefreshStatus != RefreshStatus.REFRESHING && mMoveDistanceY > 0)
+                        if (shouldHandleRefresh() && mCurrentRefreshStatus != RefreshStatus.REFRESHING && mMoveDistanceY > 0) {
                             mCurrentRefreshStatus = RefreshStatus.PULL_DOWN;
+                        }
                         break;
                     case PULL_DOWN:
                         if (mMoveDistanceY < 0) {
                             mMoveDistanceY = 0;
                         }
                         if (mMoveDistanceY <= mRefreshHeaderViewHeight) {
-                            setHeadMargin(mMoveDistanceY);
+                            setRefreshHeaderViewMarginTop(mMoveDistanceY);
                             mStickinessRefreshView.setHeight(0);
                             setChildHeight(mRefreshHeaderView, mRefreshHeaderViewHeight);
                         } else {
-                            setHeadMargin(mRefreshHeaderViewHeight);
+                            setRefreshHeaderViewMarginTop(mRefreshHeaderViewHeight);
                             mStickinessRefreshView.setHeight(mMoveDistanceY - mRefreshHeaderViewHeight);
                             setChildHeight(mRefreshHeaderView, mMoveDistanceY);
                             if (mStickinessRefreshView.isExceedMaximumHeight()) {
@@ -254,6 +203,33 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
         return true;
     }
 
+    private void setRefreshHeaderViewMarginTop(int height) {
+        LayoutParams params = (LayoutParams) mRefreshHeaderView.getLayoutParams();
+        params.topMargin = height - mRefreshHeaderViewHeight;
+        mRefreshHeaderView.setLayoutParams(params);
+    }
+
+    private void setChildHeight(View child, int height) {
+        ViewGroup.LayoutParams params = child.getLayoutParams();
+        params.height = height;
+        child.setLayoutParams(params);
+    }
+
+    private void smoothToOriginalSpot(int y) {
+        mStickinessRefreshViewMoveTask = new StickinessRefreshViewMoveTask(y);
+        mHandler.post(mStickinessRefreshViewMoveTask);
+    }
+
+    private void stopMovement() {
+        mHandler.removeCallbacks(mStickinessRefreshViewMoveTask);
+        mHandler.removeCallbacks(mRefreshHeaderViewMoveTask);
+    }
+
+    private void smoothHideHeadView() {
+        mRefreshHeaderViewMoveTask = new RefreshHeaderViewMoveTask();
+        mHandler.post(mRefreshHeaderViewMoveTask);
+    }
+
     @Override
     public void onCirclingFullyStop() {
         smoothHideHeadView();
@@ -273,23 +249,23 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
         mDelegate = delegate;
     }
 
-    private class MoveRunnable implements Runnable {
-        int startY;
+    private class StickinessRefreshViewMoveTask implements Runnable {
+        int mStartY;
 
-        public MoveRunnable(int startY) {
+        public StickinessRefreshViewMoveTask(int startY) {
             stopMovement();
-            this.startY = startY;
+            mStartY = startY;
         }
 
         @Override
         public void run() {
-            startY += (mRefreshHeaderViewHeight - startY) * 0.5F;
+            mStartY += (mRefreshHeaderViewHeight - mStartY) * 0.5F;
 
-            mStickinessRefreshView.setHeight(startY - mRefreshHeaderViewHeight);
-            setChildHeight(mRefreshHeaderView, startY);
+            mStickinessRefreshView.setHeight(mStartY - mRefreshHeaderViewHeight);
+            setChildHeight(mRefreshHeaderView, mStartY);
 
-            if (startY != mRefreshHeaderViewHeight) {
-                mHandler.postDelayed(moveRunnable, 20);
+            if (mStartY != mRefreshHeaderViewHeight) {
+                mHandler.postDelayed(mStickinessRefreshViewMoveTask, 20);
             } else {
                 switch (mCurrentRefreshStatus) {
                     case REFRESHING:
@@ -304,10 +280,10 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
         }
     }
 
-    public class HeadMoveRunnable implements Runnable {
+    public class RefreshHeaderViewMoveTask implements Runnable {
         LayoutParams params;
 
-        public HeadMoveRunnable() {
+        public RefreshHeaderViewMoveTask() {
             params = (LayoutParams) mRefreshHeaderView.getLayoutParams();
         }
 
@@ -318,7 +294,7 @@ public class BGARefreshLayout extends LinearLayout implements StickinessRefreshV
             mRefreshHeaderView.setLayoutParams(params);
 
             if (params.topMargin != -mRefreshHeaderViewHeight) {
-                mHandler.postDelayed(headMoveRunnable, 20);
+                mHandler.postDelayed(mRefreshHeaderViewMoveTask, 20);
             } else {
                 mCurrentRefreshStatus = RefreshStatus.IDLE;
             }
