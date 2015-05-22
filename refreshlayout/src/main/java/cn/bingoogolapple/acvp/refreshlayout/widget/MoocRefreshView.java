@@ -22,7 +22,7 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
  * 创建时间:15/5/21 10:43
  * 描述:
  */
-public class MoocView extends View {
+public class MoocRefreshView extends View {
     private PorterDuffXfermode mXfermode;
     /**
      * 用来画临时图像的画笔
@@ -86,15 +86,15 @@ public class MoocView extends View {
     private int mUltimateColor;
 
 
-    public MoocView(Context context) {
+    public MoocRefreshView(Context context) {
         this(context, null);
     }
 
-    public MoocView(Context context, AttributeSet attrs) {
+    public MoocRefreshView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public MoocView(Context context, AttributeSet attrs, int defStyle) {
+    public MoocRefreshView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initAttrs(context, attrs);
 
@@ -103,15 +103,15 @@ public class MoocView extends View {
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MoocView);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MoocRefreshView);
 
-        BitmapDrawable originalBitmap = (BitmapDrawable) typedArray.getDrawable(R.styleable.MoocView_mv_originalImg);
+        BitmapDrawable originalBitmap = (BitmapDrawable) typedArray.getDrawable(R.styleable.MoocRefreshView_mv_originalImg);
         if (originalBitmap == null) {
-            throw new RuntimeException(MoocView.class.getSimpleName() + "必须设置原始图片");
+            throw new RuntimeException(MoocRefreshView.class.getSimpleName() + "必须设置原始图片");
         }
         mOriginalBitmap = originalBitmap.getBitmap();
 
-        mUltimateColor = typedArray.getColor(R.styleable.MoocView_mv_ultimateColor, Color.rgb(27, 128, 255));
+        mUltimateColor = typedArray.getColor(R.styleable.MoocRefreshView_mv_ultimateColor, Color.rgb(27, 128, 255));
 
         typedArray.recycle();
     }
@@ -129,9 +129,9 @@ public class MoocView extends View {
         mOriginalBitmapHeight = mOriginalBitmap.getHeight();
 
         // 初始状态值
-        mWaveOriginalY = 9 / 10F * mOriginalBitmapHeight;
-        mWaveY = mWaveOriginalY;
-        mBezierControlOriginalY = 11 / 10F * mOriginalBitmapHeight;
+        mWaveOriginalY = mOriginalBitmapHeight;
+        mWaveY = 1.2f * mWaveOriginalY;
+        mBezierControlOriginalY = 1.25f * mWaveOriginalY;
         mBezierControlY = mBezierControlOriginalY;
 
         mXfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
@@ -184,10 +184,6 @@ public class MoocView extends View {
         mPaint.setXfermode(mXfermode);
         mCanvas.drawPath(mBezierPath, mPaint);
         mPaint.setXfermode(null);
-    }
-
-    public boolean isRefreshing() {
-        return mIsRefreshing;
     }
 
     public void startRefreshing() {

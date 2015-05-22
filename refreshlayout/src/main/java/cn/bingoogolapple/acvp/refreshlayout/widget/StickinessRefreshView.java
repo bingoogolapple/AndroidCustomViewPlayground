@@ -21,7 +21,7 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
  * 创建时间:15/5/21 22:34
  * 描述:
  */
-public class StickinessRefreshView extends View{
+public class StickinessRefreshView extends View {
 	private static final String TAG = StickinessRefreshView.class.getSimpleName();
 	
 	private int width,height;

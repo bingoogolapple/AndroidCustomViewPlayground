@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <cn.bingoogolapple.acvp.refreshlayout.widget.MoocView
+    <cn.bingoogolapple.acvp.refreshlayout.widget.MoocRefreshView
         android:id="@+id/moocView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

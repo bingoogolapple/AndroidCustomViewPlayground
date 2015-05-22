@@ -12,7 +12,7 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
  * 描述:
  */
 public class BGAMoocRefreshViewHolder extends BGARefreshViewHolder {
-    private MoocView mMoocView;
+    private MoocRefreshView mMoocRefreshView;
 
     public BGAMoocRefreshViewHolder(Context context) {
         super(context);
@@ -31,7 +31,7 @@ public class BGAMoocRefreshViewHolder extends BGARefreshViewHolder {
     public View getRefreshHeaderView() {
         if(mRefreshHeaderView == null) {
             mRefreshHeaderView = View.inflate(mContext, R.layout.view_refresh_header_mooc, null);
-            mMoocView = (MoocView) mRefreshHeaderView.findViewById(R.id.moocView);
+            mMoocRefreshView = (MoocRefreshView) mRefreshHeaderView.findViewById(R.id.moocView);
         }
         return mRefreshHeaderView;
     }
@@ -39,8 +39,8 @@ public class BGAMoocRefreshViewHolder extends BGARefreshViewHolder {
     @Override
     public void handleScale(float scale) {
         scale = 0.6f + 0.4f * scale;
-        ViewCompat.setScaleX(mMoocView, scale);
-        ViewCompat.setScaleY(mMoocView, scale);
+        ViewCompat.setScaleX(mMoocRefreshView, scale);
+        ViewCompat.setScaleY(mMoocRefreshView, scale);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class BGAMoocRefreshViewHolder extends BGARefreshViewHolder {
 
     @Override
     public void changeToRefreshing() {
-        mMoocView.startRefreshing();
+        mMoocRefreshView.startRefreshing();
     }
 
     @Override
@@ -65,6 +65,6 @@ public class BGAMoocRefreshViewHolder extends BGARefreshViewHolder {
 
     @Override
     public void onEndRefreshing() {
-        mMoocView.stopRefreshing();
+        mMoocRefreshView.stopRefreshing();
     }
 }
