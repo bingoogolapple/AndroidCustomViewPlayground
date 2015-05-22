@@ -49,10 +49,6 @@ public class BGARefreshLayout extends LinearLayout {
      */
     private int mDownY = -1;
     /**
-     * ListView在屏幕上的y值
-     */
-    private int mOnScreenY = -1;
-    /**
      * 整个头部控件最小的paddingTop
      */
     private int mMinWholeHeaderViewPaddingTop;
@@ -61,15 +57,13 @@ public class BGARefreshLayout extends LinearLayout {
      */
     private int mMaxWholeHeaderViewPaddingTop;
 
-
     private AdapterView<?> mAdapterView;
     private ScrollView mScrollView;
     private RecyclerView mRecyclerView;
     private View mNormalView;
 
-    private float mInterceptTouchDownX;
-    private float mInterceptTouchDownY;
-
+    private float mInterceptTouchDownX = -1;
+    private float mInterceptTouchDownY = -1;
 
     public BGARefreshLayout(Context context) {
         this(context, null);
@@ -110,6 +104,8 @@ public class BGARefreshLayout extends LinearLayout {
             mScrollView = (ScrollView) contentView;
         } else {
             mNormalView = contentView;
+            // 设置为可点击，否则在空白区域无法拖动
+            mNormalView.setClickable(true);
         }
     }
 
@@ -160,6 +156,13 @@ public class BGARefreshLayout extends LinearLayout {
                 mInterceptTouchDownY = event.getRawY();
                 break;
             case MotionEvent.ACTION_MOVE:
+                if (mInterceptTouchDownX == -1) {
+                    mInterceptTouchDownX = (int) event.getRawX();
+                }
+                if (mInterceptTouchDownY == -1) {
+                    mInterceptTouchDownY = (int) event.getRawY();
+                }
+
                 int interceptTouchMoveDistanceY = (int) (event.getRawY() - mInterceptTouchDownY);
                 if (Math.abs(event.getRawX() - mInterceptTouchDownX) < Math.abs(interceptTouchMoveDistanceY)) {
                     if (shouldHandleRefresh() && interceptTouchMoveDistanceY > 0) {
@@ -173,39 +176,51 @@ public class BGARefreshLayout extends LinearLayout {
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
+                // 重置
+                mInterceptTouchDownX = -1;
+                mInterceptTouchDownY = -1;
                 break;
         }
 
         return super.onInterceptTouchEvent(event);
     }
 
+    /**
+     * 是否满足处理刷新的条件
+     *
+     * @return
+     */
     private boolean shouldHandleRefresh() {
-        if (null != mNormalView) {
+        // 内容是普通控件，满足
+        if (mNormalView != null) {
             return true;
         }
 
-        if (null != mScrollView && mScrollView.getChildAt(0).getScrollY() == 0) {
+        // 内容是ScrollView，并且其scrollY为0时满足
+        if (mScrollView != null && mScrollView.getScrollY() == 0) {
             return true;
         }
 
-        if (null != mAdapterView) {
-            int firstChildTop = mAdapterView.getChildAt(0).getTop();
-            int contentViewPaddingTop = mAdapterView.getPaddingTop();
-            if (mAdapterView.getFirstVisiblePosition() == 0) {
-                if (firstChildTop == 0 || Math.abs(firstChildTop - contentViewPaddingTop) <= 3) {
-                    return true;
-                }
+        if (mAdapterView != null) {
+            int firstChildTop = 0;
+            if (mAdapterView.getChildCount() > 0) {
+                // 如果AdapterView的子控件数量不为0，获取第一个子控件的top
+                firstChildTop = mAdapterView.getChildAt(0).getTop();
+            }
+            if (mAdapterView.getFirstVisiblePosition() == 0 && firstChildTop == 0) {
+                return true;
             }
         }
 
-        if (null != mRecyclerView) {
-            int firstChildTop = mRecyclerView.getChildAt(0).getTop();
-            int contentViewPaddingTop = mRecyclerView.getPaddingTop();
+        if (mRecyclerView != null) {
+            int firstChildTop = 0;
+            if (mRecyclerView.getChildCount() > 0) {
+                // 如果RecyclerView的子控件数量不为0，获取第一个子控件的top
+                firstChildTop = mRecyclerView.getChildAt(0).getTop();
+            }
             LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-            if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
-                if (firstChildTop == 0 || Math.abs(firstChildTop - contentViewPaddingTop) <= 3) {
-                    return true;
-                }
+            if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0 && firstChildTop == 0) {
+                return true;
             }
         }
 
@@ -217,7 +232,7 @@ public class BGARefreshLayout extends LinearLayout {
         if (null != mRefreshHeaderView) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    mDownY = (int)event.getY();
+                    mDownY = (int) event.getY();
                     break;
                 case MotionEvent.ACTION_MOVE:
                     if (handleActionMove(event)) {
@@ -226,7 +241,7 @@ public class BGARefreshLayout extends LinearLayout {
                     break;
                 case MotionEvent.ACTION_CANCEL:
                 case MotionEvent.ACTION_UP:
-                    if (handleActionUp()) {
+                    if (handleActionUpOrCancel()) {
                         return true;
                     }
                     break;
@@ -299,7 +314,7 @@ public class BGARefreshLayout extends LinearLayout {
      *
      * @return true表示自己消耗掉该事件，false表示不消耗该事件
      */
-    private boolean handleActionUp() {
+    private boolean handleActionUpOrCancel() {
         mDownY = -1;
 
         boolean isReturnTrue = false;

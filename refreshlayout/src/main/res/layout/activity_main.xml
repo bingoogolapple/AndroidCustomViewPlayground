@@ -10,24 +10,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="changeToNormalRecyclerViewDemo"
-        android:text="changeToNormalRecyclerViewDemo" />
+        android:text="普通RecyclerView示例" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="changeToSwipeRecyclerViewDemo"
-        android:text="changeToSwipeRecyclerViewDemo" />
+        android:text="滑动RecyclerView示例" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="changeToNormalListViewDemo"
-        android:text="changeToNormalListViewDemo" />
+        android:text="普通ListView示例" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="changeToSwipeListViewDemo"
-        android:text="changeToSwipeListViewDemo" />
+        android:text="滑动ListView示例" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="changeToScrollViewDemo"
+        android:text="ScrollView示例" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="changeToNormalViewDemo"
+        android:text="普通View示例" />
 
 </LinearLayout>

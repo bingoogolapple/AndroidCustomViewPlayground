@@ -18,16 +18,22 @@
         </activity>
         <activity
             android:name=".activity.NormalRecyclerViewDemoActivity"
-            android:label="NormalRecyclerViewDemo" />
+            android:label="普通RecyclerView示例" />
         <activity
             android:name=".activity.SwipeRecyclerViewDemoActivity"
-            android:label="SwipeRecyclerViewDemo" />
+            android:label="滑动RecyclerView示例" />
         <activity
             android:name=".activity.NormalListViewDemoActivity"
-            android:label="NormalListViewDemo" />
+            android:label="普通ListView示例" />
         <activity
             android:name=".activity.SwipeListViewDemoActivity"
-            android:label="SwipeListViewDemo" />
+            android:label="滑动ListView示例" />
+        <activity
+            android:name=".activity.ScrollViewDemoActivity"
+            android:label="ScrollView示例" />
+        <activity
+            android:name=".activity.NormalViewDemoActivity"
+            android:label="普通View示例" />
     </application>
 
 </manifest>

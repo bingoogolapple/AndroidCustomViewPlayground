@@ -31,5 +31,12 @@ public class MainActivity extends AppCompatActivity {
     public void changeToSwipeListViewDemo(View v) {
         startActivity(new Intent(this, SwipeListViewDemoActivity.class));
     }
+    public void changeToScrollViewDemo(View v) {
+        startActivity(new Intent(this, ScrollViewDemoActivity.class));
+    }
+
+    public void changeToNormalViewDemo(View v) {
+        startActivity(new Intent(this, NormalViewDemoActivity.class));
+    }
 
 }
