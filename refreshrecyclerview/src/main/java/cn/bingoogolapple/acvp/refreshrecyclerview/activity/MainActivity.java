@@ -15,6 +15,7 @@ import java.util.List;
 import cn.bingoogolapple.acvp.refreshrecyclerview.R;
 import cn.bingoogolapple.acvp.refreshrecyclerview.adapter.RefreshModeAdapter;
 import cn.bingoogolapple.acvp.refreshrecyclerview.mode.RefreshModel;
+import cn.bingoogolapple.acvp.refreshrecyclerview.widget.BGAMoocRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshrecyclerview.widget.BGARefreshLayout;
 import cn.bingoogolapple.acvp.refreshrecyclerview.util.Divider;
 import cn.bingoogolapple.acvp.refreshrecyclerview.util.OnItemClickListener;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         setContentView(R.layout.activity_main);
         mRefreshRl = (BGARefreshLayout) findViewById(R.id.rl_demo_refresh);
         mRefreshRl.setDelegate(this);
+        mRefreshRl.setRefreshViewHolder(new BGAMoocRefreshViewHolder(this));
         mDataRv = (RecyclerView) findViewById(R.id.rv_demo_data);
         mDataRv.setLayoutManager(new LinearLayoutManager(this));
         mDataRv.addItemDecoration(new Divider(this));
@@ -88,8 +90,4 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         }.execute();
     }
 
-    @Override
-    public void onBGARefreshLayoutBeginLoadingMore() {
-        Toast.makeText(this, "开始加载", Toast.LENGTH_SHORT).show();
-    }
 }
