@@ -1,7 +1,6 @@
 package cn.bingoogolapple.acvp.refreshlayout.widget;
 
 import android.content.Context;
-import android.support.v4.view.ViewCompat;
 import android.view.View;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
@@ -11,10 +10,10 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
  * 创建时间:15/5/21 13:16
  * 描述:
  */
-public class BGAMoocRefreshViewHolder extends BGARefreshViewHolder {
-    private MoocRefreshView mMoocRefreshView;
+public class BGAStickinessRefreshViewHolder extends BGARefreshViewHolder {
+    private StickinessRefreshView mStickinessRefreshView;
 
-    public BGAMoocRefreshViewHolder(Context context) {
+    public BGAStickinessRefreshViewHolder(Context context) {
         super(context);
     }
 
@@ -26,25 +25,25 @@ public class BGAMoocRefreshViewHolder extends BGARefreshViewHolder {
     @Override
     public View getRefreshHeaderView() {
         if(mRefreshHeaderView == null) {
-            mRefreshHeaderView = View.inflate(mContext, R.layout.view_refresh_header_mooc, null);
-            mMoocRefreshView = (MoocRefreshView) mRefreshHeaderView.findViewById(R.id.moocView);
+            mRefreshHeaderView = View.inflate(mContext, R.layout.view_refresh_header_stickiness, null);
+            mStickinessRefreshView = (StickinessRefreshView) mRefreshHeaderView.findViewById(R.id.stickinessRefreshView);
         }
         return mRefreshHeaderView;
     }
 
     @Override
     public void handleScale(float scale) {
-        scale = 0.6f + 0.4f * scale;
-        ViewCompat.setScaleX(mMoocRefreshView, scale);
-        ViewCompat.setScaleY(mMoocRefreshView, scale);
+        mStickinessRefreshView.setScale(scale);
     }
 
     @Override
     public void changeToIdle() {
+        mStickinessRefreshView.smoothToIdle();
     }
 
     @Override
     public void changeToPullDown() {
+
     }
 
     @Override
@@ -53,7 +52,7 @@ public class BGAMoocRefreshViewHolder extends BGARefreshViewHolder {
 
     @Override
     public void changeToRefreshing() {
-        mMoocRefreshView.startRefreshing();
+        mStickinessRefreshView.startRefreshing();
     }
 
     @Override
@@ -62,6 +61,11 @@ public class BGAMoocRefreshViewHolder extends BGARefreshViewHolder {
 
     @Override
     public void onEndRefreshing() {
-        mMoocRefreshView.stopRefreshing();
+        mStickinessRefreshView.stopRefresh();
+    }
+
+    @Override
+    public boolean canChangeToRefreshingStatus() {
+        return mStickinessRefreshView.canChangeToRefreshing();
     }
 }

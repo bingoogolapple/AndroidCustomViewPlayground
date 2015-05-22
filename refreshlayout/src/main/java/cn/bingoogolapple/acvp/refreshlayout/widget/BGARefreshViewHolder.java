@@ -28,6 +28,10 @@ public abstract class BGARefreshViewHolder {
      */
     protected View mLoadMoreFooterView;
 
+    public BGARefreshViewHolder(Context context) {
+        mContext = context;
+    }
+
     /**
      * 获取上拉加载更多控件
      *
@@ -48,6 +52,11 @@ public abstract class BGARefreshViewHolder {
      * @param scale
      */
     public abstract void handleScale(float scale);
+
+    /**
+     * 进入到未处理下拉刷新状态
+     */
+    public abstract void changeToIdle();
 
     /**
      * 进入下拉刷新状态
@@ -92,7 +101,13 @@ public abstract class BGARefreshViewHolder {
         return SPRING_DISTANCE_SCALE;
     }
 
-    public BGARefreshViewHolder(Context context) {
-        mContext = context;
+    /**
+     * 是处于能够进入刷新状态
+     *
+     * @return
+     */
+    public boolean canChangeToRefreshingStatus() {
+        return false;
     }
+
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
-import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocRefreshViewHolder;
+import cn.bingoogolapple.acvp.refreshlayout.widget.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
@@ -31,7 +31,7 @@ public class ScrollViewDemoActivity extends AppCompatActivity implements BGARefr
         setContentView(R.layout.activity_scrollview);
         mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_scrollview_refresh);
         mRefreshLayout.setDelegate(this);
-        mRefreshLayout.setRefreshViewHolder(new BGAMoocRefreshViewHolder(this));
+        mRefreshLayout.setRefreshViewHolder(new BGANormalRefreshViewHolder(this));
 
         mClickableLabelTv = (TextView) findViewById(R.id.tv_scrollview_clickablelabel);
         mClickableLabelTv.setOnClickListener(new View.OnClickListener() {

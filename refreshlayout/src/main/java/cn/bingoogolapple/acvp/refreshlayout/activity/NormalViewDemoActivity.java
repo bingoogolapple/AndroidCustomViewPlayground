@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
-import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
+import cn.bingoogolapple.acvp.refreshlayout.widget.BGAStickinessRefreshViewHolder;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
 
@@ -31,7 +31,7 @@ public class NormalViewDemoActivity extends AppCompatActivity implements BGARefr
         setContentView(R.layout.activity_normalview);
         mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_normalview_refresh);
         mRefreshLayout.setDelegate(this);
-        mRefreshLayout.setRefreshViewHolder(new BGAMoocRefreshViewHolder(this));
+        mRefreshLayout.setRefreshViewHolder(new BGAStickinessRefreshViewHolder(this));
 
         mClickableLabelTv = (TextView) findViewById(R.id.tv_normalview_clickablelabel);
         mClickableLabelTv.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +62,7 @@ public class NormalViewDemoActivity extends AppCompatActivity implements BGARefr
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

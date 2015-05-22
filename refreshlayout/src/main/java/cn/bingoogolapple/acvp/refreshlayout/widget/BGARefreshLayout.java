@@ -39,7 +39,7 @@ public class BGARefreshLayout extends LinearLayout {
     /**
      * 当前刷新状态
      */
-    private RefreshStatus mCurrentRefreshStatus = RefreshStatus.PULL_DOWN;
+    private RefreshStatus mCurrentRefreshStatus = RefreshStatus.IDLE;
     /**
      * 下拉刷新和上拉加载更多代理
      */
@@ -273,17 +273,25 @@ public class BGARefreshLayout extends LinearLayout {
 
         // 如果是向下拉，并且当前可见的第一个条目的索引等于0，才处理整个头部控件的padding
         if (diffY > 0 && shouldHandleRefresh()) {
-            int paddingTop = mMinWholeHeaderViewPaddingTop + diffY;
+            // ACTION_DOWN时没有消耗掉事件，子控件会处于按下状态，这里设置ACTION_CANCEL，使子控件取消按下状态
+            event.setAction(MotionEvent.ACTION_CANCEL);
+            super.onTouchEvent(event);
 
+            int paddingTop = mMinWholeHeaderViewPaddingTop + diffY;
             if (paddingTop > 0 && mCurrentRefreshStatus != RefreshStatus.RELEASE_REFRESH) {
                 // 下拉刷新控件完全显示，并且当前状态没有处于释放开始刷新状态
                 mCurrentRefreshStatus = RefreshStatus.RELEASE_REFRESH;
                 handleRefreshStatusChanged();
+
+                paddingTop = Math.min(paddingTop, mMaxWholeHeaderViewPaddingTop);
             } else if (paddingTop < 0) {
                 // 下拉刷新控件没有完全显示，并且当前状态没有处于下拉刷新状态
                 if (mCurrentRefreshStatus != RefreshStatus.PULL_DOWN) {
+                    boolean isPreRefreshStatusNotIdle = mCurrentRefreshStatus != RefreshStatus.IDLE;
                     mCurrentRefreshStatus = RefreshStatus.PULL_DOWN;
-                    handleRefreshStatusChanged();
+                    if (isPreRefreshStatusNotIdle) {
+                        handleRefreshStatusChanged();
+                    }
                 }
                 float scale = 1 - paddingTop * 1.0f / mMinWholeHeaderViewPaddingTop;
                 /**
@@ -296,14 +304,12 @@ public class BGARefreshLayout extends LinearLayout {
                  */
                 mRefreshViewHolder.handleScale(scale);
             }
-
-            paddingTop = Math.min(paddingTop, mMaxWholeHeaderViewPaddingTop);
             mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
 
-            // ACTION_DOWN时没有消耗掉事件，子控件会处于按下状态，这里设置ACTION_CANCEL，使子控件取消按下状态
-            event.setAction(MotionEvent.ACTION_CANCEL);
-            super.onTouchEvent(event);
-
+            if (mRefreshViewHolder.canChangeToRefreshingStatus()) {
+                mDownY = -1;
+                changeToRefreshing();
+            }
             return true;
         }
         return false;
@@ -326,18 +332,27 @@ public class BGARefreshLayout extends LinearLayout {
         if (mCurrentRefreshStatus == RefreshStatus.PULL_DOWN) {
             // 处于下拉刷新状态，松手时隐藏下拉刷新控件
             hiddenRefreshHeaderView();
+            mCurrentRefreshStatus = RefreshStatus.IDLE;
+            handleRefreshStatusChanged();
         } else if (mCurrentRefreshStatus == RefreshStatus.RELEASE_REFRESH) {
             // 处于松开进入刷新状态，松手时完全显示下拉刷新控件，进入正在刷新状态
-            changeRefreshHeaderViewToZero();
-            mCurrentRefreshStatus = RefreshStatus.REFRESHING;
-            handleRefreshStatusChanged();
-
-            if (mDelegate != null) {
-                mDelegate.onBGARefreshLayoutBeginRefreshing();
-            }
+            changeToRefreshing();
         }
 
         return isReturnTrue;
+    }
+
+    /**
+     * 切换到正在刷新状态
+     */
+    private void changeToRefreshing() {
+        changeRefreshHeaderViewToZero();
+        mCurrentRefreshStatus = RefreshStatus.REFRESHING;
+        handleRefreshStatusChanged();
+
+        if (mDelegate != null) {
+            mDelegate.onBGARefreshLayoutBeginRefreshing();
+        }
     }
 
     /**
@@ -345,6 +360,9 @@ public class BGARefreshLayout extends LinearLayout {
      */
     private void handleRefreshStatusChanged() {
         switch (mCurrentRefreshStatus) {
+            case IDLE:
+                mRefreshViewHolder.changeToIdle();
+                break;
             case PULL_DOWN:
                 mRefreshViewHolder.changeToPullDown();
                 break;
@@ -363,7 +381,7 @@ public class BGARefreshLayout extends LinearLayout {
      * 结束下拉刷新和上拉加载更多
      */
     public void endRefreshing() {
-        mCurrentRefreshStatus = RefreshStatus.PULL_DOWN;
+        mCurrentRefreshStatus = RefreshStatus.IDLE;
         hiddenRefreshHeaderView();
         handleRefreshStatusChanged();
         mRefreshViewHolder.onEndRefreshing();
@@ -415,6 +433,6 @@ public class BGARefreshLayout extends LinearLayout {
     }
 
     public enum RefreshStatus {
-        PULL_DOWN, RELEASE_REFRESH, REFRESHING
+        IDLE, PULL_DOWN, RELEASE_REFRESH, REFRESHING
     }
 }
