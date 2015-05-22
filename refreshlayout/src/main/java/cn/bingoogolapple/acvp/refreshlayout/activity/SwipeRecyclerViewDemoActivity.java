@@ -17,9 +17,10 @@ import cn.bingoogolapple.acvp.refreshlayout.util.OnItemLongClickListener;
  */
 public class SwipeRecyclerViewDemoActivity extends BaseRecyclerViewDemoActivity implements OnItemClickListener, OnItemLongClickListener {
     private SwipeRecyclerViewAdapter mAdapter;
+
     @Override
     protected void initRefreshLayout() {
-        initCustomHeaderView();
+//        initCustomHeaderView();
     }
 
     @Override

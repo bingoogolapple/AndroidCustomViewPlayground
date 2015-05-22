@@ -163,6 +163,10 @@ public class BGARefreshLayout extends LinearLayout {
                 int interceptTouchMoveDistanceY = (int) (event.getRawY() - mInterceptTouchDownY);
                 if (Math.abs(event.getRawX() - mInterceptTouchDownX) < Math.abs(interceptTouchMoveDistanceY)) {
                     if (shouldHandleRefresh() && interceptTouchMoveDistanceY > 0) {
+
+                        // ACTION_DOWN时没有消耗掉事件，子控件会处于按下状态，这里设置ACTION_CANCEL，使子控件取消按下状态
+                        event.setAction(MotionEvent.ACTION_CANCEL);
+                        super.onInterceptTouchEvent(event);
                         return true;
                     }
                 }
@@ -240,10 +244,6 @@ public class BGARefreshLayout extends LinearLayout {
      * @return true表示自己消耗掉该事件，false表示不消耗该事件
      */
     private boolean handleActionMove(MotionEvent event) {
-        // 如果自定义头部控件没有完全显示，则跳出switch语句，执行父控件的touch事件
-        if (isCustomHeaderViewNotCompleteVisible()) {
-            return false;
-        }
         // 如果处于正在刷新状态，则跳出switch语句，执行父控件的touch事件
         if (mCurrentRefreshStatus == RefreshStatus.REFRESHING) {
             return false;
@@ -342,29 +342,6 @@ public class BGARefreshLayout extends LinearLayout {
             default:
                 break;
         }
-    }
-
-    /**
-     * 自定义头部控件是否没有完全显示
-     *
-     * @return true表示没有完全显示，false表示完全显示
-     */
-    private boolean isCustomHeaderViewNotCompleteVisible() {
-        if (mCustomHeaderView != null) {
-            // 0表示x，1表示y
-            int[] location = new int[2];
-            if (mOnScreenY == -1) {
-                getLocationOnScreen(location);
-                mOnScreenY = location[1];
-            }
-
-            mCustomHeaderView.getLocationOnScreen(location);
-            int customHeaderViewOnScreenY = location[1];
-            if (mOnScreenY > customHeaderViewOnScreenY) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

@@ -22,7 +22,7 @@ public class NormalRecyclerViewDemoActivity extends BaseRecyclerViewDemoActivity
 
     @Override
     protected void initRefreshLayout() {
-
+        initCustomHeaderView();
     }
 
     @Override
