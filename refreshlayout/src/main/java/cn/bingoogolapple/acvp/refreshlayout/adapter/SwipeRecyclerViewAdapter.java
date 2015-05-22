@@ -1,79 +1,30 @@
 package cn.bingoogolapple.acvp.refreshlayout.adapter;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
-
-import java.util.List;
+import android.content.Context;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
-import cn.bingoogolapple.acvp.refreshlayout.activity.SwipeRecyclerViewDemoActivity;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
-import cn.bingoogolapple.acvp.refreshlayout.util.BGARecyclerViewHolder;
-import cn.bingoogolapple.acvp.refreshlayout.util.OnItemChildClickListener;
+import cn.bingoogolapple.androidcommon.recyclerview.BGARecyclerViewHolder;
+import cn.bingoogolapple.androidcommon.recyclerview.BGARecyclerViewSwipeAdapter;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
- * 创建时间:15/5/22 10:43
+ * 创建时间:15/5/22 16:24
  * 描述:
  */
-public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<BGARecyclerViewHolder> implements OnItemChildClickListener {
-    private SwipeRecyclerViewDemoActivity mSwipeRecyclerViewDemoActivity;
-    private List<RefreshModel> mDatas;
+public class SwipeRecyclerViewAdapter extends BGARecyclerViewSwipeAdapter<RefreshModel> {
 
-    public SwipeRecyclerViewAdapter(SwipeRecyclerViewDemoActivity swipeRecyclerViewDemoActivity) {
-        mSwipeRecyclerViewDemoActivity = swipeRecyclerViewDemoActivity;
+    public SwipeRecyclerViewAdapter(Context context) {
+        super(context, R.layout.item_swipelist, R.id.sl_item_swipelist_root);
     }
 
     @Override
-    public BGARecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        BGARecyclerViewHolder viewHolder = new BGARecyclerViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_swipelist, parent, false), mSwipeRecyclerViewDemoActivity, mSwipeRecyclerViewDemoActivity);
-        setListener(viewHolder);
-        return viewHolder;
-    }
-
-    private void setListener(BGARecyclerViewHolder viewHolder) {
-        viewHolder.setOnItemChildClickListener(this);
-        viewHolder.setOnClickListener(R.id.tv_item_swipelist_delete);
+    protected void setListener(BGARecyclerViewHolder viewHolder) {
+        viewHolder.setItemChildClickListener(R.id.tv_item_swipelist_delete);
     }
 
     @Override
-    public void onBindViewHolder(final BGARecyclerViewHolder viewHolder, final int position) {
-        RefreshModel refreshModel = mDatas.get(position);
-        viewHolder.setText(R.id.tv_item_swipelist_title, refreshModel.mTitle).setText(R.id.tv_item_swipelist_detail, refreshModel.mDetail);
-    }
-
-    @Override
-    public int getSwipeLayoutResourceId(int position) {
-        return R.id.sl_item_swipelist_root;
-    }
-
-    @Override
-    public int getItemCount() {
-        return null == mDatas ? 0 : mDatas.size();
-    }
-
-    public void setDatas(List<RefreshModel> datas) {
-        mDatas = datas;
-        notifyDataSetChanged();
-    }
-
-    public void removeItem(int position) {
-        mDatas.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    public void addItem(int position, RefreshModel m) {
-        mDatas.add(position, m);
-        notifyItemInserted(position);
-    }
-
-    @Override
-    public void onItemChildClick(View v, int position) {
-        if (v.getId() == R.id.tv_item_swipelist_delete) {
-            removeItem(position);
-        }
+    public void fillData(BGARecyclerViewHolder viewHolder, int position, RefreshModel model) {
+        viewHolder.setText(R.id.tv_item_swipelist_title, model.mTitle).setText(R.id.tv_item_swipelist_detail, model.mDetail);
     }
 }

@@ -1,4 +1,4 @@
-package cn.bingoogolapple.acvp.refreshlistview.util;
+package cn.bingoogolapple.androidcommon.adapterview;
 
 import android.view.View;
 
@@ -7,9 +7,9 @@ import android.view.View;
  * 创建时间:15/5/21 上午1:03
  * 描述:
  */
-public class BGASwipeViewHolder extends BGAViewHolder {
+public class BGAAdapterViewSwipeHolder extends BGAAdapterViewBaseHolder {
 
-    public BGASwipeViewHolder(View convertView) {
+    public BGAAdapterViewSwipeHolder(View convertView) {
         mConvertView = convertView;
         mConvertView.setTag(this);
     }

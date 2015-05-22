@@ -1,4 +1,4 @@
-package cn.bingoogolapple.acvp.refreshlistview.util;
+package cn.bingoogolapple.androidcommon.adapterview;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,11 +10,9 @@ import android.view.ViewGroup;
  * 创建时间:15/5/21 上午1:00
  * 描述:
  */
-public class BGAAdapterViewHolder extends BGAViewHolder {
-    private int mPosition;
+public class BGAAdapterViewHolder extends BGAAdapterViewBaseHolder {
 
-    private BGAAdapterViewHolder(Context context, ViewGroup parent, int layoutId, int position) {
-        mPosition = position;
+    private BGAAdapterViewHolder(Context context, ViewGroup parent, int layoutId) {
         mConvertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
         mConvertView.setTag(this);
     }
@@ -26,18 +24,13 @@ public class BGAAdapterViewHolder extends BGAViewHolder {
      * @param convertView
      * @param parent
      * @param layoutId
-     * @param position
      * @return
      */
-    public static BGAAdapterViewHolder get(Context context, View convertView, ViewGroup parent, int layoutId, int position) {
+    public static BGAAdapterViewHolder dequeueReusableAdapterViewHolder(Context context, View convertView, ViewGroup parent, int layoutId) {
         if (convertView == null) {
-            return new BGAAdapterViewHolder(context, parent, layoutId, position);
+            return new BGAAdapterViewHolder(context, parent, layoutId);
         }
         return (BGAAdapterViewHolder) convertView.getTag();
-    }
-
-    public int getPosition() {
-        return mPosition;
     }
 
 }

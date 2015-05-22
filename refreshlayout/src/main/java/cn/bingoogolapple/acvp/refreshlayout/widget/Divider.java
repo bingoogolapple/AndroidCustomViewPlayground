@@ -1,4 +1,4 @@
-package cn.bingoogolapple.acvp.refreshlayout.util;
+package cn.bingoogolapple.acvp.refreshlayout.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;

@@ -22,7 +22,12 @@
         <activity
             android:name=".activity.SwipeRecyclerViewDemoActivity"
             android:label="SwipeRecyclerViewDemo" />
-
+        <activity
+            android:name=".activity.NormalListViewDemoActivity"
+            android:label="NormalListViewDemo" />
+        <activity
+            android:name=".activity.SwipeListViewDemoActivity"
+            android:label="SwipeListViewDemo" />
     </application>
 
 </manifest>

@@ -18,4 +18,16 @@
         android:onClick="changeToSwipeRecyclerViewDemo"
         android:text="changeToSwipeRecyclerViewDemo" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="changeToNormalListViewDemo"
+        android:text="changeToNormalListViewDemo" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="changeToSwipeListViewDemo"
+        android:text="changeToSwipeListViewDemo" />
+
 </LinearLayout>

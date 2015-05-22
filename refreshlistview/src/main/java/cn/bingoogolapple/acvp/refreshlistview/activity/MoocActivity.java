@@ -1,10 +1,10 @@
 package cn.bingoogolapple.acvp.refreshlistview.activity;
 
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.List;
 
+import cn.bingoogolapple.acvp.refreshlistview.R;
 import cn.bingoogolapple.acvp.refreshlistview.adapter.SwipeViewAdapter;
 import cn.bingoogolapple.acvp.refreshlistview.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlistview.widget.BGAMoocRefreshViewHolder;
@@ -21,7 +21,8 @@ public class MoocActivity extends BaseDemoActivity {
     protected void initListView() {
         initCustomHeaderView();
         mRefreshListView.setRefreshViewHolder(new BGAMoocRefreshViewHolder(this));
-        mAdapter = new SwipeViewAdapter(this, this, mDatas);
+        mAdapter = new SwipeViewAdapter(this, this);
+        mAdapter.setDatas(mDatas);
         mRefreshListView.setAdapter(mAdapter);
     }
 
@@ -38,9 +39,8 @@ public class MoocActivity extends BaseDemoActivity {
 
     @Override
     public void onClick(View v) {
-        RefreshModel refreshModel = (RefreshModel) v.getTag();
-        Toast.makeText(this, "点击了删除" + refreshModel.mTitle, Toast.LENGTH_SHORT).show();
-        mAdapter.remove(refreshModel);
-        mAdapter.closeAllItems();
+        if (v.getId() == R.id.tv_item_swipelist_delete) {
+            mAdapter.removeItem((RefreshModel) v.getTag());
+        }
     }
 }

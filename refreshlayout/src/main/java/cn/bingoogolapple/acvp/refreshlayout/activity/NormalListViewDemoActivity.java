@@ -1,8 +1,10 @@
 package cn.bingoogolapple.acvp.refreshlayout.activity;
 
+import android.view.View;
+
 import java.util.List;
 
-import cn.bingoogolapple.acvp.refreshlayout.adapter.RecyclerViewAdapter;
+import cn.bingoogolapple.acvp.refreshlayout.adapter.AdapterViewAdapter;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 
 /**
@@ -10,8 +12,8 @@ import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
  * 创建时间:15/5/22 10:06
  * 描述:
  */
-public class NormalRecyclerViewDemoActivity extends BaseRecyclerViewDemoActivity {
-    private RecyclerViewAdapter mAdapter;
+public class NormalListViewDemoActivity extends BaseListViewDemoActivity {
+    private AdapterViewAdapter mAdapter;
 
     @Override
     protected void initRefreshLayout() {
@@ -19,12 +21,10 @@ public class NormalRecyclerViewDemoActivity extends BaseRecyclerViewDemoActivity
     }
 
     @Override
-    protected void initRecyclerView() {
-        mAdapter = new RecyclerViewAdapter(this);
+    protected void initListView() {
+        mAdapter = new AdapterViewAdapter(this);
         mAdapter.setDatas(mDatas);
-        mAdapter.setOnRVItemClickListener(this);
-        mAdapter.setOnRVItemLongClickListener(this);
-        mDataRv.setAdapter(mAdapter);
+        mDataLv.setAdapter(mAdapter);
     }
 
     @Override
@@ -33,4 +33,7 @@ public class NormalRecyclerViewDemoActivity extends BaseRecyclerViewDemoActivity
         mAdapter.setDatas(mDatas);
     }
 
+    @Override
+    public void onClick(View v) {
+    }
 }

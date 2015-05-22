@@ -17,4 +17,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.1.1'
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'cn.bingoogolapple:bga-banner:1.0.0@aar'
+
+    compile project(':androidcommon')
 }

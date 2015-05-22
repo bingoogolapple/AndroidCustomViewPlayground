@@ -3,9 +3,9 @@ package cn.bingoogolapple.acvp.refreshlayout.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -15,9 +15,6 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
-import cn.bingoogolapple.acvp.refreshlayout.widget.Divider;
-import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemClickListener;
-import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemLongClickListener;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
 
@@ -26,31 +23,31 @@ import cn.bingoogolapple.bgabanner.BGABanner;
  * 创建时间:15/5/21 上午1:22
  * 描述:
  */
-public abstract class BaseRecyclerViewDemoActivity extends AppCompatActivity implements BGARefreshLayout.BGARefreshLayoutDelegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener {
+public abstract class BaseListViewDemoActivity extends AppCompatActivity  implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener, BGARefreshLayout.BGARefreshLayoutDelegate {
     protected BGARefreshLayout mRefreshLayout;
     protected List<RefreshModel> mDatas;
-    protected RecyclerView mDataRv;
+    protected ListView mDataLv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recyclerview);
-        mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_recyclerview_refresh);
+        setContentView(R.layout.activity_listview);
+        mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_listview_refresh);
         mRefreshLayout.setDelegate(this);
         mRefreshLayout.setRefreshViewHolder(new BGAMoocRefreshViewHolder(this));
 
-        mDataRv = (RecyclerView) findViewById(R.id.rv_recyclerview_data);
-        mDataRv.setLayoutManager(new LinearLayoutManager(this));
-        mDataRv.addItemDecoration(new Divider(this));
+        mDataLv = (ListView) findViewById(R.id.lv_listview_data);
+        mDataLv.setOnItemClickListener(this);
+        mDataLv.setOnItemLongClickListener(this);
 
         initDatas();
         initRefreshLayout();
-        initRecyclerView();
+        initListView();
     }
 
     protected abstract void initRefreshLayout();
 
-    protected abstract void initRecyclerView();
+    protected abstract void initListView();
 
     protected void initCustomHeaderView() {
         List<View> datas = new ArrayList<>();
@@ -101,13 +98,13 @@ public abstract class BaseRecyclerViewDemoActivity extends AppCompatActivity imp
     protected abstract void onEndRefreshing(List<RefreshModel> datas);
 
     @Override
-    public void onRVItemClick(View v, int position) {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(this, "点击了条目 " + mDatas.get(position).mTitle, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public boolean onRVItemLongClick(View v, int position) {
-        Toast.makeText(this, "长按了条目 " + mDatas.get(position).mTitle, Toast.LENGTH_SHORT).show();
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(this, "长按了" + mDatas.get(position).mTitle, Toast.LENGTH_SHORT).show();
         return true;
     }
 }

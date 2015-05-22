@@ -1,4 +1,4 @@
-package cn.bingoogolapple.acvp.refreshlistview.util;
+package cn.bingoogolapple.androidcommon.adapterview;
 
 import android.util.SparseArray;
 import android.view.View;
@@ -9,12 +9,21 @@ import android.widget.TextView;
  * 创建时间:15/5/21 上午12:54
  * 描述:
  */
-public class BGAViewHolder {
+public class BGAAdapterViewBaseHolder {
     protected final SparseArray<View> mViews = new SparseArray<View>();
     protected View mConvertView;
+    protected int mPosition;
 
     public View getConvertView() {
         return mConvertView;
+    }
+
+    public void setPosition(int position) {
+        mPosition = position;
+    }
+
+    public int getPosition() {
+        return mPosition;
     }
 
     /**
@@ -32,7 +41,7 @@ public class BGAViewHolder {
         return (T) view;
     }
 
-    public BGAViewHolder setText(int viewId, String text) {
+    public BGAAdapterViewBaseHolder setText(int viewId, String text) {
         TextView view = getView(viewId);
         view.setText(text);
         return this;

@@ -1,10 +1,10 @@
-package cn.bingoogolapple.acvp.refreshlistview.adapter;
+package cn.bingoogolapple.acvp.refreshlayout.adapter;
 
 import android.content.Context;
 import android.view.View;
 
-import cn.bingoogolapple.acvp.refreshlistview.R;
-import cn.bingoogolapple.acvp.refreshlistview.mode.RefreshModel;
+import cn.bingoogolapple.acvp.refreshlayout.R;
+import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.androidcommon.adapterview.BGAAdapterViewSwipeAdapter;
 import cn.bingoogolapple.androidcommon.adapterview.BGAAdapterViewSwipeHolder;
 
@@ -13,10 +13,10 @@ import cn.bingoogolapple.androidcommon.adapterview.BGAAdapterViewSwipeHolder;
  * 创建时间:15/5/21 上午12:41
  * 描述:
  */
-public class SwipeViewAdapter extends BGAAdapterViewSwipeAdapter<RefreshModel> {
+public class SwipeAdapterViewAdapter extends BGAAdapterViewSwipeAdapter<RefreshModel> {
     private View.OnClickListener mOnClickListener;
 
-    public SwipeViewAdapter(Context context, View.OnClickListener onClickListener) {
+    public SwipeAdapterViewAdapter(Context context, View.OnClickListener onClickListener) {
         super(context, R.layout.item_swipelist, R.id.sl_item_swipelist_root);
         mOnClickListener = onClickListener;
     }

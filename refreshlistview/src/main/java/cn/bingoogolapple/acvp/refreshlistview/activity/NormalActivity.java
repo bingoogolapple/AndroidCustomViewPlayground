@@ -21,7 +21,8 @@ public class NormalActivity extends BaseDemoActivity {
     protected void initListView() {
         initCustomHeaderView();
         mRefreshListView.setRefreshViewHolder(new BGANormalRefreshViewHolder(this));
-        mAdapter = new AdapterViewAdapter(this, mDatas);
+        mAdapter = new AdapterViewAdapter(this);
+        mAdapter.setDatas(mDatas);
         mRefreshListView.setAdapter(mAdapter);
     }
 

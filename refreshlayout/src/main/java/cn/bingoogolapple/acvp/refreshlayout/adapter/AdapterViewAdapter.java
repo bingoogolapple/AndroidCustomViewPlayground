@@ -1,9 +1,9 @@
-package cn.bingoogolapple.acvp.refreshlistview.adapter;
+package cn.bingoogolapple.acvp.refreshlayout.adapter;
 
 import android.content.Context;
 
-import cn.bingoogolapple.acvp.refreshlistview.R;
-import cn.bingoogolapple.acvp.refreshlistview.mode.RefreshModel;
+import cn.bingoogolapple.acvp.refreshlayout.R;
+import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.androidcommon.adapterview.BGAAdapterViewAdapter;
 import cn.bingoogolapple.androidcommon.adapterview.BGAAdapterViewHolder;
 
