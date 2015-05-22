@@ -16,7 +16,7 @@ public class BGARecyclerViewHolder extends RecyclerView.ViewHolder implements Vi
 
     public BGARecyclerViewHolder(View itemView, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
         super(itemView);
-        mViews = new SparseArray<View>();
+        mViews = new SparseArray<>();
         mContext = itemView.getContext();
         mOnItemClickListener = onItemClickListener;
         mOnItemLongClickListener = onItemLongClickListener;

@@ -34,8 +34,7 @@ public class SwipeViewAdapter extends BGASwipeViewAdapter<RefreshModel> {
     protected void fillData(BGASwipeViewHolder viewHolder, RefreshModel model) {
         viewHolder.getView(R.id.tv_item_swipelist_delete).setTag(model);
 
-        viewHolder.setText(R.id.tv_item_swipelist_title, model.mTitle);
-        viewHolder.setText(R.id.tv_item_swipelist_detail, model.mDetail);
+        viewHolder.setText(R.id.tv_item_swipelist_title, model.mTitle).setText(R.id.tv_item_swipelist_detail, model.mDetail);
     }
 
 }

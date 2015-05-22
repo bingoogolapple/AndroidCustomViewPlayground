@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.bingoogolapple.acvp.refreshrecyclerview.widget.BGARefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_demo_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ccc">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_demo_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none" />
+</cn.bingoogolapple.acvp.refreshrecyclerview.widget.BGARefreshLayout>

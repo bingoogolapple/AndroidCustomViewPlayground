@@ -1,17 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="10dp">
 
-    <cn.bingoogolapple.acvp.refreshrecyclerview.widget.BGARefreshLayout
-        android:id="@+id/rl_demo_refresh"
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:onClick="changeToNormalRecyclerViewDemo"
+        android:text="changeToNormalRecyclerViewDemo" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_demo_data"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none" />
-    </cn.bingoogolapple.acvp.refreshrecyclerview.widget.BGARefreshLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="changeToSwipeRecyclerViewDemo"
+        android:text="changeToSwipeRecyclerViewDemo" />
+
 </LinearLayout>
