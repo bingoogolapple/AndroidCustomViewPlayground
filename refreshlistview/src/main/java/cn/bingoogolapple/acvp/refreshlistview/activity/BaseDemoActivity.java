@@ -10,9 +10,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bingoogolapple.acvp.refreshlistview.R;
 import cn.bingoogolapple.acvp.refreshlistview.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlistview.widget.BGARefreshListView;
+import cn.bingoogolapple.acvp.refreshlistview.R;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
 /**

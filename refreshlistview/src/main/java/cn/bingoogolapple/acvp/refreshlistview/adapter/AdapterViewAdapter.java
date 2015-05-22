@@ -4,10 +4,10 @@ import android.content.Context;
 
 import java.util.List;
 
-import cn.bingoogolapple.acvp.refreshlistview.R;
 import cn.bingoogolapple.acvp.refreshlistview.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlistview.util.BGAAdapterViewAdapter;
 import cn.bingoogolapple.acvp.refreshlistview.util.BGAAdapterViewHolder;
+import cn.bingoogolapple.acvp.refreshlistview.R;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com

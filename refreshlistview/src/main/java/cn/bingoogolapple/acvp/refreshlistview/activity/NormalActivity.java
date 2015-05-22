@@ -4,9 +4,9 @@ import android.view.View;
 
 import java.util.List;
 
-import cn.bingoogolapple.acvp.refreshlistview.adapter.AdapterViewAdapter;
 import cn.bingoogolapple.acvp.refreshlistview.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlistview.widget.BGANormalRefreshViewHolder;
+import cn.bingoogolapple.acvp.refreshlistview.adapter.AdapterViewAdapter;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com

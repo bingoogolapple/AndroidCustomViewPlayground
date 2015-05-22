@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.bingoogolapple.acvp.refreshlistview">
+    package="cn.bingoogolapple.acvp.refreshlayout">
 
     <application
         android:allowBackup="true"
@@ -17,11 +17,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.NormalActivity"
-            android:label="Normal" />
+            android:name=".activity.NormalRecyclerViewDemoActivity"
+            android:label="NormalRecyclerViewDemo" />
         <activity
-            android:name=".activity.MoocActivity"
-            android:label="Mooc" />
+            android:name=".activity.SwipeRecyclerViewDemoActivity"
+            android:label="SwipeRecyclerViewDemo" />
+
     </application>
 
 </manifest>
