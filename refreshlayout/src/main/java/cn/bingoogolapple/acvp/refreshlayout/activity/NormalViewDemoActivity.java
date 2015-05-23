@@ -62,7 +62,7 @@ public class NormalViewDemoActivity extends AppCompatActivity implements BGARefr
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

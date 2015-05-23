@@ -1,7 +1,6 @@
 package cn.bingoogolapple.acvp.refreshlayout.widget;
 
 import android.content.Context;
-import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -60,8 +59,7 @@ public class BGANormalRefreshViewHolder extends BGARefreshViewHolder {
     }
 
     @Override
-    public void handleScale(float scale) {
-        ViewCompat.setAlpha(mStatusTv, scale);
+    public void handleScale(float scale, int moveYDistance) {
     }
 
     @Override

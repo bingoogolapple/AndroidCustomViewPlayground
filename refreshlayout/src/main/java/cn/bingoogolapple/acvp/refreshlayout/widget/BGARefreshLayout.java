@@ -125,9 +125,7 @@ public class BGARefreshLayout extends LinearLayout {
             mRefreshHeaderView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             mWholeHeaderView.addView(mRefreshHeaderView, 0);
 
-            // 测量下拉刷新控件的高度
-            mRefreshHeaderView.measure(0, 0);
-            mRefreshHeaderViewHeight = mRefreshHeaderView.getMeasuredHeight();
+            mRefreshHeaderViewHeight = mRefreshViewHolder.getRefreshHeaderViewHeight();
             mMinWholeHeaderViewPaddingTop = -mRefreshHeaderViewHeight;
             mMaxWholeHeaderViewPaddingTop = (int) (mRefreshHeaderViewHeight * mRefreshViewHolder.getSpringDistanceScale());
 
@@ -284,6 +282,7 @@ public class BGARefreshLayout extends LinearLayout {
                 handleRefreshStatusChanged();
 
                 paddingTop = Math.min(paddingTop, mMaxWholeHeaderViewPaddingTop);
+                mRefreshViewHolder.handleScale(1.0f, diffY);
             } else if (paddingTop < 0) {
                 // 下拉刷新控件没有完全显示，并且当前状态没有处于下拉刷新状态
                 if (mCurrentRefreshStatus != RefreshStatus.PULL_DOWN) {
@@ -302,7 +301,7 @@ public class BGARefreshLayout extends LinearLayout {
                  * paddingTop    0 ==> mMinWholeHeaderViewPaddingTop
                  * scale         1 ==> 0
                  */
-                mRefreshViewHolder.handleScale(scale);
+                mRefreshViewHolder.handleScale(scale, diffY);
             }
             mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
 

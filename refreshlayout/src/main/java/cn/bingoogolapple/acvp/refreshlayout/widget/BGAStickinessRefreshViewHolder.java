@@ -24,7 +24,7 @@ public class BGAStickinessRefreshViewHolder extends BGARefreshViewHolder {
 
     @Override
     public View getRefreshHeaderView() {
-        if(mRefreshHeaderView == null) {
+        if (mRefreshHeaderView == null) {
             mRefreshHeaderView = View.inflate(mContext, R.layout.view_refresh_header_stickiness, null);
             mStickinessRefreshView = (StickinessRefreshView) mRefreshHeaderView.findViewById(R.id.stickinessRefreshView);
         }
@@ -32,8 +32,8 @@ public class BGAStickinessRefreshViewHolder extends BGARefreshViewHolder {
     }
 
     @Override
-    public void handleScale(float scale) {
-        mStickinessRefreshView.setScale(scale);
+    public void handleScale(float scale, int moveYDistance) {
+        mStickinessRefreshView.setMoveYDistance((int)(moveYDistance * getPaddingTopScale()));
     }
 
     @Override
@@ -43,7 +43,6 @@ public class BGAStickinessRefreshViewHolder extends BGARefreshViewHolder {
 
     @Override
     public void changeToPullDown() {
-
     }
 
     @Override
@@ -67,5 +66,14 @@ public class BGAStickinessRefreshViewHolder extends BGARefreshViewHolder {
     @Override
     public boolean canChangeToRefreshingStatus() {
         return mStickinessRefreshView.canChangeToRefreshing();
+    }
+
+    public int getRefreshHeaderViewHeight() {
+        if (mRefreshHeaderView != null) {
+            // 测量下拉刷新控件的高度
+            mRefreshHeaderView.measure(0, 0);
+            return mStickinessRefreshView.getTotalHeight();
+        }
+        return 0;
     }
 }

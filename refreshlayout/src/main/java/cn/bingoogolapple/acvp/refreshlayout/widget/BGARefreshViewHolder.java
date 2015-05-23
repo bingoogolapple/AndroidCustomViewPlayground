@@ -49,9 +49,10 @@ public abstract class BGARefreshViewHolder {
     /**
      * 下拉刷新控件可见时，处理上下拉进度
      *
-     * @param scale
+     * @param scale         下拉过程0 ==> 1
+     * @param moveYDistance
      */
-    public abstract void handleScale(float scale);
+    public abstract void handleScale(float scale, int moveYDistance);
 
     /**
      * 进入到未处理下拉刷新状态
@@ -108,6 +109,20 @@ public abstract class BGARefreshViewHolder {
      */
     public boolean canChangeToRefreshingStatus() {
         return false;
+    }
+
+    /**
+     * 获取下拉刷新控件的高度，如果初始化时的高度和最后展开的最大高度不一致，需重写该方法返回最大高度
+     *
+     * @return
+     */
+    public int getRefreshHeaderViewHeight() {
+        if (mRefreshHeaderView != null) {
+            // 测量下拉刷新控件的高度
+            mRefreshHeaderView.measure(0, 0);
+            return mRefreshHeaderView.getMeasuredHeight();
+        }
+        return 0;
     }
 
 }

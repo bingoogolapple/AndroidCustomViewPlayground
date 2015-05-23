@@ -33,7 +33,7 @@ public class BGAMoocRefreshViewHolder extends BGARefreshViewHolder {
     }
 
     @Override
-    public void handleScale(float scale) {
+    public void handleScale(float scale, int moveYDistance) {
         scale = 0.6f + 0.4f * scale;
         ViewCompat.setScaleX(mMoocRefreshView, scale);
         ViewCompat.setScaleY(mMoocRefreshView, scale);
