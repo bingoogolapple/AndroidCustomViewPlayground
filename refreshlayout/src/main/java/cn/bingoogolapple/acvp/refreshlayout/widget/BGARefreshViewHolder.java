@@ -88,6 +88,11 @@ public abstract class BGARefreshViewHolder {
     public abstract void onEndRefreshing();
 
     /**
+     * 进入加载更多状态
+     */
+    public abstract void changeToLoadingMore();
+
+    /**
      * 手指移动距离与下拉刷新控件paddingTop移动距离的比值
      *
      * @return

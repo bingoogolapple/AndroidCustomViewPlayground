@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -15,18 +14,17 @@
 
         <ImageView
             android:id="@+id/iv_normal_refresh_header_arrow"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_gravity="center"
-            android:src="@mipmap/refresh_listview_head_arrow" />
+            android:src="@mipmap/refresh_head_arrow" />
 
-        <ProgressBar
-            android:id="@+id/pb_normal_refresh_header_progress"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:indeterminateDrawable="@drawable/custom_progressbar"
-            android:visibility="invisible" />
+        <ImageView
+            android:id="@+id/iv_normal_refresh_header_chrysanthemum"
+            android:visibility="invisible"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@anim/bga_refresh_loding"/>
     </FrameLayout>
 
     <TextView
@@ -36,5 +34,6 @@
         android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp"
         android:text="下拉刷新"
-        android:textSize="20sp" />
+        android:textColor="#777"
+        android:textSize="12sp" />
 </LinearLayout>

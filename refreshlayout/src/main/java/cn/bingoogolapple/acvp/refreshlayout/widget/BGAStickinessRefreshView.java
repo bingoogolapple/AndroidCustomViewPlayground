@@ -19,8 +19,8 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
  * 创建时间:15/5/21 22:34
  * 描述:
  */
-public class StickinessRefreshView extends View {
-    private static final String TAG = StickinessRefreshView.class.getSimpleName();
+public class BGAStickinessRefreshView extends View {
+    private static final String TAG = BGAStickinessRefreshView.class.getSimpleName();
     private BGAStickinessRefreshViewHolder mStickinessRefreshViewHolder;
     private RectF mTopBound;
     private RectF mBottomBound;
@@ -52,15 +52,17 @@ public class StickinessRefreshView extends View {
     private int mEdge = 0;
     private int mTopSize = 0;
 
-    public StickinessRefreshView(Context context) {
+    private int mStickinessColor = 0xFF999999;
+
+    public BGAStickinessRefreshView(Context context) {
         this(context, null);
     }
 
-    public StickinessRefreshView(Context context, AttributeSet attrs) {
+    public BGAStickinessRefreshView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public StickinessRefreshView(Context context, AttributeSet attrs, int defStyle) {
+    public BGAStickinessRefreshView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initBounds();
         initPaint();
@@ -77,12 +79,25 @@ public class StickinessRefreshView extends View {
 
     private void initPaint() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setColor(0xFF999999);
+        mPaint.setColor(mStickinessColor);
         mPath = new Path();
     }
 
+    public void setStickinessColor(int stickinessColor) {
+        mStickinessColor = stickinessColor;
+        if (mPaint == null) {
+            initPaint();
+        } else {
+            mPaint.setColor(mStickinessColor);
+        }
+    }
+
     private void initRotateDrawable() {
-        mRotateDrawable = getContext().getResources().getDrawable(R.mipmap.icon_pullwidget);
+        mRotateDrawable = getContext().getResources().getDrawable(R.mipmap.bga_refresh_stickiness);
+    }
+
+    public void setRotateDrawable(Drawable rotateDrawable) {
+        mRotateDrawable = rotateDrawable;
     }
 
     private void initSize() {
@@ -90,7 +105,7 @@ public class StickinessRefreshView extends View {
         mRotateDrawableSize = UIUtil.dp2px(getContext(), 30);
         mTopSize = mRotateDrawableSize + 2 * mEdge;
 
-        mMaxBottomHeight = 2 * mRotateDrawableSize;
+        mMaxBottomHeight = (int)(2.5f * mRotateDrawableSize);
     }
 
     @Override
@@ -147,7 +162,7 @@ public class StickinessRefreshView extends View {
             // scale                  0.2 ==> 1
             float scale = Math.max(mCurrentBottomHeight * 1.0f / mMaxBottomHeight, 0.2f);
 
-            float bottomControlXOffset = mTopSize * ((4 + scale * scale * 15) / 32);
+            float bottomControlXOffset = mTopSize * ((4 + scale * scale * scale * scale * 15) / 32);
             float bottomControlY = mTopBound.bottom / 2 + mCenterPoint.y / 2;
             // 三阶贝塞尔曲线，前两个是控制点，最后一个点是终点
             mPath.cubicTo(mTopBound.right - mTopSize / 8, mTopBound.bottom, mTopBound.right - bottomControlXOffset, bottomControlY, mBottomBound.right, mBottomBound.bottom - mBottomBound.height() / 2);

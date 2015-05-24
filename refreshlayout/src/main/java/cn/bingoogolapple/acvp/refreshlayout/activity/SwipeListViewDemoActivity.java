@@ -7,6 +7,7 @@ import java.util.List;
 import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.adapter.SwipeAdapterViewAdapter;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
+import cn.bingoogolapple.acvp.refreshlayout.widget.BGANormalRefreshViewHolder;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
@@ -18,6 +19,11 @@ public class SwipeListViewDemoActivity extends BaseListViewDemoActivity {
 
     @Override
     protected void initRefreshLayout() {
+        BGANormalRefreshViewHolder normalRefreshViewHolder = new BGANormalRefreshViewHolder(this);
+        normalRefreshViewHolder.setPullDownRefreshText("自定义下拉刷新文本");
+        normalRefreshViewHolder.setReleaseRefreshText("自定义松开更新文本");
+        normalRefreshViewHolder.setRefreshingText("自定义正在刷新文本");
+        mRefreshLayout.setRefreshViewHolder(normalRefreshViewHolder);
     }
 
     @Override

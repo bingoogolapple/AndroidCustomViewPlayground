@@ -13,7 +13,6 @@ import java.util.List;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
-import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
@@ -34,7 +33,6 @@ public abstract class BaseListViewDemoActivity extends AppCompatActivity  implem
         setContentView(R.layout.activity_listview);
         mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_listview_refresh);
         mRefreshLayout.setDelegate(this);
-        mRefreshLayout.setRefreshViewHolder(new BGAMoocRefreshViewHolder(this));
 
         mDataLv = (ListView) findViewById(R.id.lv_listview_data);
         mDataLv.setOnItemClickListener(this);

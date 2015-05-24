@@ -22,7 +22,7 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
  * 创建时间:15/5/21 10:43
  * 描述:
  */
-public class MoocRefreshView extends View {
+public class BGAMoocStyleRefreshView extends View {
     private PorterDuffXfermode mXfermode;
     /**
      * 用来画临时图像的画笔
@@ -86,15 +86,15 @@ public class MoocRefreshView extends View {
     private int mUltimateColor;
 
 
-    public MoocRefreshView(Context context) {
+    public BGAMoocStyleRefreshView(Context context) {
         this(context, null);
     }
 
-    public MoocRefreshView(Context context, AttributeSet attrs) {
+    public BGAMoocStyleRefreshView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public MoocRefreshView(Context context, AttributeSet attrs, int defStyle) {
+    public BGAMoocStyleRefreshView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initAttrs(context, attrs);
 
@@ -103,15 +103,15 @@ public class MoocRefreshView extends View {
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MoocRefreshView);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BGAMoocStyleRefreshView);
 
-        BitmapDrawable originalBitmap = (BitmapDrawable) typedArray.getDrawable(R.styleable.MoocRefreshView_mv_originalImg);
+        BitmapDrawable originalBitmap = (BitmapDrawable) typedArray.getDrawable(R.styleable.BGAMoocStyleRefreshView_mv_originalImg);
         if (originalBitmap == null) {
-            throw new RuntimeException(MoocRefreshView.class.getSimpleName() + "必须设置原始图片");
+            throw new RuntimeException(BGAMoocStyleRefreshView.class.getSimpleName() + "必须设置原始图片");
         }
         mOriginalBitmap = originalBitmap.getBitmap();
 
-        mUltimateColor = typedArray.getColor(R.styleable.MoocRefreshView_mv_ultimateColor, Color.rgb(27, 128, 255));
+        mUltimateColor = typedArray.getColor(R.styleable.BGAMoocStyleRefreshView_mv_ultimateColor, Color.rgb(27, 128, 255));
 
         typedArray.recycle();
     }
@@ -121,6 +121,14 @@ public class MoocRefreshView extends View {
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);
         mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setColor(mUltimateColor);
+    }
+
+    public void setUltimateColor(int ultimateColor) {
+        mUltimateColor = ultimateColor;
+        if (mPaint == null) {
+            initPaint();
+        }
         mPaint.setColor(mUltimateColor);
     }
 
@@ -140,6 +148,11 @@ public class MoocRefreshView extends View {
         mCanvas = new Canvas();
         mUltimateBitmap = Bitmap.createBitmap(mOriginalBitmapWidth, mOriginalBitmapHeight, Config.ARGB_8888);
         mCanvas.setBitmap(mUltimateBitmap);
+    }
+
+    public void setOriginalBitmap(Bitmap originalBitmap) {
+        mOriginalBitmap = originalBitmap;
+        initCanvas();
     }
 
     @Override

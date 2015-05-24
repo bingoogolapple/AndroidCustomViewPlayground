@@ -13,7 +13,7 @@ import java.util.List;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
-import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocRefreshViewHolder;
+import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocStyleRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
 import cn.bingoogolapple.acvp.refreshlayout.widget.Divider;
 import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemClickListener;
@@ -37,7 +37,7 @@ public abstract class BaseRecyclerViewDemoActivity extends AppCompatActivity imp
         setContentView(R.layout.activity_recyclerview);
         mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_recyclerview_refresh);
         mRefreshLayout.setDelegate(this);
-        mRefreshLayout.setRefreshViewHolder(new BGAMoocRefreshViewHolder(this));
+        mRefreshLayout.setRefreshViewHolder(new BGAMoocStyleRefreshViewHolder(this));
 
         mDataRv = (RecyclerView) findViewById(R.id.rv_recyclerview_data);
         mDataRv.setLayoutManager(new LinearLayoutManager(this));
