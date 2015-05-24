@@ -96,6 +96,35 @@ public abstract class BaseListViewDemoActivity extends AppCompatActivity  implem
     protected abstract void onEndRefreshing(List<RefreshModel> datas);
 
     @Override
+    public void onBGARefreshLayoutBeginLoadingMore() {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                mRefreshLayout.endRefreshing();
+
+                List<RefreshModel> datas = new ArrayList<>();
+                for (int i = 0; i < 3; i++) {
+                    datas.add(new RefreshModel("moreTitle" + i, "moreDetail" + i));
+                }
+                onEndLoadingMore(datas);
+            }
+        }.execute();
+    }
+
+    protected abstract void onEndLoadingMore(List<RefreshModel> datas);
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(this, "点击了条目 " + mDatas.get(position).mTitle, Toast.LENGTH_SHORT).show();
     }

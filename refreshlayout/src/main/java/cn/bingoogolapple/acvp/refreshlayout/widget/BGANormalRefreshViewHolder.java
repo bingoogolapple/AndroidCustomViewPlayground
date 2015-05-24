@@ -23,17 +23,17 @@ public class BGANormalRefreshViewHolder extends BGARefreshViewHolder {
     private RotateAnimation mUpAnim;
     private RotateAnimation mDownAnim;
 
-    private TextView mFooterStatusTv;
-    private ImageView mFooterChrysanthemumIv;
-    private AnimationDrawable mFooterChrysanthemumAd;
-
     private String mPullDownRefreshText = "下拉刷新";
     private String mReleaseRefreshText = "释放更新";
     private String mRefreshingText = "加载中...";
-    private String mLodingMoreText = "加载中...";
 
-    public BGANormalRefreshViewHolder(Context context) {
-        super(context);
+    /**
+     *
+     * @param context
+     * @param isLoadingMoreEnabled 上拉加载更多是否可用
+     */
+    public BGANormalRefreshViewHolder(Context context, boolean isLoadingMoreEnabled) {
+        super(context, isLoadingMoreEnabled);
         initAnimation();
     }
 
@@ -56,22 +56,6 @@ public class BGANormalRefreshViewHolder extends BGARefreshViewHolder {
 
     public void setRefreshingText(String refreshingText) {
         mRefreshingText = refreshingText;
-    }
-
-    public void setLoadingMoreText(String loadingMoreText) {
-        mLodingMoreText = loadingMoreText;
-    }
-
-    @Override
-    public View getLoadMoreFooterView() {
-        if(mLoadMoreFooterView == null) {
-            mLoadMoreFooterView = View.inflate(mContext, R.layout.view_normal_refresh_footer, null);
-            mFooterStatusTv = (TextView) mLoadMoreFooterView.findViewById(R.id.tv_normal_refresh_footer_status);
-            mFooterChrysanthemumIv = (ImageView) mLoadMoreFooterView.findViewById(R.id.iv_normal_refresh_footer_chrysanthemum);
-            mFooterChrysanthemumAd = (AnimationDrawable) mFooterChrysanthemumIv.getDrawable();
-            mFooterStatusTv.setText(mLodingMoreText);
-        }
-        return mLoadMoreFooterView;
     }
 
     @Override
@@ -126,11 +110,6 @@ public class BGANormalRefreshViewHolder extends BGARefreshViewHolder {
     }
 
     @Override
-    public void onEndLoadingMore() {
-        mFooterChrysanthemumAd.stop();
-    }
-
-    @Override
     public void onEndRefreshing() {
         mHeaderStatusTv.setText(mPullDownRefreshText);
         mHeaderChrysanthemumIv.setVisibility(View.INVISIBLE);
@@ -140,8 +119,4 @@ public class BGANormalRefreshViewHolder extends BGARefreshViewHolder {
         mHeaderArrowIv.startAnimation(mDownAnim);
     }
 
-    @Override
-    public void changeToLoadingMore() {
-        mFooterChrysanthemumAd.start();
-    }
 }

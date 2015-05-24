@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import cn.bingoogolapple.bgabanner.BGABanner;
  * 描述:
  */
 public class ScrollViewDemoActivity extends AppCompatActivity implements BGARefreshLayout.BGARefreshLayoutDelegate {
+    private static final String TAG = ScrollViewDemoActivity.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
     private TextView mClickableLabelTv;
 
@@ -32,7 +34,7 @@ public class ScrollViewDemoActivity extends AppCompatActivity implements BGARefr
         setContentView(R.layout.activity_scrollview);
         mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_scrollview_refresh);
         mRefreshLayout.setDelegate(this);
-        BGAStickinessRefreshViewHolder stickinessRefreshViewHolder = new BGAStickinessRefreshViewHolder(this);
+        BGAStickinessRefreshViewHolder stickinessRefreshViewHolder = new BGAStickinessRefreshViewHolder(this, true);
         stickinessRefreshViewHolder.setStickinessColor(Color.parseColor("#11cd6e"));
         stickinessRefreshViewHolder.setRotateDrawable(getResources().getDrawable(R.mipmap.custom_stickiness_roate));
         mRefreshLayout.setRefreshViewHolder(stickinessRefreshViewHolder);
@@ -77,6 +79,28 @@ public class ScrollViewDemoActivity extends AppCompatActivity implements BGARefr
             protected void onPostExecute(Void aVoid) {
                 mRefreshLayout.endRefreshing();
                 mClickableLabelTv.setText("加载最新数据完成");
+            }
+        }.execute();
+    }
+
+    @Override
+    public void onBGARefreshLayoutBeginLoadingMore() {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                mRefreshLayout.endRefreshing();
+                Log.i(TAG, "上拉加载更多完成");
             }
         }.execute();
     }

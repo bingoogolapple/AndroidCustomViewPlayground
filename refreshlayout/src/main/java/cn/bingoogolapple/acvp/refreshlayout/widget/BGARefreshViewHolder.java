@@ -1,7 +1,12 @@
 package cn.bingoogolapple.acvp.refreshlayout.widget;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import cn.bingoogolapple.acvp.refreshlayout.R;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
@@ -17,10 +22,16 @@ public abstract class BGARefreshViewHolder {
      * 下拉刷新控件paddingTop的弹簧距离与下拉刷新控件高度的比值
      */
     private static final float SPRING_DISTANCE_SCALE = 0.4f;
+    /**
+     * 松手时控件每一次自动移动的距离，单位dp
+     */
     public static final int STEP_INSTANCE_DP = 4;
+    /**
+     * 松手时控件每一次自动移动的距离，单位像素
+     */
     private final int mStepDistance;
     protected Context mContext;
-    private View mWholeHeaderView;
+    protected View mWholeHeaderView;
     /**
      * 下拉刷新控件
      */
@@ -30,17 +41,41 @@ public abstract class BGARefreshViewHolder {
      */
     protected View mLoadMoreFooterView;
 
-    public BGARefreshViewHolder(Context context) {
+    protected TextView mFooterStatusTv;
+    protected ImageView mFooterChrysanthemumIv;
+    protected AnimationDrawable mFooterChrysanthemumAd;
+    protected String mLodingMoreText = "加载中...";
+
+    private boolean mIsLoadingMoreEnabled = true;
+
+    public BGARefreshViewHolder(Context context, boolean isLoadingMoreEnabled) {
         mContext = context;
+        mIsLoadingMoreEnabled = isLoadingMoreEnabled;
         mStepDistance = UIUtil.dp2px(context, STEP_INSTANCE_DP);
     }
 
+    public void setLoadingMoreText(String loadingMoreText) {
+        mLodingMoreText = loadingMoreText;
+    }
+
     /**
-     * 获取上拉加载更多控件
+     * 获取上拉加载更多控件，如果不喜欢这种上拉刷新风格可重写该方法实现自定义LoadMoreFooterView
      *
      * @return
      */
-    public abstract View getLoadMoreFooterView();
+    public View getLoadMoreFooterView() {
+        if (!mIsLoadingMoreEnabled) {
+            return null;
+        }
+        if (mLoadMoreFooterView == null) {
+            mLoadMoreFooterView = View.inflate(mContext, R.layout.view_normal_refresh_footer, null);
+            mFooterStatusTv = (TextView) mLoadMoreFooterView.findViewById(R.id.tv_normal_refresh_footer_status);
+            mFooterChrysanthemumIv = (ImageView) mLoadMoreFooterView.findViewById(R.id.iv_normal_refresh_footer_chrysanthemum);
+            mFooterChrysanthemumAd = (AnimationDrawable) mFooterChrysanthemumIv.getDrawable();
+            mFooterStatusTv.setText(mLodingMoreText);
+        }
+        return mLoadMoreFooterView;
+    }
 
     /**
      * 获取下拉刷新控件
@@ -78,19 +113,9 @@ public abstract class BGARefreshViewHolder {
     public abstract void changeToRefreshing();
 
     /**
-     * 结束上拉加载更多
-     */
-    public abstract void onEndLoadingMore();
-
-    /**
      * 结束下拉刷新
      */
     public abstract void onEndRefreshing();
-
-    /**
-     * 进入加载更多状态
-     */
-    public abstract void changeToLoadingMore();
 
     /**
      * 手指移动距离与下拉刷新控件paddingTop移动距离的比值
@@ -120,6 +145,24 @@ public abstract class BGARefreshViewHolder {
     }
 
     /**
+     * 进入加载更多状态
+     */
+    public void changeToLoadingMore() {
+        if (mIsLoadingMoreEnabled && mFooterChrysanthemumAd != null) {
+            mFooterChrysanthemumAd.start();
+        }
+    }
+
+    /**
+     * 结束上拉加载更多
+     */
+    public void onEndLoadingMore() {
+        if (mIsLoadingMoreEnabled && mFooterChrysanthemumAd != null) {
+            mFooterChrysanthemumAd.stop();
+        }
+    }
+
+    /**
      * 获取下拉刷新控件的高度，如果初始化时的高度和最后展开的最大高度不一致，需重写该方法返回最大高度
      *
      * @return
@@ -135,6 +178,10 @@ public abstract class BGARefreshViewHolder {
 
     public void setWholeHeaderView(View wholeHeaderView) {
         mWholeHeaderView = wholeHeaderView;
+    }
+
+    public void getWholeHeaderView() {
+        mWholeHeaderView = mWholeHeaderView;
     }
 
     public void subtractionWholeHeaderViewPadding() {

@@ -3,7 +3,6 @@ package cn.bingoogolapple.acvp.refreshlayout.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
@@ -13,7 +12,6 @@ import java.util.List;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
-import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocStyleRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
 import cn.bingoogolapple.acvp.refreshlayout.widget.Divider;
 import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemClickListener;
@@ -37,10 +35,8 @@ public abstract class BaseRecyclerViewDemoActivity extends AppCompatActivity imp
         setContentView(R.layout.activity_recyclerview);
         mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_recyclerview_refresh);
         mRefreshLayout.setDelegate(this);
-        mRefreshLayout.setRefreshViewHolder(new BGAMoocStyleRefreshViewHolder(this));
 
         mDataRv = (RecyclerView) findViewById(R.id.rv_recyclerview_data);
-        mDataRv.setLayoutManager(new LinearLayoutManager(this));
         mDataRv.addItemDecoration(new Divider(this));
 
         initDatas();
@@ -99,6 +95,35 @@ public abstract class BaseRecyclerViewDemoActivity extends AppCompatActivity imp
     }
 
     protected abstract void onEndRefreshing(List<RefreshModel> datas);
+
+    @Override
+    public void onBGARefreshLayoutBeginLoadingMore() {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                mRefreshLayout.endRefreshing();
+
+                List<RefreshModel> datas = new ArrayList<>();
+                for (int i = 0; i < 3; i++) {
+                    datas.add(new RefreshModel("moreTitle" + i, "moreDetail" + i));
+                }
+                onEndLoadingMore(datas);
+            }
+        }.execute();
+    }
+
+    protected abstract void onEndLoadingMore(List<RefreshModel> datas);
 
     @Override
     public void onRVItemClick(View v, int position) {

@@ -19,7 +19,7 @@ public class SwipeListViewDemoActivity extends BaseListViewDemoActivity {
 
     @Override
     protected void initRefreshLayout() {
-        BGANormalRefreshViewHolder normalRefreshViewHolder = new BGANormalRefreshViewHolder(this);
+        BGANormalRefreshViewHolder normalRefreshViewHolder = new BGANormalRefreshViewHolder(this, false);
         normalRefreshViewHolder.setPullDownRefreshText("自定义下拉刷新文本");
         normalRefreshViewHolder.setReleaseRefreshText("自定义松开更新文本");
         normalRefreshViewHolder.setRefreshingText("自定义正在刷新文本");
@@ -37,6 +37,11 @@ public class SwipeListViewDemoActivity extends BaseListViewDemoActivity {
     protected void onEndRefreshing(List<RefreshModel> datas) {
         mDatas.addAll(0, datas);
         mAdapter.setDatas(mDatas);
+    }
+
+    @Override
+    protected void onEndLoadingMore(List<RefreshModel> datas) {
+        mAdapter.addDatas(datas);
     }
 
     @Override

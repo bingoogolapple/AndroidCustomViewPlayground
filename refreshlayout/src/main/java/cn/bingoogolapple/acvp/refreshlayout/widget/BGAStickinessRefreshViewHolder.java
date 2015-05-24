@@ -16,13 +16,8 @@ public class BGAStickinessRefreshViewHolder extends BGARefreshViewHolder {
     private Drawable mRotateDrawable;
     private int mStickinessColor = -1;
 
-    public BGAStickinessRefreshViewHolder(Context context) {
-        super(context);
-    }
-
-    @Override
-    public View getLoadMoreFooterView() {
-        return null;
+    public BGAStickinessRefreshViewHolder(Context context, boolean isLoadingMoreEnabled) {
+        super(context, isLoadingMoreEnabled);
     }
 
     @Override
@@ -73,16 +68,8 @@ public class BGAStickinessRefreshViewHolder extends BGARefreshViewHolder {
     }
 
     @Override
-    public void onEndLoadingMore() {
-    }
-
-    @Override
     public void onEndRefreshing() {
         mStickinessRefreshView.stopRefresh();
-    }
-
-    @Override
-    public void changeToLoadingMore() {
     }
 
     @Override

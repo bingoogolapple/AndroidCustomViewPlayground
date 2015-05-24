@@ -23,13 +23,8 @@ public class BGAMoocStyleRefreshViewHolder extends BGARefreshViewHolder {
      */
     private int mUltimateColor = -1;
 
-    public BGAMoocStyleRefreshViewHolder(Context context) {
-        super(context);
-    }
-
-    @Override
-    public View getLoadMoreFooterView() {
-        return null;
+    public BGAMoocStyleRefreshViewHolder(Context context, boolean isLoadingMoreEnabled) {
+        super(context, isLoadingMoreEnabled);
     }
 
     @Override
@@ -90,16 +85,8 @@ public class BGAMoocStyleRefreshViewHolder extends BGARefreshViewHolder {
     }
 
     @Override
-    public void onEndLoadingMore() {
-    }
-
-    @Override
     public void onEndRefreshing() {
         mMoocRefreshView.stopRefreshing();
-    }
-
-    @Override
-    public void changeToLoadingMore() {
     }
 
 }

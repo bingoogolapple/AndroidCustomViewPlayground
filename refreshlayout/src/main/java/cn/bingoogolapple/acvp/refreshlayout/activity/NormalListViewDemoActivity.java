@@ -21,7 +21,7 @@ public class NormalListViewDemoActivity extends BaseListViewDemoActivity {
 
     @Override
     protected void initRefreshLayout() {
-        BGAMoocStyleRefreshViewHolder moocStyleRefreshViewHolder = new BGAMoocStyleRefreshViewHolder(this);
+        BGAMoocStyleRefreshViewHolder moocStyleRefreshViewHolder = new BGAMoocStyleRefreshViewHolder(this, true);
         moocStyleRefreshViewHolder.setUltimateColor(Color.rgb(0, 0, 255));
         moocStyleRefreshViewHolder.setOriginalBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.iqegg));
         mRefreshLayout.setRefreshViewHolder(moocStyleRefreshViewHolder);
@@ -39,6 +39,11 @@ public class NormalListViewDemoActivity extends BaseListViewDemoActivity {
     protected void onEndRefreshing(List<RefreshModel> datas) {
         mDatas.addAll(0, datas);
         mAdapter.setDatas(mDatas);
+    }
+
+    @Override
+    protected void onEndLoadingMore(List<RefreshModel> datas) {
+        mAdapter.addDatas(datas);
     }
 
     @Override

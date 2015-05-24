@@ -1,5 +1,6 @@
 package cn.bingoogolapple.acvp.refreshlayout.activity;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.Toast;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 import cn.bingoogolapple.acvp.refreshlayout.adapter.SwipeRecyclerViewAdapter;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
+import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocStyleRefreshViewHolder;
 import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemChildClickListener;
 import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemChildLongClickListener;
 
@@ -20,11 +22,14 @@ public class SwipeRecyclerViewDemoActivity extends BaseRecyclerViewDemoActivity 
 
     @Override
     protected void initRefreshLayout() {
+        mRefreshLayout.setRefreshViewHolder(new BGAMoocStyleRefreshViewHolder(this, true));
 //        initCustomHeaderView();
     }
 
     @Override
     protected void initRecyclerView() {
+        mDataRv.setLayoutManager(new LinearLayoutManager(this));
+
         mAdapter = new SwipeRecyclerViewAdapter(this);
         mAdapter.setDatas(mDatas);
         mAdapter.setOnRVItemClickListener(this);
@@ -38,6 +43,11 @@ public class SwipeRecyclerViewDemoActivity extends BaseRecyclerViewDemoActivity 
     protected void onEndRefreshing(List<RefreshModel> datas) {
         mDatas.addAll(0, datas);
         mAdapter.setDatas(mDatas);
+    }
+
+    @Override
+    protected void onEndLoadingMore(List<RefreshModel> datas) {
+        mAdapter.addDatas(datas);
     }
 
     @Override

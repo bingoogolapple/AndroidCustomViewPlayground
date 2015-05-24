@@ -3,6 +3,7 @@ package cn.bingoogolapple.acvp.refreshlayout.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import cn.bingoogolapple.bgabanner.BGABanner;
  * 描述:
  */
 public class NormalViewDemoActivity extends AppCompatActivity implements BGARefreshLayout.BGARefreshLayoutDelegate {
+    private static final String TAG = NormalViewDemoActivity.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
     private TextView mClickableLabelTv;
 
@@ -31,7 +33,7 @@ public class NormalViewDemoActivity extends AppCompatActivity implements BGARefr
         setContentView(R.layout.activity_normalview);
         mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_normalview_refresh);
         mRefreshLayout.setDelegate(this);
-        mRefreshLayout.setRefreshViewHolder(new BGAStickinessRefreshViewHolder(this));
+        mRefreshLayout.setRefreshViewHolder(new BGAStickinessRefreshViewHolder(this, true));
 
         mClickableLabelTv = (TextView) findViewById(R.id.tv_normalview_clickablelabel);
         mClickableLabelTv.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +75,28 @@ public class NormalViewDemoActivity extends AppCompatActivity implements BGARefr
             protected void onPostExecute(Void aVoid) {
                 mRefreshLayout.endRefreshing();
                 mClickableLabelTv.setText("加载最新数据完成");
+            }
+        }.execute();
+    }
+
+    @Override
+    public void onBGARefreshLayoutBeginLoadingMore() {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                mRefreshLayout.endRefreshing();
+                Log.i(TAG, "上拉加载更多完成");
             }
         }.execute();
     }
