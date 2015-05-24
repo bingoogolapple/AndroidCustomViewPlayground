@@ -71,7 +71,6 @@ public class BGARefreshLayout extends LinearLayout {
 
     public BGARefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         setOrientation(LinearLayout.VERTICAL);
 
         initWholeHeaderView();
@@ -111,6 +110,7 @@ public class BGARefreshLayout extends LinearLayout {
 
     public void setRefreshViewHolder(BGARefreshViewHolder refreshViewHolder) {
         mRefreshViewHolder = refreshViewHolder;
+        mRefreshViewHolder.setWholeHeaderView(mWholeHeaderView);
         initRefreshHeaderView();
     }
 
@@ -394,7 +394,7 @@ public class BGARefreshLayout extends LinearLayout {
             @Override
             public void run() {
                 if (mWholeHeaderView.getPaddingTop() > mMinWholeHeaderViewPaddingTop) {
-                    mWholeHeaderView.setPadding(0, mWholeHeaderView.getPaddingTop() - 8, 0, 0);
+                    mWholeHeaderView.setPadding(0, mWholeHeaderView.getPaddingTop() - mRefreshViewHolder.getStepDistance(), 0, 0);
                     hiddenRefreshHeaderView();
                 } else {
                     mWholeHeaderView.setPadding(0, mMinWholeHeaderViewPaddingTop, 0, 0);
@@ -411,7 +411,7 @@ public class BGARefreshLayout extends LinearLayout {
             @Override
             public void run() {
                 if (mWholeHeaderView.getPaddingTop() > 0) {
-                    mWholeHeaderView.setPadding(0, mWholeHeaderView.getPaddingTop() - 8, 0, 0);
+                    mWholeHeaderView.setPadding(0, mWholeHeaderView.getPaddingTop() - mRefreshViewHolder.getStepDistance(), 0, 0);
                     changeRefreshHeaderViewToZero();
                 } else {
                     mWholeHeaderView.setPadding(0, 0, 0, 0);

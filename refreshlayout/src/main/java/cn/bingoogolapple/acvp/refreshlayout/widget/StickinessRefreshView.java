@@ -10,8 +10,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
@@ -23,7 +21,7 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
  */
 public class StickinessRefreshView extends View {
     private static final String TAG = StickinessRefreshView.class.getSimpleName();
-
+    private BGAStickinessRefreshViewHolder mStickinessRefreshViewHolder;
     private RectF mTopBound;
     private RectF mBottomBound;
     private Rect mRotateDrawableBound;
@@ -53,8 +51,6 @@ public class StickinessRefreshView extends View {
 
     private int mEdge = 0;
     private int mTopSize = 0;
-
-    private int mMoveYDistance;
 
     public StickinessRefreshView(Context context) {
         this(context, null);
@@ -90,8 +86,8 @@ public class StickinessRefreshView extends View {
     }
 
     private void initSize() {
-        mEdge = dp2px(getContext(), 5);
-        mRotateDrawableSize = dp2px(getContext(), 30);
+        mEdge = UIUtil.dp2px(getContext(), 5);
+        mRotateDrawableSize = UIUtil.dp2px(getContext(), 30);
         mTopSize = mRotateDrawableSize + 2 * mEdge;
 
         mMaxBottomHeight = 2 * mRotateDrawableSize;
@@ -100,7 +96,7 @@ public class StickinessRefreshView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = mTopSize + getPaddingLeft() + getPaddingRight();
-        int height = mTopSize + getPaddingTop() + getPaddingBottom() + mMoveYDistance;
+        int height = mTopSize + getPaddingTop() + getPaddingBottom() + mMaxBottomHeight;
 
         setMeasuredDimension(width, height);
         measureDraw();
@@ -111,16 +107,12 @@ public class StickinessRefreshView extends View {
         mCenterPoint.y = getMeasuredHeight() / 2;
 
         mTopBound.left = mCenterPoint.x - mTopSize / 2;
-        if (mCurrentBottomHeight == 0) {
-            mTopBound.top = getMeasuredHeight() - getBottomPaddingAndTopSize();
-        } else {
-            mTopBound.top = getPaddingTop();
-        }
         mTopBound.right = mTopBound.left + mTopSize;
-        mTopBound.bottom = mTopBound.top + mTopSize;
+        mTopBound.bottom = getMeasuredHeight() - getPaddingBottom() - mCurrentBottomHeight;
+        mTopBound.top = mTopBound.bottom - mTopSize;
 
         float scale = 1.0f - mCurrentBottomHeight * 1.0f / mMaxBottomHeight;
-        scale = Math.min(Math.max(scale, 0.3f), 1.0f);
+        scale = Math.min(Math.max(scale, 0.2f), 1.0f);
         int mBottomSize = (int) (mTopSize * scale);
 
         mBottomBound.left = mCenterPoint.x - mBottomSize / 2;
@@ -145,20 +137,18 @@ public class StickinessRefreshView extends View {
             canvas.restore();
         } else {
             // 移动到drawable左边缘的中间那个点
-            mPath.moveTo(mTopBound.left, mTopBound.bottom - mTopSize / 2);
+            mPath.moveTo(mTopBound.left, mTopBound.top + mTopSize / 2);
             // 从drawable左边缘的中间那个点开始画半圆
             mPath.arcTo(mTopBound, 180, 180);
             // 二阶贝塞尔曲线，第一个是控制点，第二个是终点
 //            mPath.quadTo(mTopBound.right - mTopSize / 8, mTopBound.bottom, mBottomBound.right, mBottomBound.bottom - mBottomBound.height() / 2);
 
             // mCurrentBottomHeight   0 ==> mMaxBottomHeight
-            // scale 0 ==> 1
-            float scale = mCurrentBottomHeight * 1.0f / mMaxBottomHeight;
-            // scale 0.2 ==> 1
-            scale = Math.max(scale, 0.2f);
+            // scale                  0.2 ==> 1
+            float scale = Math.max(mCurrentBottomHeight * 1.0f / mMaxBottomHeight, 0.2f);
 
             float bottomControlXOffset = mTopSize * ((4 + scale * scale * 15) / 32);
-            float bottomControlY = mTopBound.bottom / 2 + mCenterPoint.y / 15;
+            float bottomControlY = mTopBound.bottom / 2 + mCenterPoint.y / 2;
             // 三阶贝塞尔曲线，前两个是控制点，最后一个点是终点
             mPath.cubicTo(mTopBound.right - mTopSize / 8, mTopBound.bottom, mTopBound.right - bottomControlXOffset, bottomControlY, mBottomBound.right, mBottomBound.bottom - mBottomBound.height() / 2);
 
@@ -173,10 +163,6 @@ public class StickinessRefreshView extends View {
         }
     }
 
-    public int getTotalHeight() {
-        return mTopSize + getPaddingTop() + getPaddingBottom() + mMaxBottomHeight;
-    }
-
     public int getBottomPaddingAndTopSize() {
         return mTopSize + getPaddingBottom();
     }
@@ -188,9 +174,7 @@ public class StickinessRefreshView extends View {
         } else {
             mCurrentBottomHeight = 0;
         }
-        mMoveYDistance = Math.min(moveYDistance, mMaxBottomHeight);
-        Log.i(TAG, "mMoveYDistance = " + mMoveYDistance);
-        requestLayout();
+        postInvalidate();
     }
 
     /**
@@ -211,15 +195,14 @@ public class StickinessRefreshView extends View {
         ViewCompat.postOnAnimation(this, new Runnable() {
             @Override
             public void run() {
-                mCurrentBottomHeight -= 8;
-                mMoveYDistance -=8;
+                mCurrentBottomHeight -= mStickinessRefreshViewHolder.getStepDistance();
                 if (mCurrentBottomHeight > 0) {
-                    requestLayout();
+                    mStickinessRefreshViewHolder.subtractionWholeHeaderViewPadding();
+
                     smoothToRefreshing();
                 } else {
                     mIsRotating = true;
                     mCurrentBottomHeight = 0;
-                    mMoveYDistance = 0;
                     mCurrentDegree += 10;
                     if (mCurrentDegree > 360) {
                         mCurrentDegree = 0;
@@ -228,7 +211,7 @@ public class StickinessRefreshView extends View {
                         smoothToRefreshing();
                     }
                 }
-                invalidate();
+                postInvalidate();
             }
         });
     }
@@ -243,21 +226,19 @@ public class StickinessRefreshView extends View {
         ViewCompat.postOnAnimation(this, new Runnable() {
             @Override
             public void run() {
-                mCurrentBottomHeight -= 8;
-                mMoveYDistance -=8;
-                if (mMoveYDistance > 0) {
+                mCurrentBottomHeight -= mStickinessRefreshViewHolder.getStepDistance();
+                if (mCurrentBottomHeight > 0) {
                     smoothToIdle();
                 } else {
                     mCurrentBottomHeight = 0;
-                    mMoveYDistance = 0;
                     mIsRotating = false;
                 }
-                invalidate();
+                postInvalidate();
             }
         });
     }
 
-    public static int dp2px(Context context, int dpValue) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.getResources().getDisplayMetrics());
+    public void setStickinessRefreshViewHolder(BGAStickinessRefreshViewHolder stickinessRefreshViewHolder) {
+        mStickinessRefreshViewHolder = stickinessRefreshViewHolder;
     }
 }

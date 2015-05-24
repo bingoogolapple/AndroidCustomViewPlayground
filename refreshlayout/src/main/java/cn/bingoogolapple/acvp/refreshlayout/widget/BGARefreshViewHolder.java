@@ -17,8 +17,10 @@ public abstract class BGARefreshViewHolder {
      * 下拉刷新控件paddingTop的弹簧距离与下拉刷新控件高度的比值
      */
     private static final float SPRING_DISTANCE_SCALE = 0.4f;
-
+    public static final int STEP_INSTANCE_DP = 4;
+    private final int mStepDistance;
     protected Context mContext;
+    private View mWholeHeaderView;
     /**
      * 下拉刷新控件
      */
@@ -30,6 +32,7 @@ public abstract class BGARefreshViewHolder {
 
     public BGARefreshViewHolder(Context context) {
         mContext = context;
+        mStepDistance = UIUtil.dp2px(context, STEP_INSTANCE_DP);
     }
 
     /**
@@ -123,6 +126,18 @@ public abstract class BGARefreshViewHolder {
             return mRefreshHeaderView.getMeasuredHeight();
         }
         return 0;
+    }
+
+    public void setWholeHeaderView(View wholeHeaderView) {
+        mWholeHeaderView = wholeHeaderView;
+    }
+
+    public void subtractionWholeHeaderViewPadding() {
+        mWholeHeaderView.setPadding(mWholeHeaderView.getPaddingLeft(), mWholeHeaderView.getPaddingTop() - mStepDistance, mWholeHeaderView.getPaddingRight(), mWholeHeaderView.getPaddingBottom());
+    }
+
+    public int getStepDistance() {
+        return mStepDistance;
     }
 
 }
