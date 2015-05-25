@@ -86,9 +86,9 @@ public class BGARefreshLayout extends LinearLayout {
     private float mInterceptTouchDownY = -1;
 
     /**
-     * 是否已经设置过滚动监听器
+     * 是否已经初始化footerView和设置内容控件滚动监听器
      */
-    private boolean mIsSetScrollListener = false;
+    private boolean mIsInitedFooterViewAndContentViewScrollListener = false;
 
     public BGARefreshLayout(Context context) {
         this(context, null);
@@ -183,6 +183,17 @@ public class BGARefreshLayout extends LinearLayout {
             // 测量上拉加载更多控件的高度
             mLoadMoreFooterView.measure(0, 0);
             mLoadMoreFooterViewHeight = mLoadMoreFooterView.getMeasuredHeight();
+        }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        // 被添加到窗口后再设置监听器，这样开发者就不比烦恼先初始化RefreshLayout还是先设置自定义滚动监听器，ListView还可以添加自定义FooterView
+        if (!mIsInitedFooterViewAndContentViewScrollListener) {
+            setRecyclerViewOnScrollListener();
+            setAbsListViewOnScrollListener();
 
             // 如过contentView是ListView则直接添加FooterView
             if (mContentView instanceof ListView) {
@@ -191,18 +202,8 @@ public class BGARefreshLayout extends LinearLayout {
                 ListView listView = (ListView) mContentView;
                 listView.addFooterView(mLoadMoreFooterView);
             }
-        }
-    }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        // 被添加到窗口后再设置监听器，这样开发者就不比烦恼先初始化RefreshLayout还是先设置自定义滚动监听器
-        if (!mIsSetScrollListener) {
-            setRecyclerViewOnScrollListener();
-            setAbsListViewOnScrollListener();
-            mIsSetScrollListener = true;
+            mIsInitedFooterViewAndContentViewScrollListener = true;
         }
     }
 

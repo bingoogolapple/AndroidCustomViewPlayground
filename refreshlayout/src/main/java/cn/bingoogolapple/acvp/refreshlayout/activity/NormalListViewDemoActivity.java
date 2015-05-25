@@ -6,12 +6,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.adapter.AdapterViewAdapter;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocStyleRefreshViewHolder;
+import cn.bingoogolapple.bgabanner.BGABanner;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
@@ -49,6 +51,17 @@ public class NormalListViewDemoActivity extends BaseListViewDemoActivity {
                 Log.i(TAG, "正在滚动");
             }
         });
+
+        List<View> datas = new ArrayList<>();
+        datas.add(getLayoutInflater().inflate(R.layout.view_one, null));
+        datas.add(getLayoutInflater().inflate(R.layout.view_two, null));
+        datas.add(getLayoutInflater().inflate(R.layout.view_three, null));
+        datas.add(getLayoutInflater().inflate(R.layout.view_four, null));
+
+        View customFooterView = View.inflate(this, R.layout.view_custom_header, null);
+        BGABanner banner = (BGABanner) customFooterView.findViewById(R.id.banner);
+        banner.setViewPagerViews(datas);
+        mDataLv.addFooterView(customFooterView);
     }
 
     @Override
