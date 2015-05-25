@@ -1,4 +1,4 @@
-package cn.bingoogolapple.acvp.refreshlayout.widget;
+package cn.bingoogolapple.acvp.recyclerview.util;
 
 import android.content.Context;
 import android.util.TypedValue;

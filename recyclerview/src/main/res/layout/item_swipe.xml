@@ -25,6 +25,7 @@
             android:layout_height="match_parent" />
 
         <ImageView
+            android:id="@+id/iv_item_swipe_delete"
             style="@style/WrapWrap"
             android:src="@mipmap/delete" />
     </LinearLayout>

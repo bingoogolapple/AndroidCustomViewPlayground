@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
+import cn.bingoogolapple.acvp.refreshlayout.util.UIUtil;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com

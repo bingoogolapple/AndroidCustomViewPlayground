@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
+import cn.bingoogolapple.acvp.refreshlayout.util.UIUtil;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com

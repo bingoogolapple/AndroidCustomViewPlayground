@@ -15,11 +15,14 @@ import java.util.List;
 
 import cn.bingoogolapple.acvp.recyclerview.R;
 import cn.bingoogolapple.acvp.recyclerview.mode.Mode;
+import cn.bingoogolapple.acvp.recyclerview.util.UIUtil;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGAEmptyView;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGARecyclerViewAdapter;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGARecyclerViewHolder;
 import cn.bingoogolapple.acvp.recyclerview.widget.BGASwipeItemLayout;
 import cn.bingoogolapple.acvp.recyclerview.widget.Divider;
+import cn.bingoogolapple.acvp.recyclerview.widget.OnItemChildClickListener;
+import cn.bingoogolapple.acvp.recyclerview.widget.OnItemChildLongClickListener;
 import cn.bingoogolapple.acvp.recyclerview.widget.OnItemClickListener;
 import cn.bingoogolapple.acvp.recyclerview.widget.OnItemLongClickListener;
 import cn.bingoogolapple.bgaannotation.BGAA;
@@ -27,7 +30,7 @@ import cn.bingoogolapple.bgaannotation.BGAALayout;
 import cn.bingoogolapple.bgaannotation.BGAAView;
 
 @BGAALayout(R.layout.activity_swipe)
-public class SwipeActivity extends AppCompatActivity implements OnItemClickListener, OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class SwipeActivity extends AppCompatActivity implements OnItemClickListener, OnItemLongClickListener, SwipeRefreshLayout.OnRefreshListener, OnItemChildClickListener, OnItemChildLongClickListener {
     private static final String TAG = SwipeActivity.class.getSimpleName();
     @BGAAView(R.id.ev_swipe_root)
     private BGAEmptyView mRootEv;
@@ -61,7 +64,7 @@ public class SwipeActivity extends AppCompatActivity implements OnItemClickListe
 
         mDatas = Mode.getSwipeDatas();
         mItemModeAdapter.setDatas(mDatas);
-        mDataRv.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        mDataRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 switch (newState) {
@@ -79,9 +82,9 @@ public class SwipeActivity extends AppCompatActivity implements OnItemClickListe
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                Log.i(TAG, "dx = " + dx + "   dy = " + dy);
-                if (Math.abs(dy) > 3) {
-                    mItemModeAdapter.closeOpenedSwipeItemLayout();
+                Log.i(TAG, "dx = " + dx + "   dy = " + dy);
+                if (Math.abs(dy) > UIUtil.dp2px(getApplicationContext(), 2)) {
+                    mItemModeAdapter.closeOpenedSwipeItemLayoutWithAnim();
                     resetDeleteItemStatus();
                 }
             }
@@ -161,11 +164,29 @@ public class SwipeActivity extends AppCompatActivity implements OnItemClickListe
         }
     }
 
+    @Override
+    public void onItemChildClick(View v, int position) {
+        if (v.getId() == R.id.iv_item_swipe_delete) {
+            mItemModeAdapter.removeItem(position);
+        }
+    }
+
+    @Override
+    public boolean onItemChildLongClick(View v, int position) {
+        if (v.getId() == R.id.iv_item_swipe_delete) {
+            Toast.makeText(this, "长按了删除" + mDatas.get(position).attr1, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
+
     private static class ItemModeAdapter extends BGARecyclerViewAdapter<Mode> {
         private BGASwipeItemLayout mOpenedSil;
+        private SwipeActivity mSwipeActivity;
 
         public ItemModeAdapter(SwipeActivity swipeActivity) {
             super(swipeActivity, swipeActivity);
+            mSwipeActivity = swipeActivity;
         }
 
         @Override
@@ -179,7 +200,7 @@ public class SwipeActivity extends AppCompatActivity implements OnItemClickListe
             swipeItemLayout.setDelegate(new BGASwipeItemLayout.BGASwipeItemLayoutDelegate() {
                 @Override
                 public void onOpened(BGASwipeItemLayout swipeItemLayout) {
-                    closeOpenedSwipeItemLayout();
+                    closeOpenedSwipeItemLayoutWithAnim();
                     mOpenedSil = swipeItemLayout;
                 }
 
@@ -188,16 +209,28 @@ public class SwipeActivity extends AppCompatActivity implements OnItemClickListe
                     mOpenedSil = null;
                 }
             });
+            viewHolder.setOnItemChildClickListener(mSwipeActivity);
+            viewHolder.setOnItemChildLongClickListener(mSwipeActivity);
+            viewHolder.setOnClickListener(R.id.iv_item_swipe_delete);
+            viewHolder.setOnLongClickListener(R.id.iv_item_swipe_delete);
         }
 
         @Override
         public void fillData(BGARecyclerViewHolder viewHolder, int position, Mode item) {
+            closeOpenedSwipeItemLayout();
             viewHolder.setText(R.id.tv_item_swipe_attr1, item.attr1).setText(R.id.tv_item_swipe_attr2, item.attr2).setText(R.id.et_item_swipe_attr1, item.attr1);
+        }
+
+        public void closeOpenedSwipeItemLayoutWithAnim() {
+            if (mOpenedSil != null) {
+                mOpenedSil.closeWithAnim();
+                mOpenedSil = null;
+            }
         }
 
         public void closeOpenedSwipeItemLayout() {
             if (mOpenedSil != null) {
-                mOpenedSil.closeWithAnim();
+                mOpenedSil.close();
                 mOpenedSil = null;
             }
         }

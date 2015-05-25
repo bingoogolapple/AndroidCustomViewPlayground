@@ -7,6 +7,8 @@ import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -17,7 +19,10 @@ public class BGASwipeItemLayout extends RelativeLayout {
     private static final String TAG = BGASwipeItemLayout.class.getSimpleName();
     private static final String INSTANCE_STATUS = "instance_status";
     private static final String STATUS_OPEN_CLOSE = "status_open_close";
-    private static final int VEL_THRESHOLD = 400;
+    private static final int VEL_THRESHOLD = 300;
+    private static final int SWIPE_THRESHOLD_DP = 2;
+    // 触发滑动事件的距离，用于处理事件拦截，如果使用mDragHelper.shouldInterceptTouchEvent(event)处理事件拦截，会导致作为RecyclerView的item滑动时触发item的点击和长按事件，或者魅族手机上根本就不会触发点击事件
+    private int mSwipeThreshold;
     private ViewDragHelper mDragHelper;
     // 顶部视图
     private View mTopView;
@@ -48,6 +53,8 @@ public class BGASwipeItemLayout extends RelativeLayout {
 
     private float mInterceptTouchDownX = -1;
     private float mInterceptTouchDownY = -1;
+    private float mTouchDownX = -1;
+    private float mTouchDownY = -1;
 
     public BGASwipeItemLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -99,6 +106,7 @@ public class BGASwipeItemLayout extends RelativeLayout {
     }
 
     private void initProperty() {
+        mSwipeThreshold = dp2px(getContext(), SWIPE_THRESHOLD_DP);
         mDragHelper = ViewDragHelper.create(this, 1.0f, mDragHelperCallback);
         mDragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
     }
@@ -128,7 +136,7 @@ public class BGASwipeItemLayout extends RelativeLayout {
             ViewCompat.postInvalidateOnAnimation(this);
         }
     }
-
+/*
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
@@ -144,8 +152,10 @@ public class BGASwipeItemLayout extends RelativeLayout {
                     mInterceptTouchDownY = (int) event.getRawY();
                 }
 
-                int interceptTouchMoveDistanceX = (int) (event.getRawX() - mInterceptTouchDownX);
-                if (Math.abs(event.getRawY() - mInterceptTouchDownY) < Math.abs(interceptTouchMoveDistanceX) || isMoving()) {
+                float moveDistanceX = Math.abs(event.getRawX() - mInterceptTouchDownX);
+                float moveDistanceY = Math.abs(event.getRawY() - mInterceptTouchDownY);
+                Log.i(TAG, "onInterceptTouchEvent  mDragHelper.getTouchSlop() = " + mDragHelper.getTouchSlop() + "   mSwipeThreshold = " + mSwipeThreshold);
+                if ((moveDistanceY < moveDistanceX && moveDistanceX > mSwipeThreshold)) {
                     event.setAction(MotionEvent.ACTION_CANCEL);
                     super.onInterceptTouchEvent(event);
                     return true;
@@ -156,7 +166,6 @@ public class BGASwipeItemLayout extends RelativeLayout {
                 // 重置
                 mInterceptTouchDownX = -1;
                 mInterceptTouchDownY = -1;
-
                 mDragHelper.cancel();
                 if (isMoving()) {
                     return true;
@@ -164,13 +173,26 @@ public class BGASwipeItemLayout extends RelativeLayout {
         }
         return super.onInterceptTouchEvent(event);
     }
-
+*/
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         mDragHelper.processTouchEvent(event);
         switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mTouchDownX = event.getX();
+                mTouchDownY = event.getY();
+                break;
             case MotionEvent.ACTION_MOVE:
-                if (isMoving()) {
+                if (mTouchDownX == -1) {
+                    mTouchDownX = event.getX();
+                }
+                if (mTouchDownY == -1) {
+                    mTouchDownY = event.getY();
+                }
+                float moveDistanceX = Math.abs(event.getX() - mTouchDownX);
+                float moveDistanceY = Math.abs(event.getY() - mTouchDownY);
+                Log.i(TAG, "onTouchEvent  mDragHelper.getTouchSlop() = " + mDragHelper.getTouchSlop() + "   mSwipeThreshold = " + mSwipeThreshold);
+                if ((moveDistanceY < moveDistanceX && moveDistanceX > mSwipeThreshold)) {
                     event.setAction(MotionEvent.ACTION_CANCEL);
                     super.onTouchEvent(event);
                     return true;
@@ -180,6 +202,7 @@ public class BGASwipeItemLayout extends RelativeLayout {
                 if (isMoving()) {
                     return true;
                 }
+                mDragHelper.cancel();
                 break;
             default:
                 break;
@@ -505,5 +528,9 @@ public class BGASwipeItemLayout extends RelativeLayout {
         void onOpened(BGASwipeItemLayout swipeItemLayout);
 
         void onClosed(BGASwipeItemLayout swipeItemLayout);
+    }
+
+    public static int dp2px(Context context, int dpValue) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.getResources().getDisplayMetrics());
     }
 }

@@ -12,6 +12,7 @@ public class BGARecyclerViewHolder extends RecyclerView.ViewHolder implements Vi
     protected OnItemClickListener mOnItemClickListener;
     protected OnItemLongClickListener mOnItemLongClickListener;
     protected OnItemChildClickListener mOnItemChildClickListener;
+    protected OnItemChildLongClickListener mOnItemChildLongClickListener;
     protected final SparseArray<View> mViews;
 
     public BGARecyclerViewHolder(View itemView, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
@@ -43,10 +44,22 @@ public class BGARecyclerViewHolder extends RecyclerView.ViewHolder implements Vi
         getView(viewId).setOnClickListener(this);
     }
 
+    public void setOnLongClickListener(int viewId) {
+        getView(viewId).setOnLongClickListener(this);
+    }
+
+    public void setOnItemChildLongClickListener(OnItemChildLongClickListener onItemChildLongClickListener) {
+        mOnItemChildLongClickListener = onItemChildLongClickListener;
+    }
+
     @Override
     public boolean onLongClick(View v) {
         if (v.getId() == this.itemView.getId() && null != mOnItemLongClickListener) {
-            return mOnItemLongClickListener.onItemLongClick(v, getPosition());
+            return mOnItemLongClickListener.onItemLongClick(v, getAdapterPosition());
+        } else {
+            if (mOnItemChildLongClickListener != null) {
+                return mOnItemChildLongClickListener.onItemChildLongClick(v, getAdapterPosition());
+            }
         }
         return false;
     }
