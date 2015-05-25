@@ -2,6 +2,8 @@ package cn.bingoogolapple.acvp.refreshlayout.widget;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,6 +50,8 @@ public abstract class BGARefreshViewHolder {
     protected String mLodingMoreText = "加载中...";
 
     private boolean mIsLoadingMoreEnabled = true;
+    private int mLoadMoreBackgroundColorRes = -1;
+    private int mLoadMoreBackgroundDrawableRes = -1;
 
     public BGARefreshViewHolder(Context context, boolean isLoadingMoreEnabled) {
         mContext = context;
@@ -57,6 +61,14 @@ public abstract class BGARefreshViewHolder {
 
     public void setLoadingMoreText(String loadingMoreText) {
         mLodingMoreText = loadingMoreText;
+    }
+
+    public void setLoadMoreBackgroundColorRes(@ColorRes int loadMoreBackgroundColorRes) {
+        mLoadMoreBackgroundColorRes = loadMoreBackgroundColorRes;
+    }
+
+    public void setLoadMoreBackgroundDrawableRes(@DrawableRes int loadMoreBackgroundDrawableRes) {
+        mLoadMoreBackgroundDrawableRes = loadMoreBackgroundDrawableRes;
     }
 
     /**
@@ -70,6 +82,12 @@ public abstract class BGARefreshViewHolder {
         }
         if (mLoadMoreFooterView == null) {
             mLoadMoreFooterView = View.inflate(mContext, R.layout.view_normal_refresh_footer, null);
+            if (mLoadMoreBackgroundColorRes != -1) {
+                mLoadMoreFooterView.setBackgroundResource(mLoadMoreBackgroundColorRes);
+            }
+            if (mLoadMoreBackgroundDrawableRes != -1) {
+                mLoadMoreFooterView.setBackgroundResource(mLoadMoreBackgroundDrawableRes);
+            }
             mFooterStatusTv = (TextView) mLoadMoreFooterView.findViewById(R.id.tv_normal_refresh_footer_status);
             mFooterChrysanthemumIv = (ImageView) mLoadMoreFooterView.findViewById(R.id.iv_normal_refresh_footer_chrysanthemum);
             mFooterChrysanthemumAd = (AnimationDrawable) mFooterChrysanthemumIv.getDrawable();

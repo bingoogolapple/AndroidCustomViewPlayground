@@ -38,8 +38,8 @@ public abstract class BaseListViewDemoActivity extends AppCompatActivity  implem
         mDataLv.setOnItemClickListener(this);
         mDataLv.setOnItemLongClickListener(this);
 
-        initDatas();
         initRefreshLayout();
+        initDatas();
         initListView();
     }
 

@@ -19,10 +19,11 @@ public class SwipeListViewDemoActivity extends BaseListViewDemoActivity {
 
     @Override
     protected void initRefreshLayout() {
-        BGANormalRefreshViewHolder normalRefreshViewHolder = new BGANormalRefreshViewHolder(this, false);
+        BGANormalRefreshViewHolder normalRefreshViewHolder = new BGANormalRefreshViewHolder(this, true);
         normalRefreshViewHolder.setPullDownRefreshText("自定义下拉刷新文本");
         normalRefreshViewHolder.setReleaseRefreshText("自定义松开更新文本");
         normalRefreshViewHolder.setRefreshingText("自定义正在刷新文本");
+        normalRefreshViewHolder.setLoadMoreBackgroundDrawableRes(R.drawable.shape_refresh_bg);
         mRefreshLayout.setRefreshViewHolder(normalRefreshViewHolder);
     }
 
