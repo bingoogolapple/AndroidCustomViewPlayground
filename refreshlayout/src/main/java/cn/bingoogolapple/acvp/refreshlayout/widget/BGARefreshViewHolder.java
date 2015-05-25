@@ -210,5 +210,4 @@ public abstract class BGARefreshViewHolder {
     public int getStepDistance() {
         return mStepDistance;
     }
-
 }

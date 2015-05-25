@@ -149,13 +149,13 @@ public class BGARefreshLayout extends LinearLayout {
         mRefreshHeaderView = mRefreshViewHolder.getRefreshHeaderView();
         if (mRefreshHeaderView != null) {
             mRefreshHeaderView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-            mWholeHeaderView.addView(mRefreshHeaderView, 0);
 
             mRefreshHeaderViewHeight = mRefreshViewHolder.getRefreshHeaderViewHeight();
             mMinWholeHeaderViewPaddingTop = -mRefreshHeaderViewHeight;
             mMaxWholeHeaderViewPaddingTop = (int) (mRefreshHeaderViewHeight * mRefreshViewHolder.getSpringDistanceScale());
 
             mWholeHeaderView.setPadding(0, mMinWholeHeaderViewPaddingTop, 0, 0);
+            mWholeHeaderView.addView(mRefreshHeaderView, 0);
         }
     }
 
@@ -282,7 +282,7 @@ public class BGARefreshLayout extends LinearLayout {
                 return true;
             }
         } else if (manager instanceof StaggeredGridLayoutManager) {
-            StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) manager;
+            StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) manager;
             // TODO
         }
         return false;
@@ -412,7 +412,7 @@ public class BGARefreshLayout extends LinearLayout {
                     return true;
                 }
             } else if (manager instanceof StaggeredGridLayoutManager) {
-                StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) manager;
+                StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) manager;
                 // TODO
             }
         }
@@ -451,6 +451,10 @@ public class BGARefreshLayout extends LinearLayout {
      * @return true表示自己消耗掉该事件，false表示不消耗该事件
      */
     private boolean handleActionMove(MotionEvent event) {
+        if (mCurrentRefreshStatus == RefreshStatus.REFRESHING || mIsLoadingMore) {
+            return true;
+        }
+
         if (mDownY == -1) {
             mDownY = (int) event.getY();
         }
@@ -658,7 +662,15 @@ public class BGARefreshLayout extends LinearLayout {
                     });
                 }
                 if (mRecyclerView != null) {
-
+                    RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+                    if (mRecyclerView.getAdapter() != null && mRecyclerView.getAdapter().getItemCount() > 0) {
+                        layoutManager.scrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
+                    }
+                }
+                if (mAbsListView != null) {
+                    if (mAbsListView.getAdapter() != null && mAbsListView.getAdapter().getCount() > 0) {
+                        mAbsListView.smoothScrollToPosition(mAbsListView.getAdapter().getCount() - 1);
+                    }
                 }
             }
 
