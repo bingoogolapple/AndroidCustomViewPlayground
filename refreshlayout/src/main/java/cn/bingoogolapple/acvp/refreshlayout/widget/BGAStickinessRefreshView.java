@@ -162,7 +162,7 @@ public class BGAStickinessRefreshView extends View {
             // scale                  0.2 ==> 1
             float scale = Math.max(mCurrentBottomHeight * 1.0f / mMaxBottomHeight, 0.2f);
 
-            float bottomControlXOffset = mTopSize * ((4 + scale * scale * scale * scale * 15) / 32);
+            float bottomControlXOffset = mTopSize * ((4 + (float)Math.pow(scale, 7) * 15) / 32);
             float bottomControlY = mTopBound.bottom / 2 + mCenterPoint.y / 2;
             // 三阶贝塞尔曲线，前两个是控制点，最后一个点是终点
             mPath.cubicTo(mTopBound.right - mTopSize / 8, mTopBound.bottom, mTopBound.right - bottomControlXOffset, bottomControlY, mBottomBound.right, mBottomBound.bottom - mBottomBound.height() / 2);

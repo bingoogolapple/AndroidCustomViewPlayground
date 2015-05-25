@@ -193,15 +193,8 @@ public class BGARefreshLayout extends LinearLayout {
 
                 int interceptTouchMoveDistanceY = (int) (event.getRawY() - mInterceptTouchDownY);
                 if (Math.abs(event.getRawX() - mInterceptTouchDownX) < Math.abs(interceptTouchMoveDistanceY)) {
-                    if (interceptTouchMoveDistanceY > 0 && shouldHandleRefresh()) {
+                    if ((interceptTouchMoveDistanceY > 0 && shouldHandleRefresh()) || (interceptTouchMoveDistanceY < 0 && shouldHandleLoadingMore())) {
 
-                        // ACTION_DOWN时没有消耗掉事件，子控件会处于按下状态，这里设置ACTION_CANCEL，使子控件取消按下状态
-                        event.setAction(MotionEvent.ACTION_CANCEL);
-                        super.onInterceptTouchEvent(event);
-                        return true;
-                    }
-
-                    if (interceptTouchMoveDistanceY < 0 && shouldHandleLoadingMore()) {
                         // ACTION_DOWN时没有消耗掉事件，子控件会处于按下状态，这里设置ACTION_CANCEL，使子控件取消按下状态
                         event.setAction(MotionEvent.ACTION_CANCEL);
                         super.onInterceptTouchEvent(event);
@@ -360,8 +353,8 @@ public class BGARefreshLayout extends LinearLayout {
      * @return true表示自己消耗掉该事件，false表示不消耗该事件
      */
     private boolean handleActionMove(MotionEvent event) {
-        // 如果处于正在刷新状态，则跳出switch语句，执行父控件的touch事件
-        if (mCurrentRefreshStatus == RefreshStatus.REFRESHING) {
+        // 如果处于正在刷新状态或者加载更多，则跳出switch语句，执行父控件的touch事件
+        if (mCurrentRefreshStatus == RefreshStatus.REFRESHING || mIsLoadingMore) {
             return false;
         }
 
