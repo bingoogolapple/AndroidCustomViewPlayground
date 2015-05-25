@@ -79,8 +79,11 @@ public class SwipeActivity extends AppCompatActivity implements OnItemClickListe
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                Log.i(TAG, "dx = " + dx + "   dy = " + dy);
-                resetDeleteItemStatus();
+//                Log.i(TAG, "dx = " + dx + "   dy = " + dy);
+                if (Math.abs(dy) > 3) {
+                    mItemModeAdapter.closeOpenedSwipeItemLayout();
+                    resetDeleteItemStatus();
+                }
             }
         });
     }
@@ -159,6 +162,8 @@ public class SwipeActivity extends AppCompatActivity implements OnItemClickListe
     }
 
     private static class ItemModeAdapter extends BGARecyclerViewAdapter<Mode> {
+        private BGASwipeItemLayout mOpenedSil;
+
         public ItemModeAdapter(SwipeActivity swipeActivity) {
             super(swipeActivity, swipeActivity);
         }
@@ -169,8 +174,32 @@ public class SwipeActivity extends AppCompatActivity implements OnItemClickListe
         }
 
         @Override
+        protected void setListener(BGARecyclerViewHolder viewHolder) {
+            BGASwipeItemLayout swipeItemLayout = viewHolder.getView(R.id.sil_swipe_root);
+            swipeItemLayout.setDelegate(new BGASwipeItemLayout.BGASwipeItemLayoutDelegate() {
+                @Override
+                public void onOpened(BGASwipeItemLayout swipeItemLayout) {
+                    closeOpenedSwipeItemLayout();
+                    mOpenedSil = swipeItemLayout;
+                }
+
+                @Override
+                public void onClosed(BGASwipeItemLayout swipeItemLayout) {
+                    mOpenedSil = null;
+                }
+            });
+        }
+
+        @Override
         public void fillData(BGARecyclerViewHolder viewHolder, int position, Mode item) {
             viewHolder.setText(R.id.tv_item_swipe_attr1, item.attr1).setText(R.id.tv_item_swipe_attr2, item.attr2).setText(R.id.et_item_swipe_attr1, item.attr1);
+        }
+
+        public void closeOpenedSwipeItemLayout() {
+            if (mOpenedSil != null) {
+                mOpenedSil.closeWithAnim();
+                mOpenedSil = null;
+            }
         }
     }
 }

@@ -46,6 +46,9 @@ public class BGASwipeItemLayout extends RelativeLayout {
     // 手动拖动打开和关闭代理
     private BGASwipeItemLayoutDelegate mDelegate;
 
+    private float mInterceptTouchDownX = -1;
+    private float mInterceptTouchDownY = -1;
+
     public BGASwipeItemLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
@@ -127,18 +130,62 @@ public class BGASwipeItemLayout extends RelativeLayout {
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_CANCEL || ev.getAction() == MotionEvent.ACTION_UP) {
-            mDragHelper.cancel();
-            return false;
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mInterceptTouchDownX = event.getRawX();
+                mInterceptTouchDownY = event.getRawY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (mInterceptTouchDownX == -1) {
+                    mInterceptTouchDownX = (int) event.getRawX();
+                }
+                if (mInterceptTouchDownY == -1) {
+                    mInterceptTouchDownY = (int) event.getRawY();
+                }
+
+                int interceptTouchMoveDistanceX = (int) (event.getRawX() - mInterceptTouchDownX);
+                if (Math.abs(event.getRawY() - mInterceptTouchDownY) < Math.abs(interceptTouchMoveDistanceX) || isMoving()) {
+                    event.setAction(MotionEvent.ACTION_CANCEL);
+                    super.onInterceptTouchEvent(event);
+                    return true;
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                // 重置
+                mInterceptTouchDownX = -1;
+                mInterceptTouchDownY = -1;
+
+                mDragHelper.cancel();
+                if (isMoving()) {
+                    return true;
+                }
         }
-        return mDragHelper.shouldInterceptTouchEvent(ev);
+        return super.onInterceptTouchEvent(event);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         mDragHelper.processTouchEvent(event);
-        return true;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+                if (isMoving()) {
+                    event.setAction(MotionEvent.ACTION_CANCEL);
+                    super.onTouchEvent(event);
+                    return true;
+                }
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                if (isMoving()) {
+                    return true;
+                }
+                break;
+            default:
+                break;
+        }
+
+        return super.onTouchEvent(event);
     }
 
     @Override
@@ -427,12 +474,12 @@ public class BGASwipeItemLayout extends RelativeLayout {
                         mBottomView.setVisibility(INVISIBLE);
                         mCurrentStatus = Status.Closed;
                         if (mIsNeedNotify && mDelegate != null && mPreStatus != mCurrentStatus) {
-                            mDelegate.onClosed();
+                            mDelegate.onClosed(BGASwipeItemLayout.this);
                         }
                     } else {
                         mCurrentStatus = Status.Opened;
                         if (mIsNeedNotify && mDelegate != null && mPreStatus != mCurrentStatus) {
-                            mDelegate.onOpened();
+                            mDelegate.onOpened(BGASwipeItemLayout.this);
                         }
                     }
                     mPreStatus = mCurrentStatus;
@@ -455,8 +502,8 @@ public class BGASwipeItemLayout extends RelativeLayout {
     }
 
     public interface BGASwipeItemLayoutDelegate {
-        void onOpened();
+        void onOpened(BGASwipeItemLayout swipeItemLayout);
 
-        void onClosed();
+        void onClosed(BGASwipeItemLayout swipeItemLayout);
     }
 }

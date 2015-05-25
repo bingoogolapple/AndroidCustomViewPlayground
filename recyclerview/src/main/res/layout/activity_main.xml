@@ -3,9 +3,6 @@
     android:gravity="center_vertical"
     android:padding="5dp">
 
-    <cn.bingoogolapple.acvp.recyclerview.widget.MoocView
-        style="@style/WrapWrap"/>
-
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_main_helloworld"
         style="@style/MatchWrap"
