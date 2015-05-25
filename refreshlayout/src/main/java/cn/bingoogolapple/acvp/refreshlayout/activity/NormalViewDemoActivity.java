@@ -8,13 +8,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGAStickinessRefreshViewHolder;
-import cn.bingoogolapple.bgabanner.BGABanner;
 
 
 /**
@@ -31,10 +27,9 @@ public class NormalViewDemoActivity extends AppCompatActivity implements BGARefr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_normalview);
-        mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_normalview_refresh);
-        mRefreshLayout.setDelegate(this);
-        mRefreshLayout.setRefreshViewHolder(new BGAStickinessRefreshViewHolder(this, true));
 
+        initRefreshLayout();
+        
         mClickableLabelTv = (TextView) findViewById(R.id.tv_normalview_clickablelabel);
         mClickableLabelTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,17 +39,10 @@ public class NormalViewDemoActivity extends AppCompatActivity implements BGARefr
         });
     }
 
-    protected void initCustomHeaderView() {
-        List<View> datas = new ArrayList<>();
-        datas.add(getLayoutInflater().inflate(R.layout.view_one, null));
-        datas.add(getLayoutInflater().inflate(R.layout.view_two, null));
-        datas.add(getLayoutInflater().inflate(R.layout.view_three, null));
-        datas.add(getLayoutInflater().inflate(R.layout.view_four, null));
-
-        View customHeaderView = View.inflate(this, R.layout.view_custom_header, null);
-        BGABanner banner = (BGABanner) customHeaderView.findViewById(R.id.banner);
-        banner.setViewPagerViews(datas);
-        mRefreshLayout.addCustomHeaderView(customHeaderView);
+    private void initRefreshLayout() {
+        mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_normalview_refresh);
+        mRefreshLayout.setDelegate(this);
+        mRefreshLayout.setRefreshViewHolder(new BGAStickinessRefreshViewHolder(this, true));
     }
 
     @Override

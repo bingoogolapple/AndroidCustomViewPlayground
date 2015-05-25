@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeToSwipeRecyclerViewDemo(View v) {
-        startActivity(new Intent(this, SwipeRecyclerViewDemoActivity.class));
+        startActivity(new Intent(this, DMJSwipeRecyclerViewDemoActivity.class));
     }
 
     public void changeToNormalListViewDemo(View v) {
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeToSwipeListViewDemo(View v) {
-        startActivity(new Intent(this, SwipeListViewDemoActivity.class));
+        startActivity(new Intent(this, DMJSwipeListViewDemoActivity.class));
     }
     public void changeToScrollViewDemo(View v) {
         startActivity(new Intent(this, ScrollViewDemoActivity.class));

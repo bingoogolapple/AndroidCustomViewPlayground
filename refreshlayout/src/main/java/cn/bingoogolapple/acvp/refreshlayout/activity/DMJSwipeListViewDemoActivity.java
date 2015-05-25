@@ -1,7 +1,5 @@
 package cn.bingoogolapple.acvp.refreshlayout.activity;
 
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +13,10 @@ import android.widget.Toast;
 import java.util.List;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
-import cn.bingoogolapple.acvp.refreshlayout.adapter.AdapterViewAdapter;
+import cn.bingoogolapple.acvp.refreshlayout.adapter.DMJSwipeAdapterViewAdapter;
 import cn.bingoogolapple.acvp.refreshlayout.engine.DataEngine;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
-import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocStyleRefreshViewHolder;
+import cn.bingoogolapple.acvp.refreshlayout.widget.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
 
 /**
@@ -26,12 +24,12 @@ import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
  * 创建时间:15/5/22 10:06
  * 描述:
  */
-public class NormalListViewDemoActivity  extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener, BGARefreshLayout.BGARefreshLayoutDelegate {
+public class DMJSwipeListViewDemoActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener, BGARefreshLayout.BGARefreshLayoutDelegate {
     private static final String TAG = NormalListViewDemoActivity.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
     private List<RefreshModel> mDatas;
     private ListView mDataLv;
-    private AdapterViewAdapter mAdapter;
+    private DMJSwipeAdapterViewAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,20 +43,21 @@ public class NormalListViewDemoActivity  extends AppCompatActivity implements Ad
     private void initRefreshLayout() {
         mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_listview_refresh);
         mRefreshLayout.setDelegate(this);
-        BGAMoocStyleRefreshViewHolder moocStyleRefreshViewHolder = new BGAMoocStyleRefreshViewHolder(this, true);
-        moocStyleRefreshViewHolder.setUltimateColor(Color.rgb(0, 0, 255));
-        moocStyleRefreshViewHolder.setOriginalBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.iqegg));
-        moocStyleRefreshViewHolder.setLoadMoreBackgroundColorRes(android.R.color.holo_blue_light);
-        mRefreshLayout.setRefreshViewHolder(moocStyleRefreshViewHolder);
+
+        BGANormalRefreshViewHolder normalRefreshViewHolder = new BGANormalRefreshViewHolder(this, true);
+        normalRefreshViewHolder.setPullDownRefreshText("自定义下拉刷新文本");
+        normalRefreshViewHolder.setReleaseRefreshText("自定义松开更新文本");
+        normalRefreshViewHolder.setRefreshingText("自定义正在刷新文本");
+        normalRefreshViewHolder.setLoadMoreBackgroundDrawableRes(R.drawable.shape_refresh_bg);
+        mRefreshLayout.setRefreshViewHolder(normalRefreshViewHolder);
         mRefreshLayout.addCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
     }
-
 
     private void initListView() {
         mDataLv = (ListView) findViewById(R.id.lv_listview_data);
         mDataLv.setOnItemClickListener(this);
         mDataLv.setOnItemLongClickListener(this);
-        mAdapter = new AdapterViewAdapter(this);
+        mAdapter = new DMJSwipeAdapterViewAdapter(this, this);
         mDatas = DataEngine.loadInitDatas();
         mAdapter.setDatas(mDatas);
         mDataLv.setAdapter(mAdapter);
@@ -76,10 +75,6 @@ public class NormalListViewDemoActivity  extends AppCompatActivity implements Ad
         });
 
         mDataLv.addFooterView(DataEngine.getCustomHeaderOrFooterView(this));
-    }
-
-    @Override
-    public void onClick(View v) {
     }
 
     @Override
@@ -128,6 +123,13 @@ public class NormalListViewDemoActivity  extends AppCompatActivity implements Ad
     }
 
     @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.tv_item_swipelist_delete) {
+            mAdapter.removeItem((RefreshModel) v.getTag());
+        }
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(this, "点击了条目 " + mDatas.get(position).mTitle, Toast.LENGTH_SHORT).show();
     }
@@ -137,4 +139,5 @@ public class NormalListViewDemoActivity  extends AppCompatActivity implements Ad
         Toast.makeText(this, "长按了" + mDatas.get(position).mTitle, Toast.LENGTH_SHORT).show();
         return true;
     }
+
 }

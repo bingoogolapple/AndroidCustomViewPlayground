@@ -33,7 +33,7 @@ public class Divider extends RecyclerView.ItemDecoration {
 
     public void drawVertical(Canvas c, RecyclerView parent) {
         int left = parent.getPaddingLeft();
-        int right = parent.getWidth() - parent.getPaddingRight() - 200;
+        int right = parent.getWidth() - parent.getPaddingRight();
         View child;
         RecyclerView.LayoutParams layoutParams;
         int top;

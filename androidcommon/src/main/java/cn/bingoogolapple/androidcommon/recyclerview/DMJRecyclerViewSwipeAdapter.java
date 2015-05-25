@@ -13,7 +13,7 @@ import java.util.List;
  * 创建时间:15/5/22 15:01
  * 描述:
  */
-public abstract class BGARecyclerViewSwipeAdapter<M> extends RecyclerSwipeAdapter<BGARecyclerViewHolder> {
+public abstract class DMJRecyclerViewSwipeAdapter<M> extends RecyclerSwipeAdapter<BGARecyclerViewHolder> {
     protected final int mItemLayoutId;
     protected final int mSwipeViewId;
     protected Context mContext;
@@ -23,7 +23,7 @@ public abstract class BGARecyclerViewSwipeAdapter<M> extends RecyclerSwipeAdapte
     protected BGAOnRVItemChildClickListener mOnRVItemChildClickListener;
     protected BGAOnRVItemChildLongClickListener mOnRVItemChildLongClickListener;
 
-    public BGARecyclerViewSwipeAdapter(Context context, int itemLayoutId, int swipeViewId) {
+    public DMJRecyclerViewSwipeAdapter(Context context, int itemLayoutId, int swipeViewId) {
         mContext = context;
         mItemLayoutId = itemLayoutId;
         mSwipeViewId = swipeViewId;

@@ -7,9 +7,9 @@ import android.view.View;
  * 创建时间:15/5/21 上午1:03
  * 描述:
  */
-public class BGAAdapterViewSwipeHolder extends BGAAdapterViewBaseHolder {
+public class DMJAdapterViewSwipeHolder extends BGAAdapterViewBaseHolder {
 
-    public BGAAdapterViewSwipeHolder(View convertView) {
+    public DMJAdapterViewSwipeHolder(View convertView) {
         mConvertView = convertView;
         mConvertView.setTag(this);
     }

@@ -11,8 +11,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
+
+import com.nineoldandroids.animation.ValueAnimator;
 
 import java.lang.reflect.Field;
 
@@ -86,9 +87,9 @@ public class BGARefreshLayout extends LinearLayout {
     private float mInterceptTouchDownY = -1;
 
     /**
-     * 是否已经初始化footerView和设置内容控件滚动监听器
+     * 是否已经设置内容控件滚动监听器
      */
-    private boolean mIsInitedFooterViewAndContentViewScrollListener = false;
+    private boolean mIsInitedContentViewScrollListener = false;
 
     public BGARefreshLayout(Context context) {
         this(context, null);
@@ -183,6 +184,7 @@ public class BGARefreshLayout extends LinearLayout {
             // 测量上拉加载更多控件的高度
             mLoadMoreFooterView.measure(0, 0);
             mLoadMoreFooterViewHeight = mLoadMoreFooterView.getMeasuredHeight();
+            mLoadMoreFooterView.setPadding(0, 0, 0, -mLoadMoreFooterViewHeight);
         }
     }
 
@@ -190,20 +192,14 @@ public class BGARefreshLayout extends LinearLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        // 被添加到窗口后再设置监听器，这样开发者就不比烦恼先初始化RefreshLayout还是先设置自定义滚动监听器，ListView还可以添加自定义FooterView
-        if (!mIsInitedFooterViewAndContentViewScrollListener) {
+        // 被添加到窗口后再设置监听器，这样开发者就不比烦恼先初始化RefreshLayout还是先设置自定义滚动监听器
+        if (!mIsInitedContentViewScrollListener) {
             setRecyclerViewOnScrollListener();
             setAbsListViewOnScrollListener();
 
-            // 如过contentView是ListView则直接添加FooterView
-            if (mContentView instanceof ListView) {
-                mLoadMoreFooterView.setPadding(0, -mLoadMoreFooterViewHeight, 0, 0);
-                mLoadMoreFooterView.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
-                ListView listView = (ListView) mContentView;
-                listView.addFooterView(mLoadMoreFooterView);
-            }
+            addView(mLoadMoreFooterView, getChildCount());
 
-            mIsInitedFooterViewAndContentViewScrollListener = true;
+            mIsInitedContentViewScrollListener = true;
         }
     }
 
@@ -253,11 +249,6 @@ public class BGARefreshLayout extends LinearLayout {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    private void setScrollViewOnScrollListener() {
-        if (mScrollView != null) {
         }
     }
 
@@ -628,31 +619,44 @@ public class BGARefreshLayout extends LinearLayout {
      * 隐藏上拉加载更多控件
      */
     private void hiddenLoadMoreFooterView() {
-        if (mContentView instanceof ListView) {
-            mLoadMoreFooterView.setPadding(0, -mLoadMoreFooterViewHeight, 0, 0);
-        } else {
-            removeView(mLoadMoreFooterView);
-        }
+//        mLoadMoreFooterView.setPadding(0, -mLoadMoreFooterViewHeight, 0, 0);
+        startHiddenLoadingMoreViewAnim();
     }
 
     /**
      * 开始上拉加载更多
      */
     private void beginLoadingMore() {
-        if (mIsLoadingMore) {
-            return;
-        }
-        if (mLoadMoreFooterView != null && mDelegate != null) {
+        if (!mIsLoadingMore && mLoadMoreFooterView != null && mDelegate != null) {
             mIsLoadingMore = true;
-            if (mContentView instanceof ListView) {
-                mLoadMoreFooterView.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
-                ListView listView = (ListView) mContentView;
-                listView.setSelection(listView.getCount());
-                mLoadMoreFooterView.setPadding(0, 0, 0, 0);
-            } else {
-                mLoadMoreFooterView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                addView(mLoadMoreFooterView, getChildCount());
-                requestLayout();
+
+            startShowLoadingMoreViewAnim();
+
+            mRefreshViewHolder.changeToLoadingMore();
+            mDelegate.onBGARefreshLayoutBeginLoadingMore();
+        }
+    }
+
+    private void startHiddenLoadingMoreViewAnim() {
+        ValueAnimator animator = ValueAnimator.ofInt(0, -mLoadMoreFooterViewHeight);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int paddingBottom = (int) animation.getAnimatedValue();
+                mLoadMoreFooterView.setPadding(0, 0, 0, paddingBottom);
+            }
+        });
+        animator.start();
+    }
+
+    private void startShowLoadingMoreViewAnim() {
+        ValueAnimator animator = ValueAnimator.ofInt(-mLoadMoreFooterViewHeight, 0);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int paddingBottom = (int) animation.getAnimatedValue();
+                mLoadMoreFooterView.setPadding(0, 0, 0, paddingBottom);
+
                 if (mScrollView != null) {
                     new Handler().post(new Runnable() {
                         @Override
@@ -673,10 +677,8 @@ public class BGARefreshLayout extends LinearLayout {
                     }
                 }
             }
-
-            mRefreshViewHolder.changeToLoadingMore();
-            mDelegate.onBGARefreshLayoutBeginLoadingMore();
-        }
+        });
+        animator.start();
     }
 
     public void setDelegate(BGARefreshLayoutDelegate delegate) {
@@ -697,21 +699,5 @@ public class BGARefreshLayout extends LinearLayout {
 
     public enum RefreshStatus {
         IDLE, PULL_DOWN, RELEASE_REFRESH, REFRESHING
-    }
-
-    public static void scrollToBottom(final View scroll, final View inner) {
-        Handler mHandler = new Handler();
-        mHandler.post(new Runnable() {
-            public void run() {
-                if (scroll == null || inner == null) {
-                    return;
-                }
-                int offset = inner.getMeasuredHeight() - scroll.getHeight();
-                if (offset < 0) {
-                    offset = 0;
-                }
-                scroll.scrollTo(0, offset);
-            }
-        });
     }
 }

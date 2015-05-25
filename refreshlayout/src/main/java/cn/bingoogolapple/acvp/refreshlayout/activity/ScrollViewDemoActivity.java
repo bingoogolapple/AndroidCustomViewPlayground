@@ -9,13 +9,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGAStickinessRefreshViewHolder;
-import cn.bingoogolapple.bgabanner.BGABanner;
 
 
 /**
@@ -32,12 +28,8 @@ public class ScrollViewDemoActivity extends AppCompatActivity implements BGARefr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrollview);
-        mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_scrollview_refresh);
-        mRefreshLayout.setDelegate(this);
-        BGAStickinessRefreshViewHolder stickinessRefreshViewHolder = new BGAStickinessRefreshViewHolder(this, true);
-        stickinessRefreshViewHolder.setStickinessColor(Color.parseColor("#11cd6e"));
-        stickinessRefreshViewHolder.setRotateDrawable(getResources().getDrawable(R.mipmap.custom_stickiness_roate));
-        mRefreshLayout.setRefreshViewHolder(stickinessRefreshViewHolder);
+
+        initRefreshLayout();
 
         mClickableLabelTv = (TextView) findViewById(R.id.tv_scrollview_clickablelabel);
         mClickableLabelTv.setOnClickListener(new View.OnClickListener() {
@@ -48,17 +40,13 @@ public class ScrollViewDemoActivity extends AppCompatActivity implements BGARefr
         });
     }
 
-    protected void initCustomHeaderView() {
-        List<View> datas = new ArrayList<>();
-        datas.add(getLayoutInflater().inflate(R.layout.view_one, null));
-        datas.add(getLayoutInflater().inflate(R.layout.view_two, null));
-        datas.add(getLayoutInflater().inflate(R.layout.view_three, null));
-        datas.add(getLayoutInflater().inflate(R.layout.view_four, null));
-
-        View customHeaderView = View.inflate(this, R.layout.view_custom_header, null);
-        BGABanner banner = (BGABanner) customHeaderView.findViewById(R.id.banner);
-        banner.setViewPagerViews(datas);
-        mRefreshLayout.addCustomHeaderView(customHeaderView);
+    private void initRefreshLayout() {
+        mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_scrollview_refresh);
+        mRefreshLayout.setDelegate(this);
+        BGAStickinessRefreshViewHolder stickinessRefreshViewHolder = new BGAStickinessRefreshViewHolder(this, true);
+        stickinessRefreshViewHolder.setStickinessColor(Color.parseColor("#11cd6e"));
+        stickinessRefreshViewHolder.setRotateDrawable(getResources().getDrawable(R.mipmap.custom_stickiness_roate));
+        mRefreshLayout.setRefreshViewHolder(stickinessRefreshViewHolder);
     }
 
     @Override

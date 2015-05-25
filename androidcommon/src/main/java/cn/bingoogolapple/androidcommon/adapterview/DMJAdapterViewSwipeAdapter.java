@@ -14,13 +14,13 @@ import java.util.List;
  * 创建时间:15/5/21 上午1:07
  * 描述:
  */
-public abstract class BGAAdapterViewSwipeAdapter<M> extends BaseSwipeAdapter {
+public abstract class DMJAdapterViewSwipeAdapter<M> extends BaseSwipeAdapter {
     protected final int mItemLayoutId;
     protected final int mSwipeViewId;
     protected Context mContext;
     protected List<M> mDatas;
 
-    public BGAAdapterViewSwipeAdapter(Context context, int itemLayoutId, int swipeViewId) {
+    public DMJAdapterViewSwipeAdapter(Context context, int itemLayoutId, int swipeViewId) {
         mContext = context;
         mItemLayoutId = itemLayoutId;
         mSwipeViewId = swipeViewId;
@@ -49,20 +49,20 @@ public abstract class BGAAdapterViewSwipeAdapter<M> extends BaseSwipeAdapter {
     @Override
     public View generateView(int position, ViewGroup viewGroup) {
         View convertView = LayoutInflater.from(mContext).inflate(mItemLayoutId, viewGroup, false);
-        setListener(new BGAAdapterViewSwipeHolder(convertView));
+        setListener(new DMJAdapterViewSwipeHolder(convertView));
         return convertView;
     }
 
-    protected abstract void setListener(BGAAdapterViewSwipeHolder viewHolder);
+    protected abstract void setListener(DMJAdapterViewSwipeHolder viewHolder);
 
     @Override
     public void fillValues(int position, View convertView) {
-        BGAAdapterViewSwipeHolder viewHolder = (BGAAdapterViewSwipeHolder) convertView.getTag();
+        DMJAdapterViewSwipeHolder viewHolder = (DMJAdapterViewSwipeHolder) convertView.getTag();
         viewHolder.setPosition(position);
         fillData(viewHolder, mDatas.get(position), position);
     }
 
-    protected abstract void fillData(BGAAdapterViewSwipeHolder viewHolder, M model, int position);
+    protected abstract void fillData(DMJAdapterViewSwipeHolder viewHolder, M model, int position);
 
     public void setDatas(List<M> datas) {
         mDatas = datas;

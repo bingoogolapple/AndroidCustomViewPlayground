@@ -5,16 +5,16 @@ import android.content.Context;
 import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.androidcommon.recyclerview.BGARecyclerViewHolder;
-import cn.bingoogolapple.androidcommon.recyclerview.BGARecyclerViewSwipeAdapter;
+import cn.bingoogolapple.androidcommon.recyclerview.DMJRecyclerViewSwipeAdapter;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
  * 创建时间:15/5/22 16:24
  * 描述:
  */
-public class SwipeRecyclerViewAdapter extends BGARecyclerViewSwipeAdapter<RefreshModel> {
+public class DMJSwipeRecyclerViewAdapter extends DMJRecyclerViewSwipeAdapter<RefreshModel> {
 
-    public SwipeRecyclerViewAdapter(Context context) {
+    public DMJSwipeRecyclerViewAdapter(Context context) {
         super(context, R.layout.item_swipelist, R.id.sl_item_swipelist_root);
     }
 
