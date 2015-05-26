@@ -20,17 +20,22 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, NormalRecyclerViewDemoActivity.class));
     }
 
-    public void changeToSwipeRecyclerViewDemo(View v) {
+    public void changeToDMJSwipeRecyclerViewDemo(View v) {
         startActivity(new Intent(this, DMJSwipeRecyclerViewDemoActivity.class));
+    }
+
+    public void changeToNormalGridViewDemo(View v) {
+        startActivity(new Intent(this, NormalGridViewDemoActivity.class));
     }
 
     public void changeToNormalListViewDemo(View v) {
         startActivity(new Intent(this, NormalListViewDemoActivity.class));
     }
 
-    public void changeToSwipeListViewDemo(View v) {
+    public void changeToDMJSwipeListViewDemo(View v) {
         startActivity(new Intent(this, DMJSwipeListViewDemoActivity.class));
     }
+
     public void changeToScrollViewDemo(View v) {
         startActivity(new Intent(this, ScrollViewDemoActivity.class));
     }

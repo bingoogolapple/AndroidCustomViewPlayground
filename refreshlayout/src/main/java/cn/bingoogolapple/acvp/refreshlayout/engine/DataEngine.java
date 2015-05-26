@@ -27,7 +27,7 @@ public class DataEngine {
 
     public static List<RefreshModel> loadNewData() {
         List<RefreshModel> datas = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             datas.add(new RefreshModel("newTitle" + i, "newDetail" + i));
         }
         return datas;
@@ -35,7 +35,7 @@ public class DataEngine {
 
     public static List<RefreshModel> loadMoreData() {
         List<RefreshModel> datas = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             datas.add(new RefreshModel("moreTitle" + i, "moreDetail" + i));
         }
         return datas;

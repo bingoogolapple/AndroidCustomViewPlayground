@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rl_listview_refresh"
+    android:id="@+id/rl_gridview_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <ListView
-        android:id="@+id/lv_listview_data"
+    <GridView
+        android:id="@+id/lv_gridview_data"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:numColumns="2"
         android:divider="@mipmap/list_divider"
         android:scrollbars="none" />
 </cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout>

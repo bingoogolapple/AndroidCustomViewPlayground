@@ -17,17 +17,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.NormalRecyclerViewDemoActivity"
-            android:label="普通RecyclerView示例" />
-        <activity
-            android:name=".activity.DMJSwipeRecyclerViewDemoActivity"
-            android:label="滑动RecyclerView示例" />
+            android:name=".activity.NormalGridViewDemoActivity"
+            android:label="普通GridView示例" />
         <activity
             android:name=".activity.NormalListViewDemoActivity"
             android:label="普通ListView示例" />
         <activity
+            android:name=".activity.NormalRecyclerViewDemoActivity"
+            android:label="普通RecyclerView示例" />
+        <activity
             android:name=".activity.DMJSwipeListViewDemoActivity"
-            android:label="滑动ListView示例" />
+            android:label="代码家滑动ListView示例" />
+        <activity
+            android:name=".activity.DMJSwipeRecyclerViewDemoActivity"
+            android:label="代码家滑动RecyclerView示例" />
         <activity
             android:name=".activity.ScrollViewDemoActivity"
             android:label="ScrollView示例" />

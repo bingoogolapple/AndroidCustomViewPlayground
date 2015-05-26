@@ -10,36 +10,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="changeToNormalRecyclerViewDemo"
-        android:text="普通RecyclerView示例" />
+        android:text="普通RecyclerView示例"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="changeToSwipeRecyclerViewDemo"
-        android:text="滑动RecyclerView示例" />
+        android:onClick="changeToDMJSwipeRecyclerViewDemo"
+        android:text="代码家滑动RecyclerView示例"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="changeToNormalGridViewDemo"
+        android:text="普通GridView示例"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="changeToNormalListViewDemo"
-        android:text="普通ListView示例" />
+        android:text="普通ListView示例"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="changeToSwipeListViewDemo"
-        android:text="滑动ListView示例" />
+        android:onClick="changeToDMJSwipeListViewDemo"
+        android:text="代码家滑动ListView示例"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="changeToScrollViewDemo"
-        android:text="ScrollView示例" />
+        android:text="ScrollView示例"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="changeToNormalViewDemo"
-        android:text="普通View示例" />
+        android:text="普通View示例"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

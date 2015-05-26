@@ -210,7 +210,7 @@ public class BGARefreshLayout extends LinearLayout {
         super.onAttachedToWindow();
 
         // 被添加到窗口后再设置监听器，这样开发者就不比烦恼先初始化RefreshLayout还是先设置自定义滚动监听器
-        if (!mIsInitedContentViewScrollListener) {
+        if (!mIsInitedContentViewScrollListener && mLoadMoreFooterView != null) {
             setRecyclerViewOnScrollListener();
             setAbsListViewOnScrollListener();
 
