@@ -2,13 +2,13 @@ package cn.bingoogolapple.acvp.refreshlayout.widget;
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -136,9 +136,22 @@ public class BGARefreshLayout extends LinearLayout {
 
     public void setRefreshViewHolder(BGARefreshViewHolder refreshViewHolder) {
         mRefreshViewHolder = refreshViewHolder;
-        mRefreshViewHolder.setWholeHeaderView(mWholeHeaderView);
+        mRefreshViewHolder.setRefreshLayout(this);
         initRefreshHeaderView();
         initLoadMoreFooterView();
+    }
+
+    public void startChangeWholeHeaderViewPaddingTop(int distance) {
+        ValueAnimator animator = ValueAnimator.ofInt(mWholeHeaderView.getPaddingTop(), mWholeHeaderView.getPaddingTop() - distance);
+        animator.setDuration(mRefreshViewHolder.getTopAnimDuration());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int paddingTop = (int) animation.getAnimatedValue();
+                mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
+            }
+        });
+        animator.start();
     }
 
     /**
@@ -165,7 +178,11 @@ public class BGARefreshLayout extends LinearLayout {
      *
      * @param customHeaderView
      */
-    public void addCustomHeaderView(View customHeaderView) {
+    public void setCustomHeaderView(View customHeaderView) {
+        if (mCustomHeaderView != null && mCustomHeaderView.getParent() != null) {
+            ViewGroup parent = (ViewGroup) mCustomHeaderView.getParent();
+            parent.removeView(mCustomHeaderView);
+        }
         mCustomHeaderView = customHeaderView;
         if (mCustomHeaderView != null) {
             mCustomHeaderView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -253,7 +270,7 @@ public class BGARefreshLayout extends LinearLayout {
     }
 
     private boolean shouldHandleAbsListViewLoadingMore() {
-        if (mIsLoadingMore) {
+        if (mIsLoadingMore || mLoadMoreFooterView == null || mDelegate == null) {
             return false;
         }
 
@@ -266,6 +283,10 @@ public class BGARefreshLayout extends LinearLayout {
     }
 
     private boolean shouldHandleRecyclerViewLoadingMore() {
+        if (mIsLoadingMore || mLoadMoreFooterView == null || mDelegate == null) {
+            return false;
+        }
+
         RecyclerView.LayoutManager manager = mRecyclerView.getLayoutManager();
         if (manager instanceof LinearLayoutManager) {
             LinearLayoutManager layoutManager = (LinearLayoutManager) manager;
@@ -285,7 +306,7 @@ public class BGARefreshLayout extends LinearLayout {
      * @return
      */
     private boolean shouldHandleLoadingMore() {
-        if (mLoadMoreFooterView == null) {
+        if (mIsLoadingMore || mLoadMoreFooterView == null || mDelegate == null) {
             return false;
         }
 
@@ -585,41 +606,38 @@ public class BGARefreshLayout extends LinearLayout {
      * 隐藏下拉刷新控件，带动画
      */
     private void hiddenRefreshHeaderView() {
-        ViewCompat.postOnAnimation(mWholeHeaderView, new Runnable() {
+        ValueAnimator animator = ValueAnimator.ofInt(mWholeHeaderView.getPaddingTop(), mMinWholeHeaderViewPaddingTop);
+        animator.setDuration(mRefreshViewHolder.getTopAnimDuration());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void run() {
-                if (mWholeHeaderView.getPaddingTop() > mMinWholeHeaderViewPaddingTop) {
-                    mWholeHeaderView.setPadding(0, mWholeHeaderView.getPaddingTop() - mRefreshViewHolder.getStepDistance(), 0, 0);
-                    hiddenRefreshHeaderView();
-                } else {
-                    mWholeHeaderView.setPadding(0, mMinWholeHeaderViewPaddingTop, 0, 0);
-                }
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int paddingTop = (int) animation.getAnimatedValue();
+                mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
             }
         });
+        animator.start();
     }
 
     /**
      * 设置下拉刷新控件的paddingTop到0，带动画
      */
     private void changeRefreshHeaderViewToZero() {
-        ViewCompat.postOnAnimation(mWholeHeaderView, new Runnable() {
+        ValueAnimator animator = ValueAnimator.ofInt(mWholeHeaderView.getPaddingTop(), 0);
+        animator.setDuration(mRefreshViewHolder.getTopAnimDuration());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void run() {
-                if (mWholeHeaderView.getPaddingTop() > 0) {
-                    mWholeHeaderView.setPadding(0, mWholeHeaderView.getPaddingTop() - mRefreshViewHolder.getStepDistance(), 0, 0);
-                    changeRefreshHeaderViewToZero();
-                } else {
-                    mWholeHeaderView.setPadding(0, 0, 0, 0);
-                }
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int paddingTop = (int) animation.getAnimatedValue();
+                mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
             }
         });
+        animator.start();
     }
 
     /**
      * 隐藏上拉加载更多控件
      */
     private void hiddenLoadMoreFooterView() {
-//        mLoadMoreFooterView.setPadding(0, -mLoadMoreFooterViewHeight, 0, 0);
         startHiddenLoadingMoreViewAnim();
     }
 
@@ -639,6 +657,7 @@ public class BGARefreshLayout extends LinearLayout {
 
     private void startHiddenLoadingMoreViewAnim() {
         ValueAnimator animator = ValueAnimator.ofInt(0, -mLoadMoreFooterViewHeight);
+        animator.setDuration(mRefreshViewHolder.getBottomAnimDuration());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -651,6 +670,7 @@ public class BGARefreshLayout extends LinearLayout {
 
     private void startShowLoadingMoreViewAnim() {
         ValueAnimator animator = ValueAnimator.ofInt(-mLoadMoreFooterViewHeight, 0);
+        animator.setDuration(mRefreshViewHolder.getBottomAnimDuration());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {

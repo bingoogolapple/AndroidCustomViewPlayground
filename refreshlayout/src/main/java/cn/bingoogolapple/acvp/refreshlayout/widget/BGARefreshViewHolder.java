@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
-import cn.bingoogolapple.acvp.refreshlayout.util.UIUtil;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
@@ -25,16 +24,9 @@ public abstract class BGARefreshViewHolder {
      * 下拉刷新控件paddingTop的弹簧距离与下拉刷新控件高度的比值
      */
     private static final float SPRING_DISTANCE_SCALE = 0.4f;
-    /**
-     * 松手时控件每一次自动移动的距离，单位dp
-     */
-    public static final int STEP_INSTANCE_DP = 4;
-    /**
-     * 松手时控件每一次自动移动的距离，单位像素
-     */
-    private final int mStepDistance;
+
     protected Context mContext;
-    protected View mWholeHeaderView;
+    protected BGARefreshLayout mRefreshLayout;
     /**
      * 下拉刷新控件
      */
@@ -53,10 +45,18 @@ public abstract class BGARefreshViewHolder {
     private int mLoadMoreBackgroundColorRes = -1;
     private int mLoadMoreBackgroundDrawableRes = -1;
 
+    /**
+     * 头部控件移动动画时常
+     */
+    private int mTopAnimDuration = 500;
+    /**
+     * 底部控件移动动画时常
+     */
+    private int mBottomAnimDuration = 300;
+
     public BGARefreshViewHolder(Context context, boolean isLoadingMoreEnabled) {
         mContext = context;
         mIsLoadingMoreEnabled = isLoadingMoreEnabled;
-        mStepDistance = UIUtil.dp2px(context, STEP_INSTANCE_DP);
     }
 
     public void setLoadingMoreText(String loadingMoreText) {
@@ -69,6 +69,22 @@ public abstract class BGARefreshViewHolder {
 
     public void setLoadMoreBackgroundDrawableRes(@DrawableRes int loadMoreBackgroundDrawableRes) {
         mLoadMoreBackgroundDrawableRes = loadMoreBackgroundDrawableRes;
+    }
+
+    public int getTopAnimDuration() {
+        return mTopAnimDuration;
+    }
+
+    public void setTopAnimDuration(int topAnimDuration) {
+        mTopAnimDuration = topAnimDuration;
+    }
+
+    public int getBottomAnimDuration() {
+        return mBottomAnimDuration;
+    }
+
+    public void setBottomAnimDuration(int bottomAnimDuration) {
+        mBottomAnimDuration = bottomAnimDuration;
     }
 
     /**
@@ -195,19 +211,12 @@ public abstract class BGARefreshViewHolder {
         return 0;
     }
 
-    public void setWholeHeaderView(View wholeHeaderView) {
-        mWholeHeaderView = wholeHeaderView;
+    public void startChangeWholeHeaderViewPaddingTop(int distance) {
+        mRefreshLayout.startChangeWholeHeaderViewPaddingTop(distance);
     }
 
-    public void getWholeHeaderView() {
-        mWholeHeaderView = mWholeHeaderView;
+    public void setRefreshLayout(BGARefreshLayout refreshLayout) {
+        mRefreshLayout = refreshLayout;
     }
 
-    public void subtractionWholeHeaderViewPadding() {
-        mWholeHeaderView.setPadding(mWholeHeaderView.getPaddingLeft(), mWholeHeaderView.getPaddingTop() - mStepDistance, mWholeHeaderView.getPaddingRight(), mWholeHeaderView.getPaddingBottom());
-    }
-
-    public int getStepDistance() {
-        return mStepDistance;
-    }
 }

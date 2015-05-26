@@ -50,7 +50,7 @@ public class DMJSwipeListViewDemoActivity extends AppCompatActivity implements A
         normalRefreshViewHolder.setRefreshingText("自定义正在刷新文本");
         normalRefreshViewHolder.setLoadMoreBackgroundDrawableRes(R.drawable.shape_refresh_bg);
         mRefreshLayout.setRefreshViewHolder(normalRefreshViewHolder);
-        mRefreshLayout.addCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
+        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
     }
 
     private void initListView() {

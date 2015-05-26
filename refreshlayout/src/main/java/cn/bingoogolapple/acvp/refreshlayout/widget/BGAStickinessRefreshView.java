@@ -12,6 +12,9 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ValueAnimator;
+
 import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.util.UIUtil;
 
@@ -106,7 +109,7 @@ public class BGAStickinessRefreshView extends View {
         mRotateDrawableSize = UIUtil.dp2px(getContext(), 30);
         mTopSize = mRotateDrawableSize + 2 * mEdge;
 
-        mMaxBottomHeight = (int)(2.5f * mRotateDrawableSize);
+        mMaxBottomHeight = (int) (2.5f * mRotateDrawableSize);
     }
 
     @Override
@@ -163,7 +166,7 @@ public class BGAStickinessRefreshView extends View {
             // scale                  0.2 ==> 1
             float scale = Math.max(mCurrentBottomHeight * 1.0f / mMaxBottomHeight, 0.2f);
 
-            float bottomControlXOffset = mTopSize * ((4 + (float)Math.pow(scale, 7) * 15) / 32);
+            float bottomControlXOffset = mTopSize * ((4 + (float) Math.pow(scale, 7) * 15) / 32);
             float bottomControlY = mTopBound.bottom / 2 + mCenterPoint.y / 2;
             // 三阶贝塞尔曲线，前两个是控制点，最后一个点是终点
             mPath.cubicTo(mTopBound.right - mTopSize / 8, mTopBound.bottom, mTopBound.right - bottomControlXOffset, bottomControlY, mBottomBound.right, mBottomBound.bottom - mBottomBound.height() / 2);
@@ -179,12 +182,8 @@ public class BGAStickinessRefreshView extends View {
         }
     }
 
-    public int getBottomPaddingAndTopSize() {
-        return mTopSize + getPaddingBottom();
-    }
-
     public void setMoveYDistance(int moveYDistance) {
-        int bottomHeight = moveYDistance - getBottomPaddingAndTopSize() - getPaddingTop();
+        int bottomHeight = moveYDistance - mTopSize - getPaddingBottom() - getPaddingTop();
         if (bottomHeight > 0) {
             mCurrentBottomHeight = bottomHeight;
         } else {
@@ -203,29 +202,49 @@ public class BGAStickinessRefreshView extends View {
     }
 
     public void startRefreshing() {
-        mIsRefreshing = true;
-        smoothToRefreshing();
+        ValueAnimator animator = ValueAnimator.ofInt(mCurrentBottomHeight, 0);
+        animator.setDuration(mStickinessRefreshViewHolder.getTopAnimDuration());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mCurrentBottomHeight = (int) animation.getAnimatedValue();
+                postInvalidate();
+            }
+        });
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mIsRefreshing = true;
+                mStickinessRefreshViewHolder.startChangeWholeHeaderViewPaddingTop(mCurrentBottomHeight);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mIsRotating = true;
+                startRotating();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        animator.start();
     }
 
-    private void smoothToRefreshing() {
+    private void startRotating() {
         ViewCompat.postOnAnimation(this, new Runnable() {
             @Override
             public void run() {
-                mCurrentBottomHeight -= mStickinessRefreshViewHolder.getStepDistance();
-                if (mCurrentBottomHeight > 0) {
-                    mStickinessRefreshViewHolder.subtractionWholeHeaderViewPadding();
-
-                    smoothToRefreshing();
-                } else {
-                    mIsRotating = true;
-                    mCurrentBottomHeight = 0;
-                    mCurrentDegree += 10;
-                    if (mCurrentDegree > 360) {
-                        mCurrentDegree = 0;
-                    }
-                    if (mIsRefreshing) {
-                        smoothToRefreshing();
-                    }
+                mCurrentDegree += 10;
+                if (mCurrentDegree > 360) {
+                    mCurrentDegree = 0;
+                }
+                if (mIsRefreshing) {
+                    startRotating();
                 }
                 postInvalidate();
             }
@@ -239,19 +258,34 @@ public class BGAStickinessRefreshView extends View {
     }
 
     public void smoothToIdle() {
-        ViewCompat.postOnAnimation(this, new Runnable() {
+        ValueAnimator animator = ValueAnimator.ofInt(mCurrentBottomHeight, 0);
+        animator.setDuration(mStickinessRefreshViewHolder.getTopAnimDuration());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void run() {
-                mCurrentBottomHeight -= mStickinessRefreshViewHolder.getStepDistance();
-                if (mCurrentBottomHeight > 0) {
-                    smoothToIdle();
-                } else {
-                    mCurrentBottomHeight = 0;
-                    mIsRotating = false;
-                }
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mCurrentBottomHeight = (int) animation.getAnimatedValue();
                 postInvalidate();
             }
         });
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mIsRotating = false;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        animator.start();
     }
 
     public void setStickinessRefreshViewHolder(BGAStickinessRefreshViewHolder stickinessRefreshViewHolder) {
