@@ -1,4 +1,4 @@
-package cn.bingoogolapple.androidcommon.recyclerview;
+package cn.bingoogolapple.androidcommon.adapter;
 
 import android.view.View;
 

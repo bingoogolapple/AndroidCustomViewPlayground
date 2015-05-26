@@ -55,6 +55,8 @@ public class BGASwipeItemLayout extends RelativeLayout {
     // 手动拖动打开和关闭代理
     private BGASwipeItemLayoutDelegate mDelegate;
 
+    private float mInterceptTouchDownX = -1;
+    private float mInterceptTouchDownY = -1;
     private float mTouchDownX = -1;
     private float mTouchDownY = -1;
 
@@ -140,39 +142,18 @@ public class BGASwipeItemLayout extends RelativeLayout {
     }
 
     @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_CANCEL || ev.getAction() == MotionEvent.ACTION_UP) {
+            mDragHelper.cancel();
+            return false;
+        }
+        return mDragHelper.shouldInterceptTouchEvent(ev);
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         mDragHelper.processTouchEvent(event);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mTouchDownX = event.getX();
-                mTouchDownY = event.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (mTouchDownX == -1) {
-                    mTouchDownX = event.getX();
-                }
-                if (mTouchDownY == -1) {
-                    mTouchDownY = event.getY();
-                }
-                float moveDistanceX = Math.abs(event.getX() - mTouchDownX);
-                float moveDistanceY = Math.abs(event.getY() - mTouchDownY);
-                if ((moveDistanceY < moveDistanceX && moveDistanceX > mSwipeThreshold)) {
-                    event.setAction(MotionEvent.ACTION_CANCEL);
-                    super.onTouchEvent(event);
-                    return true;
-                }
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_UP:
-                if (isMoving()) {
-                    return true;
-                }
-                mDragHelper.cancel();
-                break;
-            default:
-                break;
-        }
-
-        return super.onTouchEvent(event);
+        return true;
     }
 
     @Override

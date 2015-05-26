@@ -17,15 +17,17 @@ import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocStyleRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
 import cn.bingoogolapple.acvp.refreshlayout.widget.Divider;
-import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemClickListener;
-import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemLongClickListener;
+import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildClickListener;
+import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildLongClickListener;
+import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemClickListener;
+import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemLongClickListener;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
  * 创建时间:15/5/22 10:06
  * 描述:
  */
-public class NormalRecyclerViewDemoActivity extends AppCompatActivity implements BGARefreshLayout.BGARefreshLayoutDelegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener {
+public class NormalRecyclerViewDemoActivity extends AppCompatActivity implements BGARefreshLayout.BGARefreshLayoutDelegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener {
     private NormalRecyclerViewAdapter mAdapter;
     private BGARefreshLayout mRefreshLayout;
     private List<RefreshModel> mDatas;
@@ -55,12 +57,14 @@ public class NormalRecyclerViewDemoActivity extends AppCompatActivity implements
         mDataRv.setLayoutManager(gridLayoutManager);
 
         mAdapter = new NormalRecyclerViewAdapter(this);
+        mAdapter.setOnRVItemClickListener(this);
+        mAdapter.setOnRVItemLongClickListener(this);
+        mAdapter.setOnItemChildClickListener(this);
+        mAdapter.setOnItemChildLongClickListener(this);
+
         mDatas = DataEngine.loadInitDatas();
         mAdapter.setDatas(mDatas);
         mDataRv.setAdapter(mAdapter);
-
-        mAdapter.setOnRVItemClickListener(this);
-        mAdapter.setOnRVItemLongClickListener(this);
     }
 
     @Override
@@ -110,13 +114,28 @@ public class NormalRecyclerViewDemoActivity extends AppCompatActivity implements
 
     @Override
     public void onRVItemClick(View v, int position) {
-        Toast.makeText(this, "点击了条目 " + mDatas.get(position).mTitle, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "点击了条目 " + mAdapter.getItemMode(position).mTitle, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public boolean onRVItemLongClick(View v, int position) {
-        Toast.makeText(this, "长按了条目 " + mDatas.get(position).mTitle, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "长按了条目 " + mAdapter.getItemMode(position).mTitle, Toast.LENGTH_SHORT).show();
         return true;
     }
 
+    @Override
+    public void onItemChildClick(View v, int position) {
+        if (v.getId() == R.id.tv_item_normal_delete) {
+            mAdapter.removeItem(position);
+        }
+    }
+
+    @Override
+    public boolean onItemChildLongClick(View v, int position) {
+        if (v.getId() == R.id.tv_item_normal_delete) {
+            Toast.makeText(this, "长按了删除 " + mAdapter.getItemMode(position).mTitle, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
 }

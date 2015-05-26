@@ -20,8 +20,8 @@ import cn.bingoogolapple.acvp.refreshlayout.engine.DataEngine;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocStyleRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
-import cn.bingoogolapple.androidcommon.recyclerview.BGAOnItemChildClickListener;
-import cn.bingoogolapple.androidcommon.recyclerview.BGAOnItemChildLongClickListener;
+import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildClickListener;
+import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildLongClickListener;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com

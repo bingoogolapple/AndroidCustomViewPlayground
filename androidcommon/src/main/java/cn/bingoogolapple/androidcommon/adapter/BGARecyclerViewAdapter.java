@@ -1,4 +1,4 @@
-package cn.bingoogolapple.androidcommon.recyclerview;
+package cn.bingoogolapple.androidcommon.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -42,10 +42,10 @@ public abstract class BGARecyclerViewAdapter<M> extends RecyclerView.Adapter<BGA
 
     @Override
     public void onBindViewHolder(BGARecyclerViewHolder viewHolder, int position) {
-        fillData(viewHolder, position, getItemMode(position));
+        fillData(viewHolder.getViewHolderHelper(), position, getItemMode(position));
     }
 
-    protected abstract void fillData(BGARecyclerViewHolder viewHolder, int position, M model);
+    protected abstract void fillData(BGAViewHolderHelper viewHolderHelper, int position, M model);
 
     public void setOnRVItemClickListener(BGAOnRVItemClickListener onRVItemClickListener) {
         mOnRVItemClickListener = onRVItemClickListener;

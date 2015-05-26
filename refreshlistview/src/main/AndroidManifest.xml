@@ -19,9 +19,6 @@
         <activity
             android:name=".activity.NormalActivity"
             android:label="Normal" />
-        <activity
-            android:name=".activity.MoocActivity"
-            android:label="Mooc" />
     </application>
 
 </manifest>

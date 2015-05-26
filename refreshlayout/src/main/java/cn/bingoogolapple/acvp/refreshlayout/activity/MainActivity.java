@@ -28,14 +28,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, NormalRecyclerViewDemoActivity.class));
     }
 
-    public void changeToDMJSwipeListViewDemo(View v) {
-        startActivity(new Intent(this, DMJSwipeListViewDemoActivity.class));
-    }
-
-    public void changeToDMJSwipeRecyclerViewDemo(View v) {
-        startActivity(new Intent(this, DMJSwipeRecyclerViewDemoActivity.class));
-    }
-
     public void changeToBGASwipeListViewDemo(View v) {
         startActivity(new Intent(this, BGASwipeListViewDemoActivity.class));
     }
@@ -50,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeToNormalViewDemo(View v) {
         startActivity(new Intent(this, NormalViewDemoActivity.class));
+    }
+
+    public void changeToSwipeItemDemo(View v) {
+        startActivity(new Intent(this, SwipeItemActivity.class));
     }
 
 }

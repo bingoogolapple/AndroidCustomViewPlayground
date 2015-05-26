@@ -20,13 +20,15 @@ import cn.bingoogolapple.acvp.refreshlayout.engine.DataEngine;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocStyleRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
+import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildClickListener;
+import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildLongClickListener;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
  * 创建时间:15/5/22 10:06
  * 描述:
  */
-public class NormalGridViewDemoActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener, BGARefreshLayout.BGARefreshLayoutDelegate {
+public class NormalGridViewDemoActivity extends AppCompatActivity implements BGARefreshLayout.BGARefreshLayoutDelegate, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener {
     private static final String TAG = NormalGridViewDemoActivity.class.getSimpleName();
     private BGARefreshLayout mRefreshLayout;
     private List<RefreshModel> mDatas;
@@ -57,7 +59,11 @@ public class NormalGridViewDemoActivity extends AppCompatActivity implements Ada
         mDataGv = (GridView) findViewById(R.id.lv_gridview_data);
         mDataGv.setOnItemClickListener(this);
         mDataGv.setOnItemLongClickListener(this);
+
         mAdapter = new NormalAdapterViewAdapter(this);
+        mAdapter.setOnItemChildClickListener(this);
+        mAdapter.setOnItemChildLongClickListener(this);
+
         mDatas = DataEngine.loadInitDatas();
         mAdapter.setDatas(mDatas);
         mDataGv.setAdapter(mAdapter);
@@ -74,10 +80,6 @@ public class NormalGridViewDemoActivity extends AppCompatActivity implements Ada
             }
         });
 
-    }
-
-    @Override
-    public void onClick(View v) {
     }
 
     @Override
@@ -127,12 +129,28 @@ public class NormalGridViewDemoActivity extends AppCompatActivity implements Ada
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, "点击了条目 " + mDatas.get(position).mTitle, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "点击了条目 " + mAdapter.getItem(position).mTitle, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, "长按了" + mDatas.get(position).mTitle, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "长按了" + mAdapter.getItem(position).mTitle, Toast.LENGTH_SHORT).show();
         return true;
+    }
+
+    @Override
+    public void onItemChildClick(View v, int position) {
+        if (v.getId() == R.id.tv_item_normal_delete) {
+            mAdapter.removeItem(position);
+        }
+    }
+
+    @Override
+    public boolean onItemChildLongClick(View v, int position) {
+        if (v.getId() == R.id.tv_item_normal_delete) {
+            Toast.makeText(this, "长按了删除 " + mAdapter.getItem(position).mTitle, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 }

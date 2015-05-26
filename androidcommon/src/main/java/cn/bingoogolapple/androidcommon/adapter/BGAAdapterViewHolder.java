@@ -1,14 +1,9 @@
-package cn.bingoogolapple.androidcommon.adapterview;
+package cn.bingoogolapple.androidcommon.adapter;
 
 import android.content.Context;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import cn.bingoogolapple.androidcommon.recyclerview.BGAOnItemChildClickListener;
-import cn.bingoogolapple.androidcommon.recyclerview.BGAOnItemChildLongClickListener;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
@@ -16,15 +11,16 @@ import cn.bingoogolapple.androidcommon.recyclerview.BGAOnItemChildLongClickListe
  * 描述:
  */
 public class BGAAdapterViewHolder implements View.OnClickListener, View.OnLongClickListener {
-    protected final SparseArray<View> mViews = new SparseArray<View>();
     protected BGAOnItemChildClickListener mOnItemChildClickListener;
     protected BGAOnItemChildLongClickListener mOnItemChildLongClickListener;
     protected View mConvertView;
     protected int mPosition;
+    protected BGAViewHolderHelper mViewHolderHelper;
 
     private BGAAdapterViewHolder(Context context, ViewGroup parent, int layoutId) {
         mConvertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
         mConvertView.setTag(this);
+        mViewHolderHelper = new BGAViewHolderHelper(mConvertView);
     }
 
     /**
@@ -43,12 +39,16 @@ public class BGAAdapterViewHolder implements View.OnClickListener, View.OnLongCl
         return (BGAAdapterViewHolder) convertView.getTag();
     }
 
+    public BGAViewHolderHelper getViewHolderHelper() {
+        return mViewHolderHelper;
+    }
+
     public void setOnItemChildClickListener(BGAOnItemChildClickListener onItemChildClickListener) {
         mOnItemChildClickListener = onItemChildClickListener;
     }
 
     public void setItemChildClickListener(int viewId) {
-        getView(viewId).setOnClickListener(this);
+        mViewHolderHelper.getView(viewId).setOnClickListener(this);
     }
 
     public void setOnItemChildLongClickListener(BGAOnItemChildLongClickListener onItemChildLongClickListener) {
@@ -56,7 +56,7 @@ public class BGAAdapterViewHolder implements View.OnClickListener, View.OnLongCl
     }
 
     public void setItemChildLongClickListener(int viewId) {
-        getView(viewId).setOnLongClickListener(this);
+        mViewHolderHelper.getView(viewId).setOnLongClickListener(this);
     }
 
     @Override
@@ -84,27 +84,6 @@ public class BGAAdapterViewHolder implements View.OnClickListener, View.OnLongCl
 
     public int getPosition() {
         return mPosition;
-    }
-
-    /**
-     * 通过控件的Id获取对于的控件，如果没有则加入views
-     *
-     * @param viewId
-     * @return
-     */
-    public <T extends View> T getView(int viewId) {
-        View view = mViews.get(viewId);
-        if (view == null) {
-            view = mConvertView.findViewById(viewId);
-            mViews.put(viewId, view);
-        }
-        return (T) view;
-    }
-
-    public BGAAdapterViewHolder setText(int viewId, String text) {
-        TextView view = getView(viewId);
-        view.setText(text);
-        return this;
     }
 
 }

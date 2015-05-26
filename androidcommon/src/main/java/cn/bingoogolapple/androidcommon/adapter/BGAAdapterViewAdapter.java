@@ -1,4 +1,4 @@
-package cn.bingoogolapple.androidcommon.adapterview;
+package cn.bingoogolapple.androidcommon.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -6,9 +6,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import java.util.List;
-
-import cn.bingoogolapple.androidcommon.recyclerview.BGAOnItemChildClickListener;
-import cn.bingoogolapple.androidcommon.recyclerview.BGAOnItemChildLongClickListener;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
@@ -46,15 +43,17 @@ public abstract class BGAAdapterViewAdapter<M> extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final BGAAdapterViewHolder viewHolder = BGAAdapterViewHolder.dequeueReusableAdapterViewHolder(mContext, convertView, parent, mItemLayoutId);
         viewHolder.setPosition(position);
+        viewHolder.setOnItemChildClickListener(mOnItemChildClickListener);
+        viewHolder.setOnItemChildLongClickListener(mOnItemChildLongClickListener);
         setChildListener(viewHolder);
 
-        fillData(viewHolder, getItem(position), position);
+        fillData(viewHolder.getViewHolderHelper(), getItem(position), position);
         return viewHolder.getConvertView();
     }
 
     protected abstract void setChildListener(BGAAdapterViewHolder viewHolder);
 
-    protected abstract void fillData(BGAAdapterViewHolder viewHolder, M model, int position);
+    protected abstract void fillData(BGAViewHolderHelper viewHolderHelper, M model, int position);
 
     public void setOnItemChildClickListener(BGAOnItemChildClickListener onItemChildClickListener) {
         mOnItemChildClickListener = onItemChildClickListener;

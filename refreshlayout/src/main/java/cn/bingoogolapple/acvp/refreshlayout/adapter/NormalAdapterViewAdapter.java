@@ -4,8 +4,9 @@ import android.content.Context;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
-import cn.bingoogolapple.androidcommon.adapterview.BGAAdapterViewAdapter;
-import cn.bingoogolapple.androidcommon.adapterview.BGAAdapterViewHolder;
+import cn.bingoogolapple.androidcommon.adapter.BGAAdapterViewAdapter;
+import cn.bingoogolapple.androidcommon.adapter.BGAAdapterViewHolder;
+import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
@@ -20,10 +21,12 @@ public class NormalAdapterViewAdapter extends BGAAdapterViewAdapter<RefreshModel
 
     @Override
     protected void setChildListener(BGAAdapterViewHolder viewHolder) {
+        viewHolder.setItemChildClickListener(R.id.tv_item_normal_delete);
+        viewHolder.setItemChildLongClickListener(R.id.tv_item_normal_delete);
     }
 
     @Override
-    public void fillData(BGAAdapterViewHolder viewHolder, RefreshModel model, int position) {
-        viewHolder.setText(R.id.tv_item_normal_title, model.mTitle).setText(R.id.tv_item_normal_detail, model.mDetail);
+    public void fillData(BGAViewHolderHelper viewHolderHelper, RefreshModel model, int position) {
+        viewHolderHelper.setText(R.id.tv_item_normal_title, model.mTitle).setText(R.id.tv_item_normal_detail, model.mDetail);
     }
 }

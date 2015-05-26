@@ -5,8 +5,9 @@ import android.content.Context;
 import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGASwipeItemLayout;
-import cn.bingoogolapple.androidcommon.adapterview.BGAAdapterViewAdapter;
-import cn.bingoogolapple.androidcommon.adapterview.BGAAdapterViewHolder;
+import cn.bingoogolapple.androidcommon.adapter.BGAAdapterViewAdapter;
+import cn.bingoogolapple.androidcommon.adapter.BGAAdapterViewHolder;
+import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
@@ -22,7 +23,7 @@ public class BGASwipeAdapterViewAdapter extends BGAAdapterViewAdapter<RefreshMod
 
     @Override
     protected void setChildListener(BGAAdapterViewHolder viewHolder) {
-        BGASwipeItemLayout swipeItemLayout = viewHolder.getView(R.id.sil_item_bgaswipe_root);
+        BGASwipeItemLayout swipeItemLayout = viewHolder.getViewHolderHelper().getView(R.id.sil_item_bgaswipe_root);
         swipeItemLayout.setDelegate(new BGASwipeItemLayout.BGASwipeItemLayoutDelegate() {
             @Override
             public void onBGASwipeItemLayoutOpened(BGASwipeItemLayout swipeItemLayout) {
@@ -40,9 +41,9 @@ public class BGASwipeAdapterViewAdapter extends BGAAdapterViewAdapter<RefreshMod
     }
 
     @Override
-    public void fillData(BGAAdapterViewHolder viewHolder, RefreshModel model, int position) {
+    public void fillData(BGAViewHolderHelper viewHolderHelper, RefreshModel model, int position) {
         closeOpenedSwipeItemLayout();
-        viewHolder.setText(R.id.tv_item_bgaswipe_title, model.mTitle).setText(R.id.tv_item_bgaswipe_detail, model.mDetail).setText(R.id.et_item_bgaswipe_title, model.mTitle);
+        viewHolderHelper.setText(R.id.tv_item_bgaswipe_title, model.mTitle).setText(R.id.tv_item_bgaswipe_detail, model.mDetail).setText(R.id.et_item_bgaswipe_title, model.mTitle);
     }
 
     public void closeOpenedSwipeItemLayoutWithAnim() {
