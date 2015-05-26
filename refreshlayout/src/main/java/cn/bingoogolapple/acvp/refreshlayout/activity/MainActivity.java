@@ -16,14 +16,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void changeToNormalRecyclerViewDemo(View v) {
-        startActivity(new Intent(this, NormalRecyclerViewDemoActivity.class));
-    }
-
-    public void changeToDMJSwipeRecyclerViewDemo(View v) {
-        startActivity(new Intent(this, DMJSwipeRecyclerViewDemoActivity.class));
-    }
-
     public void changeToNormalGridViewDemo(View v) {
         startActivity(new Intent(this, NormalGridViewDemoActivity.class));
     }
@@ -32,8 +24,24 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, NormalListViewDemoActivity.class));
     }
 
+    public void changeToNormalRecyclerViewDemo(View v) {
+        startActivity(new Intent(this, NormalRecyclerViewDemoActivity.class));
+    }
+
     public void changeToDMJSwipeListViewDemo(View v) {
         startActivity(new Intent(this, DMJSwipeListViewDemoActivity.class));
+    }
+
+    public void changeToDMJSwipeRecyclerViewDemo(View v) {
+        startActivity(new Intent(this, DMJSwipeRecyclerViewDemoActivity.class));
+    }
+
+    public void changeToBGASwipeListViewDemo(View v) {
+        startActivity(new Intent(this, BGASwipeListViewDemoActivity.class));
+    }
+
+    public void changeToBGASwipeRecyclerViewDemo(View v) {
+        startActivity(new Intent(this, BGASwipeRecyclerViewDemoActivity.class));
     }
 
     public void changeToScrollViewDemo(View v) {

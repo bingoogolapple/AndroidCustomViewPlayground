@@ -7,6 +7,9 @@ import android.widget.BaseAdapter;
 
 import java.util.List;
 
+import cn.bingoogolapple.androidcommon.recyclerview.BGAOnItemChildClickListener;
+import cn.bingoogolapple.androidcommon.recyclerview.BGAOnItemChildLongClickListener;
+
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
  * 创建时间:15/5/21 上午1:05
@@ -16,6 +19,8 @@ public abstract class BGAAdapterViewAdapter<M> extends BaseAdapter {
     protected final int mItemLayoutId;
     protected Context mContext;
     protected List<M> mDatas;
+    protected BGAOnItemChildClickListener mOnItemChildClickListener;
+    protected BGAOnItemChildLongClickListener mOnItemChildLongClickListener;
 
     public BGAAdapterViewAdapter(Context context, int itemLayoutId) {
         mContext = context;
@@ -41,11 +46,23 @@ public abstract class BGAAdapterViewAdapter<M> extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final BGAAdapterViewHolder viewHolder = BGAAdapterViewHolder.dequeueReusableAdapterViewHolder(mContext, convertView, parent, mItemLayoutId);
         viewHolder.setPosition(position);
+        setChildListener(viewHolder);
+
         fillData(viewHolder, getItem(position), position);
         return viewHolder.getConvertView();
     }
 
-    public abstract void fillData(BGAAdapterViewHolder viewHolder, M model, int position);
+    protected abstract void setChildListener(BGAAdapterViewHolder viewHolder);
+
+    protected abstract void fillData(BGAAdapterViewHolder viewHolder, M model, int position);
+
+    public void setOnItemChildClickListener(BGAOnItemChildClickListener onItemChildClickListener) {
+        mOnItemChildClickListener = onItemChildClickListener;
+    }
+
+    public void setOnItemChildLongClickListener(BGAOnItemChildLongClickListener onItemChildLongClickListener) {
+        mOnItemChildLongClickListener = onItemChildLongClickListener;
+    }
 
     public void setDatas(List<M> datas) {
         mDatas = datas;

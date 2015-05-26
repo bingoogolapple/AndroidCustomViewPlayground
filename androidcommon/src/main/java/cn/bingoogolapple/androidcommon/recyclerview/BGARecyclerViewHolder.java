@@ -11,8 +11,8 @@ public class BGARecyclerViewHolder extends RecyclerView.ViewHolder implements Vi
     protected Context mContext;
     protected BGAOnRVItemClickListener mOnRVItemClickListener;
     protected BGAOnRVItemLongClickListener mOnRVItemLongClickListener;
-    protected BGAOnRVItemChildClickListener mOnRVItemChildClickListener;
-    protected BGAOnRVItemChildLongClickListener mOnRVItemChildLongClickListener;
+    protected BGAOnItemChildClickListener mOnItemChildClickListener;
+    protected BGAOnItemChildLongClickListener mOnItemChildLongClickListener;
 
     public BGARecyclerViewHolder(View itemView, BGAOnRVItemClickListener onRVItemClickListener, BGAOnRVItemLongClickListener onRVItemLongClickListener) {
         super(itemView);
@@ -23,16 +23,16 @@ public class BGARecyclerViewHolder extends RecyclerView.ViewHolder implements Vi
         itemView.setOnLongClickListener(this);
     }
 
-    public void setOnRVItemChildClickListener(BGAOnRVItemChildClickListener onRVItemChildClickListener) {
-        mOnRVItemChildClickListener = onRVItemChildClickListener;
+    public void setOnItemChildClickListener(BGAOnItemChildClickListener onItemChildClickListener) {
+        mOnItemChildClickListener = onItemChildClickListener;
     }
 
     public void setItemChildClickListener(int viewId) {
         getView(viewId).setOnClickListener(this);
     }
 
-    public void setOnRVItemChildLongClickListener(BGAOnRVItemChildLongClickListener onRVItemChildLongClickListener) {
-        mOnRVItemChildLongClickListener = onRVItemChildLongClickListener;
+    public void setOnItemChildLongClickListener(BGAOnItemChildLongClickListener onItemChildLongClickListener) {
+        mOnItemChildLongClickListener = onItemChildLongClickListener;
     }
 
     public void setItemChildLongClickListener(int viewId) {
@@ -42,18 +42,18 @@ public class BGARecyclerViewHolder extends RecyclerView.ViewHolder implements Vi
     @Override
     public void onClick(View v) {
         if (v.getId() == this.itemView.getId() && null != mOnRVItemClickListener) {
-            mOnRVItemClickListener.onRVItemClick(v, getPosition());
-        } else if (mOnRVItemChildClickListener != null) {
-            mOnRVItemChildClickListener.onRVItemChildClick(v, getPosition());
+            mOnRVItemClickListener.onRVItemClick(v, getAdapterPosition());
+        } else if (mOnItemChildClickListener != null) {
+            mOnItemChildClickListener.onItemChildClick(v, getAdapterPosition());
         }
     }
 
     @Override
     public boolean onLongClick(View v) {
         if (v.getId() == this.itemView.getId() && null != mOnRVItemLongClickListener) {
-            return mOnRVItemLongClickListener.onRVItemLongClick(v, getPosition());
-        } else if (mOnRVItemChildLongClickListener != null) {
-            return mOnRVItemChildLongClickListener.onRVItemChildLongClick(v, getPosition());
+            return mOnRVItemLongClickListener.onRVItemLongClick(v, getAdapterPosition());
+        } else if (mOnItemChildLongClickListener != null) {
+            return mOnItemChildLongClickListener.onItemChildLongClick(v, getAdapterPosition());
         }
         return false;
     }

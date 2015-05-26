@@ -17,8 +17,8 @@ import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocStyleRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
 import cn.bingoogolapple.acvp.refreshlayout.widget.Divider;
-import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemChildClickListener;
-import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemChildLongClickListener;
+import cn.bingoogolapple.androidcommon.recyclerview.BGAOnItemChildClickListener;
+import cn.bingoogolapple.androidcommon.recyclerview.BGAOnItemChildLongClickListener;
 import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemClickListener;
 import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemLongClickListener;
 
@@ -27,7 +27,7 @@ import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemLongClickListener
  * 创建时间:15/5/22 10:06
  * 描述:
  */
-public class DMJSwipeRecyclerViewDemoActivity extends AppCompatActivity implements BGARefreshLayout.BGARefreshLayoutDelegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener, BGAOnRVItemChildClickListener, BGAOnRVItemChildLongClickListener {
+public class DMJSwipeRecyclerViewDemoActivity extends AppCompatActivity implements BGARefreshLayout.BGARefreshLayoutDelegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener {
     private DMJSwipeRecyclerViewAdapter mAdapter;
     private BGARefreshLayout mRefreshLayout;
     private List<RefreshModel> mDatas;
@@ -124,12 +124,12 @@ public class DMJSwipeRecyclerViewDemoActivity extends AppCompatActivity implemen
     }
 
     @Override
-    public void onRVItemChildClick(View v, int position) {
+    public void onItemChildClick(View v, int position) {
         mAdapter.removeItem(position);
     }
 
     @Override
-    public boolean onRVItemChildLongClick(View v, int position) {
+    public boolean onItemChildLongClick(View v, int position) {
         Toast.makeText(this, "长按了删除 " + position, Toast.LENGTH_SHORT).show();
         return true;
     }

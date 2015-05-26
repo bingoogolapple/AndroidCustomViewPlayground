@@ -3,7 +3,7 @@ package cn.bingoogolapple.acvp.refreshlayout.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
@@ -11,12 +11,14 @@ import android.widget.Toast;
 import java.util.List;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
-import cn.bingoogolapple.acvp.refreshlayout.adapter.NormalRecyclerViewAdapter;
+import cn.bingoogolapple.acvp.refreshlayout.adapter.BGASwipeRecyclerViewAdapter;
 import cn.bingoogolapple.acvp.refreshlayout.engine.DataEngine;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocStyleRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
 import cn.bingoogolapple.acvp.refreshlayout.widget.Divider;
+import cn.bingoogolapple.androidcommon.recyclerview.BGAOnItemChildClickListener;
+import cn.bingoogolapple.androidcommon.recyclerview.BGAOnItemChildLongClickListener;
 import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemClickListener;
 import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemLongClickListener;
 
@@ -25,8 +27,8 @@ import cn.bingoogolapple.androidcommon.recyclerview.BGAOnRVItemLongClickListener
  * 创建时间:15/5/22 10:06
  * 描述:
  */
-public class NormalRecyclerViewDemoActivity extends AppCompatActivity implements BGARefreshLayout.BGARefreshLayoutDelegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener {
-    private NormalRecyclerViewAdapter mAdapter;
+public class BGASwipeRecyclerViewDemoActivity extends AppCompatActivity implements BGARefreshLayout.BGARefreshLayoutDelegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener {
+    private BGASwipeRecyclerViewAdapter mAdapter;
     private BGARefreshLayout mRefreshLayout;
     private List<RefreshModel> mDatas;
     private RecyclerView mDataRv;
@@ -50,17 +52,19 @@ public class NormalRecyclerViewDemoActivity extends AppCompatActivity implements
     private void initRecyclerView() {
         mDataRv = (RecyclerView) findViewById(R.id.rv_recyclerview_data);
         mDataRv.addItemDecoration(new Divider(this));
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
-        mDataRv.setLayoutManager(gridLayoutManager);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mDataRv.setLayoutManager(linearLayoutManager);
 
-        mAdapter = new NormalRecyclerViewAdapter(this);
+        mAdapter = new BGASwipeRecyclerViewAdapter(this);
+        mAdapter.setOnRVItemClickListener(this);
+        mAdapter.setOnRVItemLongClickListener(this);
+        mAdapter.setOnItemChildClickListener(this);
+        mAdapter.setOnItemChildLongClickListener(this);
+
         mDatas = DataEngine.loadInitDatas();
         mAdapter.setDatas(mDatas);
         mDataRv.setAdapter(mAdapter);
-
-        mAdapter.setOnRVItemClickListener(this);
-        mAdapter.setOnRVItemLongClickListener(this);
     }
 
     @Override
@@ -110,13 +114,28 @@ public class NormalRecyclerViewDemoActivity extends AppCompatActivity implements
 
     @Override
     public void onRVItemClick(View v, int position) {
-        Toast.makeText(this, "点击了条目 " + mDatas.get(position).mTitle, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "点击了条目 " + mAdapter.getItemMode(position).mTitle, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public boolean onRVItemLongClick(View v, int position) {
-        Toast.makeText(this, "长按了条目 " + mDatas.get(position).mTitle, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "长按了条目 " + mAdapter.getItemMode(position).mTitle, Toast.LENGTH_SHORT).show();
         return true;
     }
 
+    @Override
+    public void onItemChildClick(View v, int position) {
+        if (v.getId() == R.id.tv_item_bgaswipe_delete) {
+            mAdapter.removeItem(position);
+        }
+    }
+
+    @Override
+    public boolean onItemChildLongClick(View v, int position) {
+        if (v.getId() == R.id.tv_item_bgaswipe_delete) {
+            Toast.makeText(this, "长按了删除 " + mAdapter.getItemMode(position).mTitle, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
 }

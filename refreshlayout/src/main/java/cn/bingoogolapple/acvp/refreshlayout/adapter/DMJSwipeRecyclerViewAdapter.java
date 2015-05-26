@@ -15,16 +15,16 @@ import cn.bingoogolapple.androidcommon.recyclerview.DMJRecyclerViewSwipeAdapter;
 public class DMJSwipeRecyclerViewAdapter extends DMJRecyclerViewSwipeAdapter<RefreshModel> {
 
     public DMJSwipeRecyclerViewAdapter(Context context) {
-        super(context, R.layout.item_swipelist, R.id.sl_item_swipelist_root);
+        super(context, R.layout.item_dmjswipe, R.id.sl_item_dmjswipe_root);
     }
 
     @Override
     protected void setListener(BGARecyclerViewHolder viewHolder) {
-        viewHolder.setItemChildClickListener(R.id.tv_item_swipelist_delete);
+        viewHolder.setItemChildClickListener(R.id.tv_item_dmjswipe_delete);
     }
 
     @Override
     public void fillData(BGARecyclerViewHolder viewHolder, int position, RefreshModel model) {
-        viewHolder.setText(R.id.tv_item_swipelist_title, model.mTitle).setText(R.id.tv_item_swipelist_detail, model.mDetail);
+        viewHolder.setText(R.id.tv_item_dmjswipe_title, model.mTitle).setText(R.id.tv_item_dmjswipe_detail, model.mDetail);
     }
 }

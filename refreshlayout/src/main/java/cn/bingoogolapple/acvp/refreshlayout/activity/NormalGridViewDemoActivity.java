@@ -15,7 +15,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
-import cn.bingoogolapple.acvp.refreshlayout.adapter.AdapterViewAdapter;
+import cn.bingoogolapple.acvp.refreshlayout.adapter.NormalAdapterViewAdapter;
 import cn.bingoogolapple.acvp.refreshlayout.engine.DataEngine;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocStyleRefreshViewHolder;
@@ -31,7 +31,7 @@ public class NormalGridViewDemoActivity extends AppCompatActivity implements Ada
     private BGARefreshLayout mRefreshLayout;
     private List<RefreshModel> mDatas;
     private GridView mDataGv;
-    private AdapterViewAdapter mAdapter;
+    private NormalAdapterViewAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class NormalGridViewDemoActivity extends AppCompatActivity implements Ada
         mDataGv = (GridView) findViewById(R.id.lv_gridview_data);
         mDataGv.setOnItemClickListener(this);
         mDataGv.setOnItemLongClickListener(this);
-        mAdapter = new AdapterViewAdapter(this);
+        mAdapter = new NormalAdapterViewAdapter(this);
         mDatas = DataEngine.loadInitDatas();
         mAdapter.setDatas(mDatas);
         mDataGv.setAdapter(mAdapter);

@@ -13,7 +13,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
-import cn.bingoogolapple.acvp.refreshlayout.adapter.DMJSwipeAdapterViewAdapter;
+import cn.bingoogolapple.acvp.refreshlayout.adapter.BGASwipeAdapterViewAdapter;
 import cn.bingoogolapple.acvp.refreshlayout.engine.DataEngine;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGANormalRefreshViewHolder;
@@ -29,7 +29,7 @@ public class DMJSwipeListViewDemoActivity extends AppCompatActivity implements A
     private BGARefreshLayout mRefreshLayout;
     private List<RefreshModel> mDatas;
     private ListView mDataLv;
-    private DMJSwipeAdapterViewAdapter mAdapter;
+    private BGASwipeAdapterViewAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class DMJSwipeListViewDemoActivity extends AppCompatActivity implements A
         mDataLv = (ListView) findViewById(R.id.lv_listview_data);
         mDataLv.setOnItemClickListener(this);
         mDataLv.setOnItemLongClickListener(this);
-        mAdapter = new DMJSwipeAdapterViewAdapter(this, this);
+        mAdapter = new BGASwipeAdapterViewAdapter(this);
         mDatas = DataEngine.loadInitDatas();
         mAdapter.setDatas(mDatas);
         mDataLv.setAdapter(mAdapter);
@@ -124,7 +124,7 @@ public class DMJSwipeListViewDemoActivity extends AppCompatActivity implements A
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.tv_item_swipelist_delete) {
+        if (v.getId() == R.id.tv_item_bgaswipe_delete) {
             mAdapter.removeItem((RefreshModel) v.getTag());
         }
     }

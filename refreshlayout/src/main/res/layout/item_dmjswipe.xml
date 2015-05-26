@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/sl_item_swipelist_root"
+    android:id="@+id/sl_item_dmjswipe_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:drag_edge="right"
     app:show_mode="lay_down">
 
     <TextView
-        android:id="@+id/tv_item_swipelist_delete"
+        android:id="@+id/tv_item_dmjswipe_delete"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="#f00"
@@ -28,7 +28,7 @@
         android:padding="10dp">
 
         <TextView
-            android:id="@+id/tv_item_swipelist_title"
+            android:id="@+id/tv_item_dmjswipe_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="标题"
@@ -36,7 +36,7 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/tv_item_swipelist_detail"
+            android:id="@+id/tv_item_dmjswipe_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"

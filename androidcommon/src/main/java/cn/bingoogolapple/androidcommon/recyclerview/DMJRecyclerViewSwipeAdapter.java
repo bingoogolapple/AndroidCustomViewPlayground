@@ -20,8 +20,8 @@ public abstract class DMJRecyclerViewSwipeAdapter<M> extends RecyclerSwipeAdapte
     protected List<M> mDatas;
     private BGAOnRVItemClickListener mOnRVItemClickListener;
     private BGAOnRVItemLongClickListener mOnRVItemLongClickListener;
-    protected BGAOnRVItemChildClickListener mOnRVItemChildClickListener;
-    protected BGAOnRVItemChildLongClickListener mOnRVItemChildLongClickListener;
+    protected BGAOnItemChildClickListener mOnRVItemChildClickListener;
+    protected BGAOnItemChildLongClickListener mOnRVItemChildLongClickListener;
 
     public DMJRecyclerViewSwipeAdapter(Context context, int itemLayoutId, int swipeViewId) {
         mContext = context;
@@ -42,8 +42,8 @@ public abstract class DMJRecyclerViewSwipeAdapter<M> extends RecyclerSwipeAdapte
     @Override
     public BGARecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         BGARecyclerViewHolder viewHolder = new BGARecyclerViewHolder(LayoutInflater.from(mContext).inflate(mItemLayoutId, parent, false), mOnRVItemClickListener, mOnRVItemLongClickListener);
-        viewHolder.setOnRVItemChildClickListener(mOnRVItemChildClickListener);
-        viewHolder.setOnRVItemChildLongClickListener(mOnRVItemChildLongClickListener);
+        viewHolder.setOnItemChildClickListener(mOnRVItemChildClickListener);
+        viewHolder.setOnItemChildLongClickListener(mOnRVItemChildLongClickListener);
         setListener(viewHolder);
         return viewHolder;
     }
@@ -65,11 +65,11 @@ public abstract class DMJRecyclerViewSwipeAdapter<M> extends RecyclerSwipeAdapte
         mOnRVItemLongClickListener = onRVItemLongClickListener;
     }
 
-    public void setOnRVItemChildClickListener(BGAOnRVItemChildClickListener onRVItemChildClickListener) {
+    public void setOnRVItemChildClickListener(BGAOnItemChildClickListener onRVItemChildClickListener) {
         mOnRVItemChildClickListener = onRVItemChildClickListener;
     }
 
-    public void setOnRVItemChildLongClickListener(BGAOnRVItemChildLongClickListener onRVItemChildLongClickListener) {
+    public void setOnRVItemChildLongClickListener(BGAOnItemChildLongClickListener onRVItemChildLongClickListener) {
         mOnRVItemChildLongClickListener = onRVItemChildLongClickListener;
     }
 

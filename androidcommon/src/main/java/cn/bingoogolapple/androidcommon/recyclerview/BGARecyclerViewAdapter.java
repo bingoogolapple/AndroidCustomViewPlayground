@@ -14,10 +14,10 @@ public abstract class BGARecyclerViewAdapter<M> extends RecyclerView.Adapter<BGA
     protected final int mItemLayoutId;
     protected Context mContext;
     protected List<M> mDatas;
+    protected BGAOnItemChildClickListener mOnItemChildClickListener;
+    protected BGAOnItemChildLongClickListener mOnItemChildLongClickListener;
     private BGAOnRVItemClickListener mOnRVItemClickListener;
     private BGAOnRVItemLongClickListener mOnRVItemLongClickListener;
-    protected BGAOnRVItemChildClickListener mOnRVItemChildClickListener;
-    protected BGAOnRVItemChildLongClickListener mOnRVItemChildLongClickListener;
 
     public BGARecyclerViewAdapter(Context context, int itemLayoutId) {
         mContext = context;
@@ -32,8 +32,8 @@ public abstract class BGARecyclerViewAdapter<M> extends RecyclerView.Adapter<BGA
     @Override
     public BGARecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         BGARecyclerViewHolder viewHolder = new BGARecyclerViewHolder(LayoutInflater.from(mContext).inflate(mItemLayoutId, parent, false), mOnRVItemClickListener, mOnRVItemLongClickListener);
-        viewHolder.setOnRVItemChildClickListener(mOnRVItemChildClickListener);
-        viewHolder.setOnRVItemChildLongClickListener(mOnRVItemChildLongClickListener);
+        viewHolder.setOnItemChildClickListener(mOnItemChildClickListener);
+        viewHolder.setOnItemChildLongClickListener(mOnItemChildLongClickListener);
         setListener(viewHolder);
         return viewHolder;
     }
@@ -45,7 +45,7 @@ public abstract class BGARecyclerViewAdapter<M> extends RecyclerView.Adapter<BGA
         fillData(viewHolder, position, getItemMode(position));
     }
 
-    public abstract void fillData(BGARecyclerViewHolder viewHolder, int position, M model);
+    protected abstract void fillData(BGARecyclerViewHolder viewHolder, int position, M model);
 
     public void setOnRVItemClickListener(BGAOnRVItemClickListener onRVItemClickListener) {
         mOnRVItemClickListener = onRVItemClickListener;
@@ -55,12 +55,12 @@ public abstract class BGARecyclerViewAdapter<M> extends RecyclerView.Adapter<BGA
         mOnRVItemLongClickListener = onRVItemLongClickListener;
     }
 
-    public void setOnRVItemChildClickListener(BGAOnRVItemChildClickListener onRVItemChildClickListener) {
-        mOnRVItemChildClickListener = onRVItemChildClickListener;
+    public void setOnItemChildClickListener(BGAOnItemChildClickListener onItemChildClickListener) {
+        mOnItemChildClickListener = onItemChildClickListener;
     }
 
-    public void setOnRVItemChildLongClickListener(BGAOnRVItemChildLongClickListener onRVItemChildLongClickListener) {
-        mOnRVItemChildLongClickListener = onRVItemChildLongClickListener;
+    public void setOnItemChildLongClickListener(BGAOnItemChildLongClickListener onItemChildLongClickListener) {
+        mOnItemChildLongClickListener = onItemChildLongClickListener;
     }
 
     public M getItemMode(int position) {
@@ -95,5 +95,4 @@ public abstract class BGARecyclerViewAdapter<M> extends RecyclerView.Adapter<BGA
         mDatas.add(position, model);
         notifyItemInserted(position);
     }
-
 }
