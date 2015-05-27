@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,10 +85,14 @@ public class BGARefreshLayout extends LinearLayout {
 
     private float mInterceptTouchDownX = -1;
     private float mInterceptTouchDownY = -1;
-
-    private int mWholeHeaderViewPaddingTop = 0;
+    /**
+     * 按下时整个头部控件的paddingTop
+     */
+    private int mWholeHeaderViewDownPaddingTop = 0;
+    /**
+     * 记录开始下拉刷新时的downY
+     */
     private int mRefreshDownY = -1;
-    private boolean mIsNeedDispatchTouchActionDown = false;
 
     /**
      * 是否已经设置内容控件滚动监听器
@@ -103,7 +106,6 @@ public class BGARefreshLayout extends LinearLayout {
     public BGARefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOrientation(LinearLayout.VERTICAL);
-
         initWholeHeaderView();
     }
 
@@ -455,7 +457,7 @@ public class BGARefreshLayout extends LinearLayout {
                     mWholeHeaderDownY = (int) event.getY();
 
                     if (mCustomHeaderView != null) {
-                        mWholeHeaderViewPaddingTop = mWholeHeaderView.getPaddingTop();
+                        mWholeHeaderViewDownPaddingTop = mWholeHeaderView.getPaddingTop();
                     }
 
                     if (mCustomHeaderView == null) {
@@ -522,13 +524,11 @@ public class BGARefreshLayout extends LinearLayout {
             mWholeHeaderView.getLocationOnScreen(location);
             int wholeHeaderViewOnScreenY = location[1];
             if (wholeHeaderViewOnScreenY + mWholeHeaderView.getMeasuredHeight() <= mOnScreenY) {
-                Log.i(TAG, "完全隐藏");
                 return true;
             } else {
                 return false;
             }
         }
-        Log.i(TAG, "没有完全隐藏");
         return true;
     }
 
@@ -593,7 +593,6 @@ public class BGARefreshLayout extends LinearLayout {
                 changeToRefreshing();
             }
 
-            mIsNeedDispatchTouchActionDown = true;
             return true;
         }
 
@@ -601,28 +600,22 @@ public class BGARefreshLayout extends LinearLayout {
         if (mWholeHeaderDownY == -1) {
             mWholeHeaderDownY = (int) event.getY();
             if (mCustomHeaderView != null) {
-                mWholeHeaderViewPaddingTop = mWholeHeaderView.getPaddingTop();
+                mWholeHeaderViewDownPaddingTop = mWholeHeaderView.getPaddingTop();
             }
         }
 
         int wholeHeaderDiffY = (int) event.getY() - mWholeHeaderDownY;
         if (!isWholeHeaderViewCompleteInvisible() || (wholeHeaderDiffY > 0 && shouldHandleRefresh() && !isCustomHeaderViewCompleteVisible())) {
 
-            int paddingTop = mWholeHeaderViewPaddingTop + wholeHeaderDiffY;
+            int paddingTop = mWholeHeaderViewDownPaddingTop + wholeHeaderDiffY;
             if (paddingTop < mMinWholeHeaderViewPaddingTop - mCustomHeaderView.getMeasuredHeight()) {
                 paddingTop = mMinWholeHeaderViewPaddingTop - mCustomHeaderView.getMeasuredHeight();
             }
             mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
 
-            mIsNeedDispatchTouchActionDown = true;
             return true;
         }
 
-        if (mIsNeedDispatchTouchActionDown) {
-            mIsNeedDispatchTouchActionDown = false;
-            event.setAction(MotionEvent.ACTION_DOWN);
-            dispatchTouchEvent(event);
-        }
         return false;
     }
 
