@@ -28,7 +28,6 @@ public class BGANormalRefreshViewHolder extends BGARefreshViewHolder {
     private String mRefreshingText = "加载中...";
 
     /**
-     *
      * @param context
      * @param isLoadingMoreEnabled 上拉加载更多是否可用
      */
@@ -60,8 +59,14 @@ public class BGANormalRefreshViewHolder extends BGARefreshViewHolder {
 
     @Override
     public View getRefreshHeaderView() {
-        if(mRefreshHeaderView == null) {
+        if (mRefreshHeaderView == null) {
             mRefreshHeaderView = View.inflate(mContext, R.layout.view_refresh_header_normal, null);
+            if (mRefreshViewBackgroundColorRes != -1) {
+                mRefreshHeaderView.setBackgroundResource(mRefreshViewBackgroundColorRes);
+            }
+            if (mRefreshViewBackgroundDrawableRes != -1) {
+                mRefreshHeaderView.setBackgroundResource(mRefreshViewBackgroundDrawableRes);
+            }
             mHeaderStatusTv = (TextView) mRefreshHeaderView.findViewById(R.id.tv_normal_refresh_header_status);
             mHeaderArrowIv = (ImageView) mRefreshHeaderView.findViewById(R.id.iv_normal_refresh_header_arrow);
             mHeaderChrysanthemumIv = (ImageView) mRefreshHeaderView.findViewById(R.id.iv_normal_refresh_header_chrysanthemum);

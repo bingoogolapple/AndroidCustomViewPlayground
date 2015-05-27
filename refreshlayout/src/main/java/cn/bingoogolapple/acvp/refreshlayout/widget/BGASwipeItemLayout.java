@@ -30,7 +30,7 @@ public class BGASwipeItemLayout extends RelativeLayout {
     private static final String TAG = BGASwipeItemLayout.class.getSimpleName();
     private static final String INSTANCE_STATUS = "instance_status";
     private static final String STATUS_OPEN_CLOSE = "status_open_close";
-    private static final int VEL_THRESHOLD = 300;
+    private static final int VEL_THRESHOLD = 400;
     private ViewDragHelper mDragHelper;
     // 顶部视图
     private View mTopView;
@@ -242,10 +242,30 @@ public class BGASwipeItemLayout extends RelativeLayout {
     }
     // -----------------------------------参考代码家AndroidSwipeLayout结束---------------------------------------------
 
+    private void requestParentDisallowInterceptTouchEvent() {
+        ViewParent parent = getParent();
+        if (parent != null) {
+            parent.requestDisallowInterceptTouchEvent(true);
+        }
+    }
+
     private GestureDetector.SimpleOnGestureListener mSimpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            return Math.abs(distanceX) > Math.abs(distanceY);
+            if (Math.abs(distanceX) > Math.abs(distanceY) || Math.abs(distanceY) > 15) {
+                requestParentDisallowInterceptTouchEvent();
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (Math.abs(velocityX) > Math.abs(velocityY)) {
+                requestParentDisallowInterceptTouchEvent();
+                return true;
+            }
+            return false;
         }
 
         @Override
@@ -269,19 +289,31 @@ public class BGASwipeItemLayout extends RelativeLayout {
 
         @Override
         public void onLongPress(MotionEvent e) {
-            // 2
-            setPressed(false);
             if (isClosed()) {
+                setPressed(true);
+                postDelayed(mCancelPressedTask, 300);
                 performLongClick();
             }
         }
 
-        @Override
-        public void onShowPress(MotionEvent e) {
-            // 1
+        // 作为ListView或者RecyclerView的item，双击事件很少，这里就不处理双击事件了╮(╯_╰)╭
+        public boolean onDoubleTap(MotionEvent e) {
             if (isClosed()) {
                 setPressed(true);
             }
+            return false;
+        }
+
+        public boolean onDoubleTapEvent(MotionEvent e) {
+            setPressed(false);
+            return false;
+        }
+    };
+
+    private Runnable mCancelPressedTask = new Runnable() {
+        @Override
+        public void run() {
+            setPressed(false);
         }
     };
 
@@ -526,17 +558,18 @@ public class BGASwipeItemLayout extends RelativeLayout {
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             // 默认关闭，接下来再判断为打开时的条件
             int finalLeft = getPaddingLeft() + mTopLp.leftMargin;
-
             if (mSwipeDirection == SwipeDirection.Left) {
                 // 向左滑动为打开，向右滑动为关闭
 
-                if (xvel < -VEL_THRESHOLD || (xvel < VEL_THRESHOLD && mDragRatio > 0.5f)) {
+                if (xvel < -VEL_THRESHOLD || (mPreStatus == Status.Closed && xvel < VEL_THRESHOLD && mDragRatio >= 0.3f) || (mPreStatus == Status.Opened && xvel < VEL_THRESHOLD && mDragRatio >= 0.7f)) {
+                    // 向左的速度达到条件
                     finalLeft -= mDragRange;
                 }
+
             } else {
                 // 向左滑动为关闭，向右滑动为打开
 
-                if (xvel > VEL_THRESHOLD || (xvel > -VEL_THRESHOLD && mDragRatio > 0.5f)) {
+                if (xvel > VEL_THRESHOLD || (mPreStatus == Status.Closed && xvel > -VEL_THRESHOLD && mDragRatio >= 0.3f) || (mPreStatus == Status.Opened && xvel > -VEL_THRESHOLD && mDragRatio >= 0.7f)) {
                     finalLeft += mDragRange;
                 }
             }

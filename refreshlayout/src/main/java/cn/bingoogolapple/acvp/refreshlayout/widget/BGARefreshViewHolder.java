@@ -47,6 +47,9 @@ public abstract class BGARefreshViewHolder {
     private int mLoadMoreBackgroundColorRes = -1;
     private int mLoadMoreBackgroundDrawableRes = -1;
 
+    protected int mRefreshViewBackgroundColorRes = -1;
+    protected int mRefreshViewBackgroundDrawableRes = -1;
+
     /**
      * 头部控件移动动画时常
      */
@@ -71,6 +74,14 @@ public abstract class BGARefreshViewHolder {
 
     public void setLoadMoreBackgroundDrawableRes(@DrawableRes int loadMoreBackgroundDrawableRes) {
         mLoadMoreBackgroundDrawableRes = loadMoreBackgroundDrawableRes;
+    }
+
+    public void setRefreshViewBackgroundColorRes(@ColorRes int refreshViewBackgroundColorRes) {
+        mRefreshViewBackgroundColorRes = refreshViewBackgroundColorRes;
+    }
+
+    public void setRefreshViewBackgroundDrawableRes(@DrawableRes int refreshViewBackgroundDrawableRes) {
+        mRefreshViewBackgroundDrawableRes = refreshViewBackgroundDrawableRes;
     }
 
     public int getTopAnimDuration() {

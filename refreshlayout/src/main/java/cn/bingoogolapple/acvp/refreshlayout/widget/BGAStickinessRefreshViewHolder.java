@@ -24,6 +24,12 @@ public class BGAStickinessRefreshViewHolder extends BGARefreshViewHolder {
     public View getRefreshHeaderView() {
         if (mRefreshHeaderView == null) {
             mRefreshHeaderView = View.inflate(mContext, R.layout.view_refresh_header_stickiness, null);
+            if (mRefreshViewBackgroundColorRes != -1) {
+                mRefreshHeaderView.setBackgroundResource(mRefreshViewBackgroundColorRes);
+            }
+            if (mRefreshViewBackgroundDrawableRes != -1) {
+                mRefreshHeaderView.setBackgroundResource(mRefreshViewBackgroundDrawableRes);
+            }
             mStickinessRefreshView = (BGAStickinessRefreshView) mRefreshHeaderView.findViewById(R.id.stickinessRefreshView);
             mStickinessRefreshView.setStickinessRefreshViewHolder(this);
             if (mRotateDrawable != null) {

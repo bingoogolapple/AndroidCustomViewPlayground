@@ -31,6 +31,12 @@ public class BGAMoocStyleRefreshViewHolder extends BGARefreshViewHolder {
     public View getRefreshHeaderView() {
         if (mRefreshHeaderView == null) {
             mRefreshHeaderView = View.inflate(mContext, R.layout.view_refresh_header_mooc_style, null);
+            if (mRefreshViewBackgroundColorRes != -1) {
+                mRefreshHeaderView.setBackgroundResource(mRefreshViewBackgroundColorRes);
+            }
+            if (mRefreshViewBackgroundDrawableRes != -1) {
+                mRefreshHeaderView.setBackgroundResource(mRefreshViewBackgroundDrawableRes);
+            }
             mMoocRefreshView = (BGAMoocStyleRefreshView) mRefreshHeaderView.findViewById(R.id.moocView);
             if (mOriginalBitmap != null) {
                 mMoocRefreshView.setOriginalBitmap(mOriginalBitmap);
