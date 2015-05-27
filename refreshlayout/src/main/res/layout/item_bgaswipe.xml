@@ -4,7 +4,7 @@
     android:id="@+id/sil_item_bgaswipe_root"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="@android:color/white"
+    android:background="@drawable/selector_item"
     app:bga_sil_bottomMode="pullOut"
     app:bga_sil_springDistance="20dp"
     app:bga_sil_swipeDirection="left">
@@ -38,7 +38,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/selector_item"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:padding="10dp">

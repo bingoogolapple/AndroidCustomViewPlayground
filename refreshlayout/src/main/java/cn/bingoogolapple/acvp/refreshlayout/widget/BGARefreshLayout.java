@@ -270,7 +270,7 @@ public class BGARefreshLayout extends LinearLayout {
     }
 
     private boolean shouldHandleAbsListViewLoadingMore() {
-        if (mIsLoadingMore || mLoadMoreFooterView == null || mDelegate == null) {
+        if (mIsLoadingMore || mLoadMoreFooterView == null || mDelegate == null || mAbsListView.getAdapter() == null || mAbsListView.getAdapter().getCount() == 0) {
             return false;
         }
 
@@ -283,11 +283,15 @@ public class BGARefreshLayout extends LinearLayout {
     }
 
     private boolean shouldHandleRecyclerViewLoadingMore() {
-        if (mIsLoadingMore || mLoadMoreFooterView == null || mDelegate == null) {
+        if (mIsLoadingMore || mLoadMoreFooterView == null || mDelegate == null || mRecyclerView.getAdapter() == null || mRecyclerView.getAdapter().getItemCount() == 0) {
             return false;
         }
 
         RecyclerView.LayoutManager manager = mRecyclerView.getLayoutManager();
+        if (manager == null || manager.getItemCount() == 0) {
+            return false;
+        }
+
         if (manager instanceof LinearLayoutManager) {
             LinearLayoutManager layoutManager = (LinearLayoutManager) manager;
             if (layoutManager.findLastCompletelyVisibleItemPosition() == mRecyclerView.getAdapter().getItemCount() - 1) {
@@ -418,6 +422,13 @@ public class BGARefreshLayout extends LinearLayout {
             }
 
             RecyclerView.LayoutManager manager = mRecyclerView.getLayoutManager();
+            if (manager == null) {
+                return true;
+            }
+            if (manager.getItemCount() == 0) {
+                return true;
+            }
+
             if (manager instanceof LinearLayoutManager) {
                 LinearLayoutManager layoutManager = (LinearLayoutManager) manager;
                 if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0 && firstChildTop == 0) {

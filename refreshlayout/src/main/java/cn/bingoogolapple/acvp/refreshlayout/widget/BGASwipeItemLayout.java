@@ -8,8 +8,6 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
@@ -33,9 +31,6 @@ public class BGASwipeItemLayout extends RelativeLayout {
     private static final String INSTANCE_STATUS = "instance_status";
     private static final String STATUS_OPEN_CLOSE = "status_open_close";
     private static final int VEL_THRESHOLD = 300;
-    private static final int SWIPE_THRESHOLD_DP = 2;
-    // 触发滑动事件的距离，用于处理事件拦截，如果使用mDragHelper.shouldInterceptTouchEvent(event)处理事件拦截，会导致作为RecyclerView的item滑动时触发item的点击和长按事件，或者魅族手机上根本就不会触发点击事件
-    private int mSwipeThreshold;
     private ViewDragHelper mDragHelper;
     // 顶部视图
     private View mTopView;
@@ -118,7 +113,6 @@ public class BGASwipeItemLayout extends RelativeLayout {
     }
 
     private void initProperty() {
-        mSwipeThreshold = dp2px(getContext(), SWIPE_THRESHOLD_DP);
         mDragHelper = ViewDragHelper.create(this, mDragHelperCallback);
         mDragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
         mGestureDetectorCompat = new GestureDetectorCompat(getContext(), mSimpleOnGestureListener);
@@ -158,6 +152,7 @@ public class BGASwipeItemLayout extends RelativeLayout {
         return mDragHelper.shouldInterceptTouchEvent(ev) && mGestureDetectorCompat.onTouchEvent(ev);
     }
 
+    // -----------------------------------参考代码家AndroidSwipeLayout开始---------------------------------------------
     @Override
     public void setOnClickListener(OnClickListener l) {
         super.setOnClickListener(l);
@@ -245,22 +240,48 @@ public class BGASwipeItemLayout extends RelativeLayout {
         }
         return null;
     }
+    // -----------------------------------参考代码家AndroidSwipeLayout结束---------------------------------------------
 
     private GestureDetector.SimpleOnGestureListener mSimpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            Log.i(TAG, "distanceX = " + distanceX + "  distanceY" + distanceY);
             return Math.abs(distanceX) > Math.abs(distanceY);
         }
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            return performClick();
+            // 2
+            setPressed(false);
+            if (isClosed()) {
+                return performClick();
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            // 1
+            if (isClosed()) {
+                setPressed(true);
+            }
+            return false;
         }
 
         @Override
         public void onLongPress(MotionEvent e) {
-            performLongClick();
+            // 2
+            setPressed(false);
+            if (isClosed()) {
+                performLongClick();
+            }
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+            // 1
+            if (isClosed()) {
+                setPressed(true);
+            }
         }
     };
 
@@ -396,19 +417,11 @@ public class BGASwipeItemLayout extends RelativeLayout {
     }
 
     public boolean isOpened() {
-        return getStatus() == Status.Opened;
+        return (mCurrentStatus == Status.Opened) || (mCurrentStatus == Status.Moving && mPreStatus == Status.Opened);
     }
 
     public boolean isClosed() {
-        return getStatus() == Status.Closed;
-    }
-
-    public boolean isMoving() {
-        return getStatus() == Status.Moving;
-    }
-
-    public Status getStatus() {
-        return mCurrentStatus;
+        return mCurrentStatus == Status.Closed || (mCurrentStatus == Status.Moving && mPreStatus == Status.Closed);
     }
 
     @Override
@@ -470,6 +483,7 @@ public class BGASwipeItemLayout extends RelativeLayout {
         public int clampViewPositionHorizontal(View child, int left, int dx) {
             int minTopLeft;
             int maxTopLeft;
+
             if (mSwipeDirection == SwipeDirection.Left) {
                 // 向左滑动
 
@@ -588,10 +602,6 @@ public class BGASwipeItemLayout extends RelativeLayout {
         void onBGASwipeItemLayoutOpened(BGASwipeItemLayout swipeItemLayout);
 
         void onBGASwipeItemLayoutClosed(BGASwipeItemLayout swipeItemLayout);
-    }
-
-    public static int dp2px(Context context, int dpValue) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.getResources().getDisplayMetrics());
     }
 
 }

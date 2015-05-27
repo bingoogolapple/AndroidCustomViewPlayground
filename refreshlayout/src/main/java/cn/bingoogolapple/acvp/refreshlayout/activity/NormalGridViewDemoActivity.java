@@ -52,7 +52,7 @@ public class NormalGridViewDemoActivity extends AppCompatActivity implements BGA
         moocStyleRefreshViewHolder.setOriginalBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.iqegg));
         moocStyleRefreshViewHolder.setLoadMoreBackgroundColorRes(android.R.color.holo_blue_light);
         mRefreshLayout.setRefreshViewHolder(moocStyleRefreshViewHolder);
-        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
+//        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
     }
 
     private void initListView() {

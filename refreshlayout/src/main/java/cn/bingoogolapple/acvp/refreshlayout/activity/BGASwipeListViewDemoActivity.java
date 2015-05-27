@@ -51,7 +51,7 @@ public class BGASwipeListViewDemoActivity extends AppCompatActivity implements B
         moocStyleRefreshViewHolder.setOriginalBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.iqegg));
         moocStyleRefreshViewHolder.setLoadMoreBackgroundColorRes(android.R.color.holo_blue_light);
         mRefreshLayout.setRefreshViewHolder(moocStyleRefreshViewHolder);
-        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
+//        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
     }
 
     private void initListView() {
@@ -79,7 +79,7 @@ public class BGASwipeListViewDemoActivity extends AppCompatActivity implements B
             }
         });
 
-        mDataLv.addFooterView(DataEngine.getCustomHeaderOrFooterView(this));
+//        mDataLv.addFooterView(DataEngine.getCustomHeaderOrFooterView(this));
     }
 
     @Override

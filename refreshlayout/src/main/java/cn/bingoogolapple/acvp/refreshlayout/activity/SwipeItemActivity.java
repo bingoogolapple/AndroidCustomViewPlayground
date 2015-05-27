@@ -67,18 +67,16 @@ public class SwipeItemActivity extends AppCompatActivity {
                 mTestSil.closeWithAnim();
                 break;
             case R.id.btn_swipeitem_status:
-                showStatus(mTestSil.getStatus());
+                showStatus();
                 break;
         }
     }
 
-    private void showStatus(BGASwipeItemLayout.Status status) {
-        if (status == BGASwipeItemLayout.Status.Opened) {
+    private void showStatus() {
+        if (mTestSil.isOpened()) {
             Toast.makeText(this, "打开状态", Toast.LENGTH_SHORT).show();
-        } else if (status == BGASwipeItemLayout.Status.Closed) {
+        } else if (mTestSil.isClosed()) {
             Toast.makeText(this, "关闭状态", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "正在移动", Toast.LENGTH_SHORT).show();
         }
     }
 }
