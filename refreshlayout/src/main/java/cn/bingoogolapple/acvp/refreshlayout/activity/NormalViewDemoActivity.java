@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
+import cn.bingoogolapple.acvp.refreshlayout.engine.DataEngine;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGAStickinessRefreshViewHolder;
 
@@ -43,6 +44,7 @@ public class NormalViewDemoActivity extends AppCompatActivity implements BGARefr
         mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_normalview_refresh);
         mRefreshLayout.setDelegate(this);
         mRefreshLayout.setRefreshViewHolder(new BGAStickinessRefreshViewHolder(this, true));
+        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
     }
 
     @Override

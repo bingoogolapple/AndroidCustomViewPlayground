@@ -45,7 +45,7 @@ public class BGASwipeRecyclerViewDemoActivity extends AppCompatActivity implemen
     private void initRefreshLayout() {
         mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_recyclerview_refresh);
         mRefreshLayout.setDelegate(this);
-//        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
+        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
         mRefreshLayout.setRefreshViewHolder(new BGAMoocStyleRefreshViewHolder(this, true));
     }
 

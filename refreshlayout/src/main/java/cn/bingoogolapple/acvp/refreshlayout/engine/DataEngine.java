@@ -19,9 +19,9 @@ public class DataEngine {
 
     public static List<RefreshModel> loadInitDatas() {
         List<RefreshModel> datas = new ArrayList<>();
-//        for (int i = 0; i < 20; i++) {
-//            datas.add(new RefreshModel("title" + i, "detail" + i));
-//        }
+        for (int i = 0; i < 20; i++) {
+            datas.add(new RefreshModel("title" + i, "detail" + i));
+        }
         return datas;
     }
 

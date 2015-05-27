@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +63,7 @@ public class BGARefreshLayout extends LinearLayout {
     /**
      * 手指按下时，y轴方向的偏移量
      */
-    private int mDownY = -1;
+    private int mWholeHeaderDownY = -1;
     /**
      * 整个头部控件最小的paddingTop
      */
@@ -85,6 +86,9 @@ public class BGARefreshLayout extends LinearLayout {
 
     private float mInterceptTouchDownX = -1;
     private float mInterceptTouchDownY = -1;
+
+    private int mWholeHeaderViewPaddingTop = 0;
+    private int mRefreshDownY = -1;
 
     /**
      * 是否已经设置内容控件滚动监听器
@@ -363,7 +367,7 @@ public class BGARefreshLayout extends LinearLayout {
 
                 int interceptTouchMoveDistanceY = (int) (event.getRawY() - mInterceptTouchDownY);
                 if (Math.abs(event.getRawX() - mInterceptTouchDownX) < Math.abs(interceptTouchMoveDistanceY)) {
-                    if ((interceptTouchMoveDistanceY > 0 && shouldHandleRefresh()) || (interceptTouchMoveDistanceY < 0 && shouldHandleLoadingMore())) {
+                    if ((interceptTouchMoveDistanceY > 0 && shouldHandleRefresh()) || (interceptTouchMoveDistanceY < 0 && shouldHandleLoadingMore()) || (interceptTouchMoveDistanceY < 0 && !isWholeHeaderViewCompleteInvisible())) {
 
                         // ACTION_DOWN时没有消耗掉事件，子控件会处于按下状态，这里设置ACTION_CANCEL，使子控件取消按下状态
                         event.setAction(MotionEvent.ACTION_CANCEL);
@@ -447,7 +451,18 @@ public class BGARefreshLayout extends LinearLayout {
         if (null != mRefreshHeaderView) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    mDownY = (int) event.getY();
+                    mWholeHeaderDownY = (int) event.getY();
+
+                    if (mCustomHeaderView != null) {
+                        mWholeHeaderViewPaddingTop = mWholeHeaderView.getPaddingTop();
+                    }
+
+                    if (mCustomHeaderView == null) {
+                        mRefreshDownY = (int) event.getY();
+                    }
+                    if (mCustomHeaderView != null && isWholeHeaderViewCompleteInvisible()) {
+                        mRefreshDownY = (int) event.getY();
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
                     if (handleActionMove(event)) {
@@ -468,6 +483,56 @@ public class BGARefreshLayout extends LinearLayout {
     }
 
     /**
+     * 自定义头部控件是否已经完全显示
+     *
+     * @return true表示已经完全显示，false表示没有完全显示
+     */
+    private boolean isCustomHeaderViewCompleteVisible() {
+        if (mCustomHeaderView != null) {
+            // 0表示x，1表示y
+            int[] location = new int[2];
+            getLocationOnScreen(location);
+            int mOnScreenY = location[1];
+
+            mCustomHeaderView.getLocationOnScreen(location);
+            int customHeaderViewOnScreenY = location[1];
+            if (mOnScreenY <= customHeaderViewOnScreenY) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    /**
+     * 整个头部控件是否已经完全隐藏
+     *
+     * @return true表示完全隐藏，false表示没有完全隐藏
+     */
+    private boolean isWholeHeaderViewCompleteInvisible() {
+        if (mCustomHeaderView != null) {
+            // 0表示x，1表示y
+            int[] location = new int[2];
+            getLocationOnScreen(location);
+            int mOnScreenY = location[1];
+
+            mWholeHeaderView.getLocationOnScreen(location);
+            int wholeHeaderViewOnScreenY = location[1];
+            if (wholeHeaderViewOnScreenY + mWholeHeaderView.getMeasuredHeight() <= mOnScreenY) {
+                Log.i(TAG, "完全隐藏");
+                return true;
+            } else {
+                return false;
+            }
+        }
+        Log.i(TAG, "没有完全隐藏");
+        return true;
+    }
+
+
+    /**
      * 处理手指滑动事件
      *
      * @param event
@@ -478,23 +543,26 @@ public class BGARefreshLayout extends LinearLayout {
             return true;
         }
 
-        if (mDownY == -1) {
-            mDownY = (int) event.getY();
+        if (mCustomHeaderView == null && mRefreshDownY == -1) {
+            mRefreshDownY = (int) event.getY();
         }
-        int diffY = (int) event.getY() - mDownY;
+        if (mCustomHeaderView != null && isCustomHeaderViewCompleteVisible() && mRefreshDownY == -1) {
+            mRefreshDownY = (int) event.getY();
+        }
 
-        diffY = (int) (diffY / mRefreshViewHolder.getPaddingTopScale());
+        int refreshDiffY = (int) event.getY() - mRefreshDownY;
+        refreshDiffY = (int) (refreshDiffY / mRefreshViewHolder.getPaddingTopScale());
 
         // 如果是向下拉，并且当前可见的第一个条目的索引等于0，才处理整个头部控件的padding
-        if (diffY > 0 && shouldHandleRefresh()) {
-            int paddingTop = mMinWholeHeaderViewPaddingTop + diffY;
+        if (refreshDiffY > 0 && shouldHandleRefresh() && isCustomHeaderViewCompleteVisible()) {
+            int paddingTop = mMinWholeHeaderViewPaddingTop + refreshDiffY;
             if (paddingTop > 0 && mCurrentRefreshStatus != RefreshStatus.RELEASE_REFRESH) {
                 // 下拉刷新控件完全显示，并且当前状态没有处于释放开始刷新状态
                 mCurrentRefreshStatus = RefreshStatus.RELEASE_REFRESH;
                 handleRefreshStatusChanged();
 
                 paddingTop = Math.min(paddingTop, mMaxWholeHeaderViewPaddingTop);
-                mRefreshViewHolder.handleScale(1.0f, diffY);
+                mRefreshViewHolder.handleScale(1.0f, refreshDiffY);
             } else if (paddingTop < 0) {
                 // 下拉刷新控件没有完全显示，并且当前状态没有处于下拉刷新状态
                 if (mCurrentRefreshStatus != RefreshStatus.PULL_DOWN) {
@@ -513,14 +581,34 @@ public class BGARefreshLayout extends LinearLayout {
                  * paddingTop    0 ==> mMinWholeHeaderViewPaddingTop
                  * scale         1 ==> 0
                  */
-                mRefreshViewHolder.handleScale(scale, diffY);
+                mRefreshViewHolder.handleScale(scale, refreshDiffY);
             }
             mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
 
             if (mRefreshViewHolder.canChangeToRefreshingStatus()) {
-                mDownY = -1;
+                mWholeHeaderDownY = -1;
+                mRefreshDownY = -1;
                 changeToRefreshing();
             }
+            return true;
+        }
+
+
+        if (mWholeHeaderDownY == -1) {
+            mWholeHeaderDownY = (int) event.getY();
+            if (mCustomHeaderView != null) {
+                mWholeHeaderViewPaddingTop = mWholeHeaderView.getPaddingTop();
+            }
+        }
+
+        int wholeHeaderDiffY = (int) event.getY() - mWholeHeaderDownY;
+        if (!isWholeHeaderViewCompleteInvisible() || (wholeHeaderDiffY > 0 && shouldHandleRefresh() && !isCustomHeaderViewCompleteVisible())) {
+
+            int paddingTop = mWholeHeaderViewPaddingTop + wholeHeaderDiffY;
+            if (paddingTop < mMinWholeHeaderViewPaddingTop - mCustomHeaderView.getMeasuredHeight()) {
+                paddingTop = mMinWholeHeaderViewPaddingTop - mCustomHeaderView.getMeasuredHeight();
+            }
+            mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
             return true;
         }
         return false;
@@ -548,17 +636,18 @@ public class BGARefreshLayout extends LinearLayout {
             changeToRefreshing();
         }
 
-        if (mDownY == -1) {
-            mDownY = (int) event.getY();
+        if (mRefreshDownY == -1) {
+            mRefreshDownY = (int) event.getY();
         }
-        int diffY = (int) event.getY() - mDownY;
+        int diffY = (int) event.getY() - mRefreshDownY;
         if (shouldHandleLoadingMore() && diffY < 0 && !mIsLoadingMore) {
             // 处理上拉加载更多，需要返回true，自己消耗ACTION_UP事件
             isReturnTrue = true;
             beginLoadingMore();
         }
 
-        mDownY = -1;
+        mWholeHeaderDownY = -1;
+        mRefreshDownY = -1;
         return isReturnTrue;
     }
 

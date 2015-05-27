@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
+import cn.bingoogolapple.acvp.refreshlayout.engine.DataEngine;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGAStickinessRefreshViewHolder;
 
@@ -47,6 +48,7 @@ public class ScrollViewDemoActivity extends AppCompatActivity implements BGARefr
         stickinessRefreshViewHolder.setStickinessColor(Color.parseColor("#11cd6e"));
         stickinessRefreshViewHolder.setRotateDrawable(getResources().getDrawable(R.mipmap.custom_stickiness_roate));
         mRefreshLayout.setRefreshViewHolder(stickinessRefreshViewHolder);
+        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
     }
 
     @Override

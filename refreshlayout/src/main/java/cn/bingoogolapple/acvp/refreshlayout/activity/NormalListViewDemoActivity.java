@@ -80,8 +80,6 @@ public class NormalListViewDemoActivity extends AppCompatActivity implements BGA
                 Log.i(TAG, "正在滚动");
             }
         });
-
-//        mDataLv.addFooterView(DataEngine.getCustomHeaderOrFooterView(this));
     }
 
     @Override

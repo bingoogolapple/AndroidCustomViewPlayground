@@ -1,7 +1,5 @@
 package cn.bingoogolapple.acvp.refreshlayout.activity;
 
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +16,7 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.adapter.NormalAdapterViewAdapter;
 import cn.bingoogolapple.acvp.refreshlayout.engine.DataEngine;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
-import cn.bingoogolapple.acvp.refreshlayout.widget.BGAMoocStyleRefreshViewHolder;
+import cn.bingoogolapple.acvp.refreshlayout.widget.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGARefreshLayout;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildClickListener;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildLongClickListener;
@@ -47,12 +45,8 @@ public class NormalGridViewDemoActivity extends AppCompatActivity implements BGA
     private void initRefreshLayout() {
         mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_gridview_refresh);
         mRefreshLayout.setDelegate(this);
-        BGAMoocStyleRefreshViewHolder moocStyleRefreshViewHolder = new BGAMoocStyleRefreshViewHolder(this, true);
-        moocStyleRefreshViewHolder.setUltimateColor(Color.rgb(0, 0, 255));
-        moocStyleRefreshViewHolder.setOriginalBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.iqegg));
-        moocStyleRefreshViewHolder.setLoadMoreBackgroundColorRes(android.R.color.holo_blue_light);
-        mRefreshLayout.setRefreshViewHolder(moocStyleRefreshViewHolder);
-//        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
+        mRefreshLayout.setRefreshViewHolder(new BGANormalRefreshViewHolder(this, true));
+        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
     }
 
     private void initListView() {
