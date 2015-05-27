@@ -46,7 +46,7 @@ public class NormalGridViewDemoActivity extends AppCompatActivity implements BGA
         mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_gridview_refresh);
         mRefreshLayout.setDelegate(this);
         mRefreshLayout.setRefreshViewHolder(new BGANormalRefreshViewHolder(this, true));
-        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
+//        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this), false);
     }
 
     private void initListView() {

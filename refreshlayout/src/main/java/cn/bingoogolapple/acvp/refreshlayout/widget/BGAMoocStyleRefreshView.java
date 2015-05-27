@@ -20,7 +20,7 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
  * 创建时间:15/5/21 10:43
- * 描述:
+ * 描述:慕课网下拉刷新风格控件
  */
 public class BGAMoocStyleRefreshView extends View {
     private PorterDuffXfermode mXfermode;

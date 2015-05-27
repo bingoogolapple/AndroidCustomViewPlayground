@@ -48,7 +48,7 @@ public class ScrollViewDemoActivity extends AppCompatActivity implements BGARefr
         stickinessRefreshViewHolder.setStickinessColor(Color.parseColor("#11cd6e"));
         stickinessRefreshViewHolder.setRotateDrawable(getResources().getDrawable(R.mipmap.custom_stickiness_roate));
         mRefreshLayout.setRefreshViewHolder(stickinessRefreshViewHolder);
-        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
+        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this), false);
     }
 
     @Override

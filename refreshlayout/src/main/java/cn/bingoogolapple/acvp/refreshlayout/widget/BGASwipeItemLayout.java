@@ -24,7 +24,7 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
  * 创建时间:15/5/26 上午2:07
- * 描述:
+ * 描述:适用于AdapterView和RecyclerView的水平方向滑动item。【AdapterView的item单击和长按参考代码家https://github.com/daimajia/AndroidSwipeLayout】
  */
 public class BGASwipeItemLayout extends RelativeLayout {
     private static final String TAG = BGASwipeItemLayout.class.getSimpleName();

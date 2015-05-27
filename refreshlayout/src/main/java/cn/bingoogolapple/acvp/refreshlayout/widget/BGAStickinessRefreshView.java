@@ -21,7 +21,7 @@ import cn.bingoogolapple.acvp.refreshlayout.util.UIUtil;
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
  * 创建时间:15/5/21 22:34
- * 描述:
+ * 描述:黏性下拉刷新控件
  */
 public class BGAStickinessRefreshView extends View {
     private static final String TAG = BGAStickinessRefreshView.class.getSimpleName();

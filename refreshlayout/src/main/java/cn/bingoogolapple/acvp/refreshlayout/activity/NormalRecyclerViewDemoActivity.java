@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemLongClickListener;
  * 描述:
  */
 public class NormalRecyclerViewDemoActivity extends AppCompatActivity implements BGARefreshLayout.BGARefreshLayoutDelegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener {
+    private static final String TAG = NormalRecyclerViewDemoActivity.class.getSimpleName();
     private NormalRecyclerViewAdapter mAdapter;
     private BGARefreshLayout mRefreshLayout;
     private List<RefreshModel> mDatas;
@@ -45,7 +47,7 @@ public class NormalRecyclerViewDemoActivity extends AppCompatActivity implements
     private void initRefreshLayout() {
         mRefreshLayout = (BGARefreshLayout) findViewById(R.id.rl_recyclerview_refresh);
         mRefreshLayout.setDelegate(this);
-        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
+        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this), false);
         mRefreshLayout.setRefreshViewHolder(new BGAMoocStyleRefreshViewHolder(this, true));
     }
 
@@ -65,6 +67,19 @@ public class NormalRecyclerViewDemoActivity extends AppCompatActivity implements
         mDatas = DataEngine.loadInitDatas();
         mAdapter.setDatas(mDatas);
         mDataRv.setAdapter(mAdapter);
+
+        // 使用addOnScrollListener，而不是setOnScrollListener();
+        mDataRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                Log.i(TAG, "测试自定义onScrollStateChanged被调用");
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                Log.i(TAG, "测试自定义onScrolled被调用");
+            }
+        });
     }
 
     @Override

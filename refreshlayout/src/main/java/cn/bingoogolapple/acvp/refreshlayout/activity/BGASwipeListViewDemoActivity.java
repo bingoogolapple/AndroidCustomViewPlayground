@@ -51,7 +51,7 @@ public class BGASwipeListViewDemoActivity extends AppCompatActivity implements B
         moocStyleRefreshViewHolder.setOriginalBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.iqegg));
         moocStyleRefreshViewHolder.setLoadMoreBackgroundColorRes(android.R.color.holo_blue_light);
         mRefreshLayout.setRefreshViewHolder(moocStyleRefreshViewHolder);
-        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
+        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this), true);
     }
 
     private void initListView() {

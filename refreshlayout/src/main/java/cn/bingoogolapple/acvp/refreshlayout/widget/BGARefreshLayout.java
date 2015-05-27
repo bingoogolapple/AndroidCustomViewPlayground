@@ -21,7 +21,7 @@ import java.lang.reflect.Field;
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
  * 创建时间:15/5/21 22:35
- * 描述:
+ * 描述:下拉刷新、上拉加载更多、可添加自定义（固定、可滑动）头部控件（例如慕课网app顶部的广告位）
  */
 public class BGARefreshLayout extends LinearLayout {
     private static final String TAG = BGARefreshLayout.class.getSimpleName();
@@ -39,6 +39,10 @@ public class BGARefreshLayout extends LinearLayout {
      * 下拉刷新控件下方的自定义控件
      */
     private View mCustomHeaderView;
+    /**
+     * 下拉刷新控件下方的自定义控件是否可滚动，默认不可滚动
+     */
+    private boolean mIsCustomHeaderViewScrollable = false;
     /**
      * 下拉刷新控件的高度
      */
@@ -181,11 +185,12 @@ public class BGARefreshLayout extends LinearLayout {
     }
 
     /**
-     * 添加下拉刷新控件下方的自定义控件
+     * 设置下拉刷新控件下方的自定义控件
      *
-     * @param customHeaderView
+     * @param customHeaderView 下拉刷新控件下方的自定义控件
+     * @param scrollable       是否可以滚动
      */
-    public void setCustomHeaderView(View customHeaderView) {
+    public void setCustomHeaderView(View customHeaderView, boolean scrollable) {
         if (mCustomHeaderView != null && mCustomHeaderView.getParent() != null) {
             ViewGroup parent = (ViewGroup) mCustomHeaderView.getParent();
             parent.removeView(mCustomHeaderView);
@@ -194,6 +199,7 @@ public class BGARefreshLayout extends LinearLayout {
         if (mCustomHeaderView != null) {
             mCustomHeaderView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             mWholeHeaderView.addView(mCustomHeaderView);
+            mIsCustomHeaderViewScrollable = scrollable;
         }
     }
 
@@ -216,7 +222,7 @@ public class BGARefreshLayout extends LinearLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        // 被添加到窗口后再设置监听器，这样开发者就不比烦恼先初始化RefreshLayout还是先设置自定义滚动监听器
+        // 被添加到窗口后再设置监听器，这样开发者就不必烦恼先初始化RefreshLayout还是先设置自定义滚动监听器
         if (!mIsInitedContentViewScrollListener && mLoadMoreFooterView != null) {
             setRecyclerViewOnScrollListener();
             setAbsListViewOnScrollListener();
@@ -286,7 +292,7 @@ public class BGARefreshLayout extends LinearLayout {
             // 如果AdapterView的子控件数量不为0，获取最后一个子控件的bottom
             lastChildBottom = mAbsListView.getChildAt(mAbsListView.getChildCount() - 1).getBottom();
         }
-        return mAbsListView.getLastVisiblePosition() == mAbsListView.getAdapter().getCount() - 1 && lastChildBottom == mAbsListView.getHeight();
+        return mAbsListView.getLastVisiblePosition() == mAbsListView.getAdapter().getCount() - 1 && lastChildBottom <= mAbsListView.getHeight();
     }
 
     private boolean shouldHandleRecyclerViewLoadingMore() {
@@ -369,8 +375,9 @@ public class BGARefreshLayout extends LinearLayout {
                 }
 
                 int interceptTouchMoveDistanceY = (int) (event.getRawY() - mInterceptTouchDownY);
-                if (Math.abs(event.getRawX() - mInterceptTouchDownX) < Math.abs(interceptTouchMoveDistanceY)) {
-                    if ((interceptTouchMoveDistanceY > 0 && shouldHandleRefresh()) || (interceptTouchMoveDistanceY < 0 && shouldHandleLoadingMore()) || (interceptTouchMoveDistanceY < 0 && !isWholeHeaderViewCompleteInvisible())) {
+                // 可以没有上拉加载更多，但是必须有下拉刷新，否则就不拦截事件
+                if (Math.abs(event.getRawX() - mInterceptTouchDownX) < Math.abs(interceptTouchMoveDistanceY) && mRefreshHeaderView != null) {
+                    if ((interceptTouchMoveDistanceY > 0 && shouldHandleRefresh()) || (interceptTouchMoveDistanceY < 0 && shouldHandleLoadingMore()) || interceptTouchMoveDistanceY < 0 && !isWholeHeaderViewCompleteInvisible()) {
 
                         // ACTION_DOWN时没有消耗掉事件，子控件会处于按下状态，这里设置ACTION_CANCEL，使子控件取消按下状态
                         event.setAction(MotionEvent.ACTION_CANCEL);
@@ -460,10 +467,10 @@ public class BGARefreshLayout extends LinearLayout {
                         mWholeHeaderViewDownPaddingTop = mWholeHeaderView.getPaddingTop();
                     }
 
-                    if (mCustomHeaderView == null) {
+                    if (mCustomHeaderView == null || !mIsCustomHeaderViewScrollable) {
                         mRefreshDownY = (int) event.getY();
                     }
-                    if (mCustomHeaderView != null && isWholeHeaderViewCompleteInvisible()) {
+                    if (isWholeHeaderViewCompleteInvisible()) {
                         mRefreshDownY = (int) event.getY();
                     }
                     break;
@@ -515,7 +522,7 @@ public class BGARefreshLayout extends LinearLayout {
      * @return true表示完全隐藏，false表示没有完全隐藏
      */
     private boolean isWholeHeaderViewCompleteInvisible() {
-        if (mCustomHeaderView != null) {
+        if (mCustomHeaderView != null && mIsCustomHeaderViewScrollable) {
             // 0表示x，1表示y
             int[] location = new int[2];
             getLocationOnScreen(location);
@@ -543,10 +550,10 @@ public class BGARefreshLayout extends LinearLayout {
             return true;
         }
 
-        if (mCustomHeaderView == null && mRefreshDownY == -1) {
+        if ((mCustomHeaderView == null || !mIsCustomHeaderViewScrollable) && mRefreshDownY == -1) {
             mRefreshDownY = (int) event.getY();
         }
-        if (mCustomHeaderView != null && isCustomHeaderViewCompleteVisible() && mRefreshDownY == -1) {
+        if (mCustomHeaderView != null && mIsCustomHeaderViewScrollable && isCustomHeaderViewCompleteVisible() && mRefreshDownY == -1) {
             mRefreshDownY = (int) event.getY();
         }
 
@@ -595,23 +602,25 @@ public class BGARefreshLayout extends LinearLayout {
         }
 
 
-        if (mWholeHeaderDownY == -1) {
-            mWholeHeaderDownY = (int) event.getY();
-            if (mCustomHeaderView != null) {
-                mWholeHeaderViewDownPaddingTop = mWholeHeaderView.getPaddingTop();
+        if (mCustomHeaderView != null && mIsCustomHeaderViewScrollable) {
+            if (mWholeHeaderDownY == -1) {
+                mWholeHeaderDownY = (int) event.getY();
+                if (mCustomHeaderView != null) {
+                    mWholeHeaderViewDownPaddingTop = mWholeHeaderView.getPaddingTop();
+                }
             }
-        }
 
-        int wholeHeaderDiffY = (int) event.getY() - mWholeHeaderDownY;
-        if (!isWholeHeaderViewCompleteInvisible() || (wholeHeaderDiffY > 0 && shouldHandleRefresh() && !isCustomHeaderViewCompleteVisible())) {
+            int wholeHeaderDiffY = (int) event.getY() - mWholeHeaderDownY;
+            if (!isWholeHeaderViewCompleteInvisible() || (wholeHeaderDiffY > 0 && shouldHandleRefresh() && !isCustomHeaderViewCompleteVisible())) {
 
-            int paddingTop = mWholeHeaderViewDownPaddingTop + wholeHeaderDiffY;
-            if (paddingTop < mMinWholeHeaderViewPaddingTop - mCustomHeaderView.getMeasuredHeight()) {
-                paddingTop = mMinWholeHeaderViewPaddingTop - mCustomHeaderView.getMeasuredHeight();
+                int paddingTop = mWholeHeaderViewDownPaddingTop + wholeHeaderDiffY;
+                if (paddingTop < mMinWholeHeaderViewPaddingTop - mCustomHeaderView.getMeasuredHeight()) {
+                    paddingTop = mMinWholeHeaderViewPaddingTop - mCustomHeaderView.getMeasuredHeight();
+                }
+                mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
+
+                return true;
             }
-            mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
-
-            return true;
         }
 
         return false;
@@ -645,7 +654,7 @@ public class BGARefreshLayout extends LinearLayout {
             mRefreshDownY = (int) event.getY();
         }
         int diffY = (int) event.getY() - mRefreshDownY;
-        if (shouldHandleLoadingMore() && diffY < 0 && !mIsLoadingMore) {
+        if (shouldHandleLoadingMore() && (diffY < 0 || (mScrollView != null && diffY == 0)) && !mIsLoadingMore) {
             // 处理上拉加载更多，需要返回true，自己消耗ACTION_UP事件
             isReturnTrue = true;
             beginLoadingMore();

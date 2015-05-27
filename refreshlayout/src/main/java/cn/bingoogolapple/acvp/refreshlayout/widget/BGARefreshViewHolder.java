@@ -13,21 +13,30 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
  * 创建时间:15/5/21 12:56
- * 描述:
+ * 描述:继承该抽象类实现响应的抽象方法，做出各种下拉刷新效果。参考BGANormalRefreshViewHolder、BGAStickinessRefreshViewHolder、BGAMoocStyleRefreshViewHolder
  */
 public abstract class BGARefreshViewHolder {
     /**
      * 手指移动距离与下拉刷新控件paddingTop移动距离的比值
      */
-    private static final float PADDING_TOP_SCALE = 1.8f;
+    private static final float PULL_DISTANCE_SCALE = 1.8f;
+    /**
+     * 手指移动距离与下拉刷新控件paddingTop移动距离的比值，默认1.8f
+     */
+    private float mPullDistanceScale = PULL_DISTANCE_SCALE;
     /**
      * 下拉刷新控件paddingTop的弹簧距离与下拉刷新控件高度的比值
      */
     private static final float SPRING_DISTANCE_SCALE = 0.4f;
-
+    /**
+     * 下拉刷新控件paddingTop的弹簧距离与下拉刷新控件高度的比值，默认0.4f
+     */
     private float mSpringDistanceScale = SPRING_DISTANCE_SCALE;
 
     protected Context mContext;
+    /**
+     * 下拉刷新上拉加载更多控件
+     */
     protected BGARefreshLayout mRefreshLayout;
     /**
      * 下拉刷新控件
@@ -37,19 +46,42 @@ public abstract class BGARefreshViewHolder {
      * 上拉加载更多控件
      */
     protected View mLoadMoreFooterView;
-
+    /**
+     * 底部加载更多提示控件
+     */
     protected TextView mFooterStatusTv;
+    /**
+     * 底部加载更多菊花控件
+     */
     protected ImageView mFooterChrysanthemumIv;
+    /**
+     * 底部加载更多菊花drawable
+     */
     protected AnimationDrawable mFooterChrysanthemumAd;
+    /**
+     * 正在加载更多时的文本
+     */
     protected String mLodingMoreText = "加载中...";
-
+    /**
+     * 是否开启加载更多功能
+     */
     private boolean mIsLoadingMoreEnabled = true;
+    /**
+     * 整个加载更多控件的背景颜色资源id
+     */
     private int mLoadMoreBackgroundColorRes = -1;
+    /**
+     * 整个加载更多控件的背景drawable资源id
+     */
     private int mLoadMoreBackgroundDrawableRes = -1;
-
+    /**
+     * 下拉刷新控件的背景颜色资源id
+     */
     protected int mRefreshViewBackgroundColorRes = -1;
+    /**
+     * 下拉刷新控件的背景drawable资源id
+     */
     protected int mRefreshViewBackgroundDrawableRes = -1;
-
     /**
      * 头部控件移动动画时常
      */
@@ -59,43 +91,92 @@ public abstract class BGARefreshViewHolder {
      */
     private int mBottomAnimDuration = 300;
 
+    /**
+     * @param context
+     * @param isLoadingMoreEnabled 上拉加载更多是否可用
+     */
     public BGARefreshViewHolder(Context context, boolean isLoadingMoreEnabled) {
         mContext = context;
         mIsLoadingMoreEnabled = isLoadingMoreEnabled;
     }
 
+    /**
+     * 设置正在加载更多时的文本
+     *
+     * @param loadingMoreText
+     */
     public void setLoadingMoreText(String loadingMoreText) {
         mLodingMoreText = loadingMoreText;
     }
 
+    /**
+     * 设置整个加载更多控件的背景颜色资源id
+     *
+     * @param loadMoreBackgroundColorRes
+     */
     public void setLoadMoreBackgroundColorRes(@ColorRes int loadMoreBackgroundColorRes) {
         mLoadMoreBackgroundColorRes = loadMoreBackgroundColorRes;
     }
 
+    /**
+     * 设置整个加载更多控件的背景drawable资源id
+     *
+     * @param loadMoreBackgroundDrawableRes
+     */
     public void setLoadMoreBackgroundDrawableRes(@DrawableRes int loadMoreBackgroundDrawableRes) {
         mLoadMoreBackgroundDrawableRes = loadMoreBackgroundDrawableRes;
     }
 
+    /**
+     * 设置下拉刷新控件的背景颜色资源id
+     *
+     * @param refreshViewBackgroundColorRes
+     */
     public void setRefreshViewBackgroundColorRes(@ColorRes int refreshViewBackgroundColorRes) {
         mRefreshViewBackgroundColorRes = refreshViewBackgroundColorRes;
     }
 
+    /**
+     * 设置下拉刷新控件的背景drawable资源id
+     *
+     * @param refreshViewBackgroundDrawableRes
+     */
     public void setRefreshViewBackgroundDrawableRes(@DrawableRes int refreshViewBackgroundDrawableRes) {
         mRefreshViewBackgroundDrawableRes = refreshViewBackgroundDrawableRes;
     }
 
+    /**
+     * 获取顶部未满足下拉刷新条件时回弹到初始状态、满足刷新条件时回弹到正在刷新状态、刷新完毕后回弹到初始状态的动画时间，默认为500毫秒
+     *
+     * @return
+     */
     public int getTopAnimDuration() {
         return mTopAnimDuration;
     }
 
+    /**
+     * 设置顶部未满足下拉刷新条件时回弹到初始状态、满足刷新条件时回弹到正在刷新状态、刷新完毕后回弹到初始状态的动画时间，默认为300毫秒
+     *
+     * @param topAnimDuration
+     */
     public void setTopAnimDuration(int topAnimDuration) {
         mTopAnimDuration = topAnimDuration;
     }
 
+    /**
+     * 获取底部加载更多控件显示、隐藏的动画时间
+     *
+     * @return
+     */
     public int getBottomAnimDuration() {
         return mBottomAnimDuration;
     }
 
+    /**
+     * 设置底部加载更多控件显示、隐藏的动画时间
+     *
+     * @param bottomAnimDuration
+     */
     public void setBottomAnimDuration(int bottomAnimDuration) {
         mBottomAnimDuration = bottomAnimDuration;
     }
@@ -126,7 +207,7 @@ public abstract class BGARefreshViewHolder {
     }
 
     /**
-     * 获取下拉刷新控件
+     * 获取头部下拉刷新控件
      *
      * @return
      */
@@ -135,8 +216,8 @@ public abstract class BGARefreshViewHolder {
     /**
      * 下拉刷新控件可见时，处理上下拉进度
      *
-     * @param scale         下拉过程0 ==> 1
-     * @param moveYDistance
+     * @param scale         下拉过程0 ==> 1，回弹过程1 ==> 0，没有加上弹簧距离移动时的比例
+     * @param moveYDistance 整个下拉刷新控件paddingTop变化的值，如果有弹簧距离，会大于整个下拉刷新控件的高度
      */
     public abstract void handleScale(float scale, int moveYDistance);
 
@@ -146,7 +227,7 @@ public abstract class BGARefreshViewHolder {
     public abstract void changeToIdle();
 
     /**
-     * 进入下拉刷新状态
+     * 进入下拉状态
      */
     public abstract void changeToPullDown();
 
@@ -171,7 +252,16 @@ public abstract class BGARefreshViewHolder {
      * @return
      */
     public float getPaddingTopScale() {
-        return PADDING_TOP_SCALE;
+        return mPullDistanceScale;
+    }
+
+    /**
+     * 设置手指移动距离与下拉刷新控件paddingTop移动距离的比值
+     *
+     * @param pullDistanceScale
+     */
+    public void setPullDistanceScale(float pullDistanceScale) {
+        mPullDistanceScale = pullDistanceScale;
     }
 
     /**
@@ -236,10 +326,20 @@ public abstract class BGARefreshViewHolder {
         return 0;
     }
 
+    /**
+     * 改变整个下拉刷新头部控件移动一定的距离（带动画），自定义刷新控件进入刷新状态前后的高度有变化时可以使用该方法（参考BGAStickinessRefreshView）
+     *
+     * @param distance
+     */
     public void startChangeWholeHeaderViewPaddingTop(int distance) {
         mRefreshLayout.startChangeWholeHeaderViewPaddingTop(distance);
     }
 
+    /**
+     * 设置下拉刷新上拉加载更多控件，该方法是设置BGARefreshViewHolder给BGARefreshLayout时由BGARefreshLayout调用
+     *
+     * @param refreshLayout
+     */
     public void setRefreshLayout(BGARefreshLayout refreshLayout) {
         mRefreshLayout = refreshLayout;
     }

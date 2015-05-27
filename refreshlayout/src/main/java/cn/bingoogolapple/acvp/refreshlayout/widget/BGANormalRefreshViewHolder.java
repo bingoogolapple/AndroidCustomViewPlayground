@@ -13,7 +13,7 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
  * 创建时间:15/5/21 13:05
- * 描述:
+ * 描述:类似新浪微博下拉刷新风格
  */
 public class BGANormalRefreshViewHolder extends BGARefreshViewHolder {
     private TextView mHeaderStatusTv;
@@ -45,14 +45,29 @@ public class BGANormalRefreshViewHolder extends BGARefreshViewHolder {
         mDownAnim.setFillAfter(true);
     }
 
+    /**
+     * 设置未满足刷新条件，提示继续往下拉的文本
+     *
+     * @param pullDownRefreshText
+     */
     public void setPullDownRefreshText(String pullDownRefreshText) {
         mPullDownRefreshText = pullDownRefreshText;
     }
 
+    /**
+     * 设置满足刷新条件时的文本
+     *
+     * @param releaseRefreshText
+     */
     public void setReleaseRefreshText(String releaseRefreshText) {
         mReleaseRefreshText = releaseRefreshText;
     }
 
+    /**
+     * 设置正在刷新时的文本
+     *
+     * @param refreshingText
+     */
     public void setRefreshingText(String refreshingText) {
         mRefreshingText = refreshingText;
     }
@@ -71,7 +86,6 @@ public class BGANormalRefreshViewHolder extends BGARefreshViewHolder {
             mHeaderArrowIv = (ImageView) mRefreshHeaderView.findViewById(R.id.iv_normal_refresh_header_arrow);
             mHeaderChrysanthemumIv = (ImageView) mRefreshHeaderView.findViewById(R.id.iv_normal_refresh_header_chrysanthemum);
             mHeaderChrysanthemumAd = (AnimationDrawable) mHeaderChrysanthemumIv.getDrawable();
-
             mHeaderStatusTv.setText(mPullDownRefreshText);
         }
         return mRefreshHeaderView;
