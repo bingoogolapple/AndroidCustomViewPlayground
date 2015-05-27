@@ -561,9 +561,7 @@ public class BGARefreshLayout extends LinearLayout {
                 mCurrentRefreshStatus = RefreshStatus.RELEASE_REFRESH;
                 handleRefreshStatusChanged();
 
-                paddingTop = Math.min(paddingTop, mMaxWholeHeaderViewPaddingTop);
                 mRefreshViewHolder.handleScale(1.0f, refreshDiffY);
-                mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
             } else if (paddingTop < 0) {
                 // 下拉刷新控件没有完全显示，并且当前状态没有处于下拉刷新状态
                 if (mCurrentRefreshStatus != RefreshStatus.PULL_DOWN) {
@@ -583,9 +581,9 @@ public class BGARefreshLayout extends LinearLayout {
                  * scale         1 ==> 0
                  */
                 mRefreshViewHolder.handleScale(scale, refreshDiffY);
-                mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
             }
-
+            paddingTop = Math.min(paddingTop, mMaxWholeHeaderViewPaddingTop);
+            mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
 
             if (mRefreshViewHolder.canChangeToRefreshingStatus()) {
                 mWholeHeaderDownY = -1;

@@ -25,6 +25,8 @@ public abstract class BGARefreshViewHolder {
      */
     private static final float SPRING_DISTANCE_SCALE = 0.4f;
 
+    private float mSpringDistanceScale = SPRING_DISTANCE_SCALE;
+
     protected Context mContext;
     protected BGARefreshLayout mRefreshLayout;
     /**
@@ -167,7 +169,19 @@ public abstract class BGARefreshViewHolder {
      * @return
      */
     public float getSpringDistanceScale() {
-        return SPRING_DISTANCE_SCALE;
+        return mSpringDistanceScale;
+    }
+
+    /**
+     * 设置下拉刷新控件paddingTop的弹簧距离与下拉刷新控件高度的比值，不能小于0，如果刷新控件比较高，建议将该值设置小一些
+     *
+     * @param springDistanceScale
+     */
+    public void setSpringDistanceScale(float springDistanceScale) {
+        if (springDistanceScale < 0) {
+            throw new RuntimeException("下拉刷新控件paddingTop的弹簧距离与下拉刷新控件高度的比值springDistanceScale不能小于0");
+        }
+        mSpringDistanceScale = springDistanceScale;
     }
 
     /**

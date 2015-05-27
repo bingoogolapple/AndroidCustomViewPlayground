@@ -51,6 +51,7 @@ public class NormalListViewDemoActivity extends AppCompatActivity implements BGA
         moocStyleRefreshViewHolder.setUltimateColor(Color.rgb(0, 0, 255));
         moocStyleRefreshViewHolder.setOriginalBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.iqegg));
         moocStyleRefreshViewHolder.setLoadMoreBackgroundColorRes(android.R.color.holo_blue_light);
+        moocStyleRefreshViewHolder.setSpringDistanceScale(0.2f);
         mRefreshLayout.setRefreshViewHolder(moocStyleRefreshViewHolder);
 //        mRefreshLayout.setCustomHeaderView(DataEngine.getCustomHeaderOrFooterView(this));
     }
