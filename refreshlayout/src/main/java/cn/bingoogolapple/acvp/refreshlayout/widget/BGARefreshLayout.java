@@ -89,6 +89,7 @@ public class BGARefreshLayout extends LinearLayout {
 
     private int mWholeHeaderViewPaddingTop = 0;
     private int mRefreshDownY = -1;
+    private boolean mIsNeedDispatchTouchActionDown = false;
 
     /**
      * 是否已经设置内容控件滚动监听器
@@ -531,7 +532,6 @@ public class BGARefreshLayout extends LinearLayout {
         return true;
     }
 
-
     /**
      * 处理手指滑动事件
      *
@@ -563,6 +563,7 @@ public class BGARefreshLayout extends LinearLayout {
 
                 paddingTop = Math.min(paddingTop, mMaxWholeHeaderViewPaddingTop);
                 mRefreshViewHolder.handleScale(1.0f, refreshDiffY);
+                mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
             } else if (paddingTop < 0) {
                 // 下拉刷新控件没有完全显示，并且当前状态没有处于下拉刷新状态
                 if (mCurrentRefreshStatus != RefreshStatus.PULL_DOWN) {
@@ -582,14 +583,17 @@ public class BGARefreshLayout extends LinearLayout {
                  * scale         1 ==> 0
                  */
                 mRefreshViewHolder.handleScale(scale, refreshDiffY);
+                mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
             }
-            mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
+
 
             if (mRefreshViewHolder.canChangeToRefreshingStatus()) {
                 mWholeHeaderDownY = -1;
                 mRefreshDownY = -1;
                 changeToRefreshing();
             }
+
+            mIsNeedDispatchTouchActionDown = true;
             return true;
         }
 
@@ -609,7 +613,15 @@ public class BGARefreshLayout extends LinearLayout {
                 paddingTop = mMinWholeHeaderViewPaddingTop - mCustomHeaderView.getMeasuredHeight();
             }
             mWholeHeaderView.setPadding(0, paddingTop, 0, 0);
+
+            mIsNeedDispatchTouchActionDown = true;
             return true;
+        }
+
+        if (mIsNeedDispatchTouchActionDown) {
+            mIsNeedDispatchTouchActionDown = false;
+            event.setAction(MotionEvent.ACTION_DOWN);
+            dispatchTouchEvent(event);
         }
         return false;
     }
@@ -628,7 +640,9 @@ public class BGARefreshLayout extends LinearLayout {
 
         if (mCurrentRefreshStatus == RefreshStatus.PULL_DOWN) {
             // 处于下拉刷新状态，松手时隐藏下拉刷新控件
-            hiddenRefreshHeaderView();
+            if (mCustomHeaderView == null || (mCustomHeaderView != null && mWholeHeaderView.getPaddingTop() < 0 && mWholeHeaderView.getPaddingTop() > mMinWholeHeaderViewPaddingTop)) {
+                hiddenRefreshHeaderView();
+            }
             mCurrentRefreshStatus = RefreshStatus.IDLE;
             handleRefreshStatusChanged();
         } else if (mCurrentRefreshStatus == RefreshStatus.RELEASE_REFRESH) {
