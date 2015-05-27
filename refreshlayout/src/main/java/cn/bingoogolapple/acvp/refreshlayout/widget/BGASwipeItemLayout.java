@@ -4,13 +4,22 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.GestureDetector;
+import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewParent;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.RelativeLayout;
+
+import java.lang.reflect.Method;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
 
@@ -55,10 +64,9 @@ public class BGASwipeItemLayout extends RelativeLayout {
     // 手动拖动打开和关闭代理
     private BGASwipeItemLayoutDelegate mDelegate;
 
-    private float mInterceptTouchDownX = -1;
-    private float mInterceptTouchDownY = -1;
-    private float mTouchDownX = -1;
-    private float mTouchDownY = -1;
+    private GestureDetectorCompat mGestureDetectorCompat;
+    private OnLongClickListener mOnLongClickListener;
+    private OnClickListener mOnClickListener;
 
     public BGASwipeItemLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -111,8 +119,9 @@ public class BGASwipeItemLayout extends RelativeLayout {
 
     private void initProperty() {
         mSwipeThreshold = dp2px(getContext(), SWIPE_THRESHOLD_DP);
-        mDragHelper = ViewDragHelper.create(this, 1.0f, mDragHelperCallback);
+        mDragHelper = ViewDragHelper.create(this, mDragHelperCallback);
         mDragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
+        mGestureDetectorCompat = new GestureDetectorCompat(getContext(), mSimpleOnGestureListener);
     }
 
     public void setDelegate(BGASwipeItemLayoutDelegate delegate) {
@@ -145,14 +154,120 @@ public class BGASwipeItemLayout extends RelativeLayout {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_CANCEL || ev.getAction() == MotionEvent.ACTION_UP) {
             mDragHelper.cancel();
-            return false;
         }
-        return mDragHelper.shouldInterceptTouchEvent(ev);
+        return mDragHelper.shouldInterceptTouchEvent(ev) && mGestureDetectorCompat.onTouchEvent(ev);
     }
+
+    @Override
+    public void setOnClickListener(OnClickListener l) {
+        super.setOnClickListener(l);
+        mOnClickListener = l;
+    }
+
+    @Override
+    public void setOnLongClickListener(OnLongClickListener l) {
+        super.setOnLongClickListener(l);
+        mOnLongClickListener = l;
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        if (insideAdapterView()) {
+            if (mOnClickListener == null) {
+                setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        performAdapterViewItemClick();
+                    }
+                });
+            }
+            if (mOnLongClickListener == null) {
+                setOnLongClickListener(new OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        performAdapterViewItemLongClick();
+                        return true;
+                    }
+                });
+            }
+        }
+    }
+
+    private void performAdapterViewItemClick() {
+        ViewParent t = getParent();
+        if (t instanceof AdapterView) {
+            AdapterView view = (AdapterView) t;
+            int p = view.getPositionForView(BGASwipeItemLayout.this);
+            if (p != AdapterView.INVALID_POSITION) {
+                view.performItemClick(view.getChildAt(p - view.getFirstVisiblePosition()), p, view.getAdapter().getItemId(p));
+            }
+        }
+    }
+
+    private boolean performAdapterViewItemLongClick() {
+        ViewParent t = getParent();
+        if (t instanceof AdapterView) {
+            AdapterView view = (AdapterView) t;
+            int p = view.getPositionForView(BGASwipeItemLayout.this);
+            if (p == AdapterView.INVALID_POSITION) return false;
+            long vId = view.getItemIdAtPosition(p);
+            boolean handled = false;
+            try {
+                Method m = AbsListView.class.getDeclaredMethod("performLongPress", View.class, int.class, long.class);
+                m.setAccessible(true);
+                handled = (boolean) m.invoke(view, BGASwipeItemLayout.this, p, vId);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                if (view.getOnItemLongClickListener() != null) {
+                    handled = view.getOnItemLongClickListener().onItemLongClick(view, BGASwipeItemLayout.this, p, vId);
+                }
+                if (handled) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
+            }
+            return handled;
+        }
+        return false;
+    }
+
+    private boolean insideAdapterView() {
+        return getAdapterView() != null;
+    }
+
+    private AdapterView getAdapterView() {
+        ViewParent t = getParent();
+        if (t instanceof AdapterView) {
+            return (AdapterView) t;
+        }
+        return null;
+    }
+
+    private GestureDetector.SimpleOnGestureListener mSimpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            Log.i(TAG, "distanceX = " + distanceX + "  distanceY" + distanceY);
+            return Math.abs(distanceX) > Math.abs(distanceY);
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            return performClick();
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            performLongClick();
+        }
+    };
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         mDragHelper.processTouchEvent(event);
+        mGestureDetectorCompat.onTouchEvent(event);
         return true;
     }
 
@@ -478,4 +593,5 @@ public class BGASwipeItemLayout extends RelativeLayout {
     public static int dp2px(Context context, int dpValue) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.getResources().getDisplayMetrics());
     }
+
 }
