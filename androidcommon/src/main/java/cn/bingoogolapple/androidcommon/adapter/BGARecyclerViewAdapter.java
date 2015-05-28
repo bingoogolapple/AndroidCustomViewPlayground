@@ -32,13 +32,13 @@ public abstract class BGARecyclerViewAdapter<M> extends RecyclerView.Adapter<BGA
     @Override
     public BGARecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         BGARecyclerViewHolder viewHolder = new BGARecyclerViewHolder(LayoutInflater.from(mContext).inflate(mItemLayoutId, parent, false), mOnRVItemClickListener, mOnRVItemLongClickListener);
-        viewHolder.setOnItemChildClickListener(mOnItemChildClickListener);
-        viewHolder.setOnItemChildLongClickListener(mOnItemChildLongClickListener);
-        setListener(viewHolder);
+        viewHolder.getViewHolderHelper().setOnItemChildClickListener(mOnItemChildClickListener);
+        viewHolder.getViewHolderHelper().setOnItemChildLongClickListener(mOnItemChildLongClickListener);
+        setItemChildListener(viewHolder.getViewHolderHelper());
         return viewHolder;
     }
 
-    protected abstract void setListener(BGARecyclerViewHolder viewHolder);
+    protected abstract void setItemChildListener(BGAViewHolderHelper viewHolderHelper);
 
     @Override
     public void onBindViewHolder(BGARecyclerViewHolder viewHolder, int position) {
@@ -87,12 +87,20 @@ public abstract class BGARecyclerViewAdapter<M> extends RecyclerView.Adapter<BGA
     }
 
     public void removeItem(M model) {
-        mDatas.remove(model);
-        notifyDataSetChanged();
+        removeItem(mDatas.indexOf(model));
     }
 
     public void addItem(int position, M model) {
         mDatas.add(position, model);
         notifyItemInserted(position);
+    }
+
+    public void setItem(int location, M newModel) {
+        mDatas.set(location, newModel);
+        notifyItemChanged(location);
+    }
+
+    public void setItem(M oldModel, M newModel) {
+        setItem(mDatas.indexOf(oldModel), newModel);
     }
 }

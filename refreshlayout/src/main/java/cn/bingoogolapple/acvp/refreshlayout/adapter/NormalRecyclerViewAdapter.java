@@ -4,9 +4,8 @@ import android.content.Context;
 
 import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
-import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
 import cn.bingoogolapple.androidcommon.adapter.BGARecyclerViewAdapter;
-import cn.bingoogolapple.androidcommon.adapter.BGARecyclerViewHolder;
+import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
@@ -19,9 +18,9 @@ public class NormalRecyclerViewAdapter extends BGARecyclerViewAdapter<RefreshMod
     }
 
     @Override
-    public void setListener(BGARecyclerViewHolder viewHolder) {
-        viewHolder.setItemChildClickListener(R.id.tv_item_normal_delete);
-        viewHolder.setItemChildLongClickListener(R.id.tv_item_normal_delete);
+    public void setItemChildListener(BGAViewHolderHelper viewHolderHelper) {
+        viewHolderHelper.setItemChildClickListener(R.id.tv_item_normal_delete);
+        viewHolderHelper.setItemChildLongClickListener(R.id.tv_item_normal_delete);
     }
 
     @Override

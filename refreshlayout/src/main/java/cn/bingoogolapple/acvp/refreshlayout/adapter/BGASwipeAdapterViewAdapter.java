@@ -6,7 +6,6 @@ import cn.bingoogolapple.acvp.refreshlayout.R;
 import cn.bingoogolapple.acvp.refreshlayout.mode.RefreshModel;
 import cn.bingoogolapple.acvp.refreshlayout.widget.BGASwipeItemLayout;
 import cn.bingoogolapple.androidcommon.adapter.BGAAdapterViewAdapter;
-import cn.bingoogolapple.androidcommon.adapter.BGAAdapterViewHolder;
 import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
 
 /**
@@ -22,8 +21,8 @@ public class BGASwipeAdapterViewAdapter extends BGAAdapterViewAdapter<RefreshMod
     }
 
     @Override
-    protected void setChildListener(BGAAdapterViewHolder viewHolder) {
-        BGASwipeItemLayout swipeItemLayout = viewHolder.getViewHolderHelper().getView(R.id.sil_item_bgaswipe_root);
+    protected void setItemChildListener(BGAViewHolderHelper viewHolderHelper) {
+        BGASwipeItemLayout swipeItemLayout = viewHolderHelper.getView(R.id.sil_item_bgaswipe_root);
         swipeItemLayout.setDelegate(new BGASwipeItemLayout.BGASwipeItemLayoutDelegate() {
             @Override
             public void onBGASwipeItemLayoutOpened(BGASwipeItemLayout swipeItemLayout) {
@@ -36,8 +35,8 @@ public class BGASwipeAdapterViewAdapter extends BGAAdapterViewAdapter<RefreshMod
                 mOpenedSil = null;
             }
         });
-        viewHolder.setItemChildClickListener(R.id.tv_item_bgaswipe_delete);
-        viewHolder.setItemChildLongClickListener(R.id.tv_item_bgaswipe_delete);
+        viewHolderHelper.setItemChildClickListener(R.id.tv_item_bgaswipe_delete);
+        viewHolderHelper.setItemChildLongClickListener(R.id.tv_item_bgaswipe_delete);
     }
 
     @Override

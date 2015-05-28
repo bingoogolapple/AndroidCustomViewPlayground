@@ -8,13 +8,10 @@ import android.view.ViewGroup;
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
  * 创建时间:15/5/21 上午1:00
- * 描述:
+ * 描述:适用于AdapterView的item的ViewHolder
  */
-public class BGAAdapterViewHolder implements View.OnClickListener, View.OnLongClickListener {
-    protected BGAOnItemChildClickListener mOnItemChildClickListener;
-    protected BGAOnItemChildLongClickListener mOnItemChildLongClickListener;
+public class BGAAdapterViewHolder {
     protected View mConvertView;
-    protected int mPosition;
     protected BGAViewHolderHelper mViewHolderHelper;
 
     private BGAAdapterViewHolder(Context context, ViewGroup parent, int layoutId) {
@@ -43,47 +40,8 @@ public class BGAAdapterViewHolder implements View.OnClickListener, View.OnLongCl
         return mViewHolderHelper;
     }
 
-    public void setOnItemChildClickListener(BGAOnItemChildClickListener onItemChildClickListener) {
-        mOnItemChildClickListener = onItemChildClickListener;
-    }
-
-    public void setItemChildClickListener(int viewId) {
-        mViewHolderHelper.getView(viewId).setOnClickListener(this);
-    }
-
-    public void setOnItemChildLongClickListener(BGAOnItemChildLongClickListener onItemChildLongClickListener) {
-        mOnItemChildLongClickListener = onItemChildLongClickListener;
-    }
-
-    public void setItemChildLongClickListener(int viewId) {
-        mViewHolderHelper.getView(viewId).setOnLongClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (mOnItemChildClickListener != null) {
-            mOnItemChildClickListener.onItemChildClick(v, getPosition());
-        }
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        if (mOnItemChildLongClickListener != null) {
-            return mOnItemChildLongClickListener.onItemChildLongClick(v, getPosition());
-        }
-        return false;
-    }
-
     public View getConvertView() {
         return mConvertView;
-    }
-
-    public void setPosition(int position) {
-        mPosition = position;
-    }
-
-    public int getPosition() {
-        return mPosition;
     }
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
  * 创建时间:15/5/21 上午1:05
- * 描述:
+ * 描述:AdapterView适配器
  */
 public abstract class BGAAdapterViewAdapter<M> extends BaseAdapter {
     protected final int mItemLayoutId;
@@ -42,17 +42,27 @@ public abstract class BGAAdapterViewAdapter<M> extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final BGAAdapterViewHolder viewHolder = BGAAdapterViewHolder.dequeueReusableAdapterViewHolder(mContext, convertView, parent, mItemLayoutId);
-        viewHolder.setPosition(position);
-        viewHolder.setOnItemChildClickListener(mOnItemChildClickListener);
-        viewHolder.setOnItemChildLongClickListener(mOnItemChildLongClickListener);
-        setChildListener(viewHolder);
+        viewHolder.getViewHolderHelper().setPosition(position);
+        viewHolder.getViewHolderHelper().setOnItemChildClickListener(mOnItemChildClickListener);
+        viewHolder.getViewHolderHelper().setOnItemChildLongClickListener(mOnItemChildLongClickListener);
+        setItemChildListener(viewHolder.getViewHolderHelper());
 
         fillData(viewHolder.getViewHolderHelper(), getItem(position), position);
         return viewHolder.getConvertView();
     }
 
-    protected abstract void setChildListener(BGAAdapterViewHolder viewHolder);
+    /**
+     * 为item的孩子节点设置监听器
+     *
+     * @param viewHolderHelper
+     */
+    protected abstract void setItemChildListener(BGAViewHolderHelper viewHolderHelper);
 
+    /**
+     * @param viewHolderHelper
+     * @param model
+     * @param position
+     */
     protected abstract void fillData(BGAViewHolderHelper viewHolderHelper, M model, int position);
 
     public void setOnItemChildClickListener(BGAOnItemChildClickListener onItemChildClickListener) {
@@ -90,6 +100,15 @@ public abstract class BGAAdapterViewAdapter<M> extends BaseAdapter {
     public void addItem(int position, M model) {
         mDatas.add(position, model);
         notifyDataSetChanged();
+    }
+
+    public void setItem(int location, M newModel) {
+        mDatas.set(location, newModel);
+        notifyDataSetChanged();
+    }
+
+    public void setItem(M oldModel, M newModel) {
+        setItem(mDatas.indexOf(oldModel), newModel);
     }
 
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 import cn.bingoogolapple.acvp.refreshlistview.R;
 import cn.bingoogolapple.acvp.refreshlistview.mode.RefreshModel;
 import cn.bingoogolapple.androidcommon.adapter.BGAAdapterViewAdapter;
-import cn.bingoogolapple.androidcommon.adapter.BGAAdapterViewHolder;
 import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
 
 /**
@@ -20,7 +19,7 @@ public class AdapterViewAdapter extends BGAAdapterViewAdapter<RefreshModel> {
     }
 
     @Override
-    protected void setChildListener(BGAAdapterViewHolder viewHolder) {
+    protected void setItemChildListener(BGAViewHolderHelper viewHolderHelper) {
     }
 
     @Override

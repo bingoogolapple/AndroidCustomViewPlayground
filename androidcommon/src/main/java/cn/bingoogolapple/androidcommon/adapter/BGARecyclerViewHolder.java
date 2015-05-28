@@ -4,12 +4,15 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+/**
+ * 作者:王浩 邮件:bingoogolapple@gmail.com
+ * 创建时间:15/5/28 上午7:28
+ * 描述:适用于RecyclerView的item的ViewHolder
+ */
 public class BGARecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
     protected Context mContext;
     protected BGAOnRVItemClickListener mOnRVItemClickListener;
     protected BGAOnRVItemLongClickListener mOnRVItemLongClickListener;
-    protected BGAOnItemChildClickListener mOnItemChildClickListener;
-    protected BGAOnItemChildLongClickListener mOnItemChildLongClickListener;
     protected BGAViewHolderHelper mViewHolderHelper;
 
     public BGARecyclerViewHolder(View itemView, BGAOnRVItemClickListener onRVItemClickListener, BGAOnRVItemLongClickListener onRVItemLongClickListener) {
@@ -20,34 +23,17 @@ public class BGARecyclerViewHolder extends RecyclerView.ViewHolder implements Vi
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
         mViewHolderHelper = new BGAViewHolderHelper(this.itemView);
+        mViewHolderHelper.setRecyclerViewHolder(this);
     }
 
     public BGAViewHolderHelper getViewHolderHelper() {
         return mViewHolderHelper;
     }
 
-    public void setOnItemChildClickListener(BGAOnItemChildClickListener onItemChildClickListener) {
-        mOnItemChildClickListener = onItemChildClickListener;
-    }
-
-    public void setItemChildClickListener(int viewId) {
-        mViewHolderHelper.getView(viewId).setOnClickListener(this);
-    }
-
-    public void setOnItemChildLongClickListener(BGAOnItemChildLongClickListener onItemChildLongClickListener) {
-        mOnItemChildLongClickListener = onItemChildLongClickListener;
-    }
-
-    public void setItemChildLongClickListener(int viewId) {
-        mViewHolderHelper.getView(viewId).setOnLongClickListener(this);
-    }
-
     @Override
     public void onClick(View v) {
         if (v.getId() == this.itemView.getId() && null != mOnRVItemClickListener) {
             mOnRVItemClickListener.onRVItemClick(v, getAdapterPosition());
-        } else if (mOnItemChildClickListener != null) {
-            mOnItemChildClickListener.onItemChildClick(v, getAdapterPosition());
         }
     }
 
@@ -55,8 +41,6 @@ public class BGARecyclerViewHolder extends RecyclerView.ViewHolder implements Vi
     public boolean onLongClick(View v) {
         if (v.getId() == this.itemView.getId() && null != mOnRVItemLongClickListener) {
             return mOnRVItemLongClickListener.onRVItemLongClick(v, getAdapterPosition());
-        } else if (mOnItemChildLongClickListener != null) {
-            return mOnItemChildLongClickListener.onItemChildLongClick(v, getAdapterPosition());
         }
         return false;
     }
