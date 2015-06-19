@@ -44,6 +44,17 @@ public class MainActivity extends AppCompatActivity {
                 container.removeView((View) object);
             }
         });
+    }
+
+    public void rotate(View v) {
+        mViewPager.setPageTransformer(true, new RotatePageTransformer());
+    }
+
+    public void zoom(View v) {
+        mViewPager.setPageTransformer(true, new ZoomPageTransformer());
+    }
+
+    public void depth(View v) {
         mViewPager.setPageTransformer(true, new DepthPageTransformer());
     }
 

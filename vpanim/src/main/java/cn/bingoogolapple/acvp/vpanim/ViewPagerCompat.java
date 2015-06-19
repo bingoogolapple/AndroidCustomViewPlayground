@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
  * 创建时间:15/6/19 11:23
- * 描述:
+ * 描述:通过继承+反射方式实现
  */
 public class ViewPagerCompat extends ViewPager {
     private boolean mScrollable = true;
@@ -48,7 +48,7 @@ public class ViewPagerCompat extends ViewPager {
             boolean needsPopulate = hasTransformer != (mPageTransformer != null);
             pageTransformerField.set(this, transformer);
 
-            Method setChildrenDrawingOrderEnabledCompatMethod = viewpagerClass.getDeclaredMethod("setChildrenDrawingOrderEnabledCompat", Boolean.class);
+            Method setChildrenDrawingOrderEnabledCompatMethod = viewpagerClass.getDeclaredMethod("setChildrenDrawingOrderEnabledCompat", boolean.class);
             setChildrenDrawingOrderEnabledCompatMethod.setAccessible(true);
             setChildrenDrawingOrderEnabledCompatMethod.invoke(this, hasTransformer);
 
