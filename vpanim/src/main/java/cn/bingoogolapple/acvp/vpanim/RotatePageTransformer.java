@@ -1,6 +1,5 @@
 package cn.bingoogolapple.acvp.vpanim;
 
-import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.nineoldandroids.view.ViewHelper;
@@ -10,19 +9,37 @@ import com.nineoldandroids.view.ViewHelper;
  * 创建时间:15/6/19 上午8:41
  * 描述:
  */
-public class RotatePageTransformer implements ViewPager.PageTransformer {
-    private static final float ROT_MAX = 15.0f;
+public class RotatePageTransformer extends BGAPageTransformer {
+    protected float mMaxRotation = 15.0f;
 
-    public void transformPage(View view, float position) {
-        if (position < -1) {
-            ViewHelper.setRotation(view, 0);
-        } else if (position <= 1) {
-            float rotation = (ROT_MAX * position);
-            ViewHelper.setPivotX(view, view.getMeasuredWidth() * 0.5f);
-            ViewHelper.setPivotY(view, view.getMeasuredHeight());
-            ViewHelper.setRotation(view, rotation);
-        } else {
-            ViewHelper.setRotation(view, 0);
+    public RotatePageTransformer() {
+    }
+
+    public RotatePageTransformer(float maxRotation) {
+        setMaxRotation(maxRotation);
+    }
+
+    @Override
+    public void handleInvisiblePage(View view, float position) {
+        ViewHelper.setRotation(view, 0);
+    }
+
+    @Override
+    public void handleLeftPage(View view, float position) {
+        float rotation = (mMaxRotation * position);
+        ViewHelper.setPivotX(view, view.getMeasuredWidth() * 0.5f);
+        ViewHelper.setPivotY(view, view.getMeasuredHeight());
+        ViewHelper.setRotation(view, rotation);
+    }
+
+    @Override
+    public void handleRightPage(View view, float position) {
+        handleLeftPage(view, position);
+    }
+
+    public void setMaxRotation(float maxRotation) {
+        if (maxRotation >= 0.0f && maxRotation <= 40.0f) {
+            mMaxRotation = maxRotation;
         }
     }
 }

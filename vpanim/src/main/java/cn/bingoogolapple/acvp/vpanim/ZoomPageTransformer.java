@@ -1,6 +1,5 @@
 package cn.bingoogolapple.acvp.vpanim;
 
-import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.nineoldandroids.view.ViewHelper;
@@ -10,29 +9,44 @@ import com.nineoldandroids.view.ViewHelper;
  * 创建时间:15/6/19 上午8:42
  * 描述:
  */
-public class ZoomPageTransformer implements ViewPager.PageTransformer {
-    private static final float MIN_SCALE = 0.85f;
-    private static final float MIN_ALPHA = 0.5f;
+public class ZoomPageTransformer extends BGAPageTransformer {
+    private float mMinScale = 0.85f;
+    private float mMinAlpha = 0.65f;
 
-    public void transformPage(View view, float position) {
-        int pageWidth = view.getWidth();
-        int pageHeight = view.getHeight();
-        if (position < -1) {
-            ViewHelper.setAlpha(view, 0);
-        } else if (position <= 1) {
-            float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
-            float vertMargin = pageHeight * (1 - scaleFactor) / 2;
-            float horzMargin = pageWidth * (1 - scaleFactor) / 2;
-            if (position < 0) {
-                ViewHelper.setTranslationX(view, horzMargin - vertMargin / 2);
-            } else {
-                ViewHelper.setTranslationX(view, -horzMargin + vertMargin / 2);
-            }
-            ViewHelper.setScaleX(view, scaleFactor);
-            ViewHelper.setScaleY(view, scaleFactor);
-            ViewHelper.setAlpha(view, MIN_ALPHA + (scaleFactor - MIN_SCALE) / (1 - MIN_SCALE) * (1 - MIN_ALPHA));
+    @Override
+    public void handleInvisiblePage(View view, float position) {
+        ViewHelper.setAlpha(view, 0);
+    }
+
+    @Override
+    public void handleLeftPage(View view, float position) {
+        float scaleFactor = Math.max(mMinScale, 1 - Math.abs(position));
+        float vertMargin = view.getHeight() * (1 - scaleFactor) / 2;
+        float horzMargin = view.getWidth() * (1 - scaleFactor) / 2;
+        if (position < 0) {
+            ViewHelper.setTranslationX(view, horzMargin - vertMargin / 2);
         } else {
-            ViewHelper.setAlpha(view, 0);
+            ViewHelper.setTranslationX(view, -horzMargin + vertMargin / 2);
+        }
+        ViewHelper.setScaleX(view, scaleFactor);
+        ViewHelper.setScaleY(view, scaleFactor);
+        ViewHelper.setAlpha(view, mMinAlpha + (scaleFactor - mMinScale) / (1 - mMinScale) * (1 - mMinAlpha));
+    }
+
+    @Override
+    public void handleRightPage(View view, float position) {
+        handleLeftPage(view, position);
+    }
+
+    public void setMinAlpha(float minAlpha) {
+        if (minAlpha >= 0.6f && minAlpha <= 1.0f) {
+            mMinAlpha = minAlpha;
+        }
+    }
+
+    public void setMinScale(float minScale) {
+        if (minScale >= 0.6f && minScale <= 1.0f) {
+            mMinScale = minScale;
         }
     }
 }

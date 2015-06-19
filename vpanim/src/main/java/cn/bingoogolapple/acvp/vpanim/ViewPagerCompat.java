@@ -25,7 +25,6 @@ public class ViewPagerCompat extends ViewPager {
         super(context, attrs);
     }
 
-
     public void setPageTransformer(boolean reverseDrawingOrder, ViewPager.PageTransformer transformer) {
         /**
          继承ViewPager，重写setPageTransformer方法，移除版本限制，通过反射设置参数和方法
