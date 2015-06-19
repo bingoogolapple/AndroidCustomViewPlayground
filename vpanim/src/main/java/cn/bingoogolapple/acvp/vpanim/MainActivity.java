@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mViewPager = (ViewPagerCompat) findViewById(R.id.viewpager);
+//        mViewPager.setScrollable(false);
         mViewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {

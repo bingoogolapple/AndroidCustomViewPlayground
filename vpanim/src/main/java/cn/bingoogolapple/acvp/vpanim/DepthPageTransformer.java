@@ -11,7 +11,7 @@ import com.nineoldandroids.view.ViewHelper;
  * 描述:
  */
 public class DepthPageTransformer implements ViewPager.PageTransformer {
-    private static final float MIN_SCALE = 0.75f;
+    private static final float MIN_SCALE = 0.8f;
 
     public void transformPage(View view, float position) {
         int pageWidth = view.getWidth();
