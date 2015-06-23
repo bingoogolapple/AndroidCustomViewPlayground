@@ -72,15 +72,17 @@ public class FlowLayout extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        if (changed) {
-            int rowCount = mRows.size();
-            int top = getPaddingTop();
-            Row row;
-            for (int i = 0; i < rowCount; i++) {
-                row = mRows.get(i);
-                row.layout(top);
-                top += row.mHeight + mVerticalChildGap;
+        int rowCount = mRows.size();
+        int top = getPaddingTop();
+        Row row;
+        for (int i = 0; i < rowCount; i++) {
+            row = mRows.get(i);
+            if (i != rowCount - 1) {
+                row.layout(true, top);
+            } else {
+                row.layout(false, top);
             }
+            top += row.mHeight + mVerticalChildGap;
         }
     }
 
@@ -117,7 +119,11 @@ public class FlowLayout extends ViewGroup {
             return mNewWidth > mMaxWidth;
         }
 
-        public void layout(int top) {
+        public void layout(boolean isNeedSplit, int top) {
+            if (mViews.size() == 0) {
+                return;
+            }
+
             int left = getPaddingLeft();
             int count = mViews.size();
             int splitWidth = (mMaxWidth - mWidth) / count;
@@ -127,12 +133,19 @@ public class FlowLayout extends ViewGroup {
                 int childWidth = view.getMeasuredWidth();
                 int childHeight = view.getMeasuredHeight();
                 int topOffset = (int) ((mHeight - childHeight) / 2.0 + 0.5);
-                childWidth = childWidth + splitWidth;
-                view.getLayoutParams().width = childWidth;
-                if (splitWidth > 0) {
-                    int widthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY);
-                    int heightMeasureSpec = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY);
-                    view.measure(widthMeasureSpec, heightMeasureSpec);
+                if (isNeedSplit) {
+                    childWidth = childWidth + splitWidth;
+                    view.getLayoutParams().width = childWidth;
+                    if (splitWidth > 0) {
+                        /**
+                         * 1.EXACTLY:100dp,match_parent
+                         * 2.AT_MOST:wrap_content
+                         * 3.UNSPCIFIED:子控件想要多大就多大，很少见（ScrollView）
+                         */
+                        int widthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY);
+                        int heightMeasureSpec = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY);
+                        view.measure(widthMeasureSpec, heightMeasureSpec);
+                    }
                 }
                 view.layout(left, top + topOffset, left + childWidth, top + topOffset + childHeight);
 

@@ -1,17 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/MatchMatch.Vertical">
 
-    <Button
-        style="@style/MatchWrap"
-        android:background="@drawable/selector_tag"
-        android:onClick="onClick"
-        android:text="添加"
-        android:textColor="@android:color/white" />
-
     <cn.bingoogolapple.acvp.flowlayout.FlowLayout
         style="@style/MatchWrap"
         android:background="#8E92DB"
-        android:padding="20dp">
+        android:padding="10dp">
 
         <TextView
             style="@style/TvMainTag"
@@ -58,19 +51,30 @@
         <TextView
             style="@style/TvMainTag"
             android:text="3" />
-
-        <TextView
-            style="@style/TvMainTag"
-            android:text="Hesdfsdfsdfsdfsdfllo" />
-
-        <TextView
-            style="@style/TvMainTag"
-            android:text="sdfsdfsfsdfsdl" />
     </cn.bingoogolapple.acvp.flowlayout.FlowLayout>
 
     <cn.bingoogolapple.acvp.flowlayout.FlowLayout
         android:id="@+id/flowlayout"
         style="@style/MatchWrap"
         android:background="#8a9a22"
-        android:padding="20dp" />
+        android:padding="5dp" />
+
+    <LinearLayout
+        style="@style/MatchWrap.Horizontal"
+        android:gravity="center_vertical"
+        android:padding="10dp">
+
+        <EditText
+            android:id="@+id/et_main_tag"
+            style="@style/AutoWrap" />
+
+        <Button
+            style="@style/WrapWrap"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/selector_tag"
+            android:onClick="onClick"
+            android:text="添加"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
 </LinearLayout>
