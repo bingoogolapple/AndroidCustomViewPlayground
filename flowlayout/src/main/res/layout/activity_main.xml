@@ -1,63 +1,74 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/MatchMatch.Vertical">
 
     <cn.bingoogolapple.acvp.flowlayout.FlowLayout
         style="@style/MatchWrap"
         android:background="#8E92DB"
-        android:padding="10dp">
+        android:padding="10dp"
+        app:fl_horizontalChildGap="15dp"
+        app:fl_verticalChildGap="10dp">
 
         <TextView
             style="@style/TvMainTag"
-            android:text="Hello" />
+            android:text="bingo" />
+
+        <TextView
+            style="@style/TvMainTag"
+            android:text="googol" />
+
+        <TextView
+            style="@style/TvMainTag"
+            android:text="apple" />
+
+        <TextView
+            style="@style/TvMainTag"
+            android:text="bingoogolapple" />
 
         <TextView
             style="@style/TvMainTag"
             android:layout_height="40dp"
+            android:text="HelloWorld" />
+
+        <TextView
+            style="@style/TvMainTag"
             android:text="Android" />
 
         <TextView
             style="@style/TvMainTag"
-            android:text="Welcome" />
+            android:text="iOS" />
 
         <TextView
             style="@style/TvMainTag"
-            android:text="Hello" />
+            android:text="PHP" />
 
         <TextView
             style="@style/TvMainTag"
-            android:text="Hesdfsdfsdfsdfsdfllo" />
+            android:text="PhoneGap" />
 
         <TextView
             style="@style/TvMainTag"
-            android:text="sdfsdfsfsdfsdl" />
+            android:text="Cordova" />
 
         <TextView
             style="@style/TvMainTag"
-            android:layout_height="35dp"
-            android:text="h" />
+            android:text="AppCan" />
 
         <TextView
             style="@style/TvMainTag"
-            android:text="3" />
+            android:text="React Native" />
 
         <TextView
             style="@style/TvMainTag"
-            android:text="3" />
+            android:text="Ionic" />
 
-        <TextView
-            style="@style/TvMainTag"
-            android:text="Hello" />
-
-        <TextView
-            style="@style/TvMainTag"
-            android:text="3" />
     </cn.bingoogolapple.acvp.flowlayout.FlowLayout>
 
     <cn.bingoogolapple.acvp.flowlayout.FlowLayout
         android:id="@+id/flowlayout"
         style="@style/MatchWrap"
         android:background="#8a9a22"
-        android:padding="5dp" />
+        android:padding="10dp" />
 
     <LinearLayout
         style="@style/MatchWrap.Horizontal"

@@ -1,6 +1,7 @@
 package cn.bingoogolapple.acvp.flowlayout;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -24,8 +25,33 @@ public class FlowLayout extends ViewGroup {
 
     public FlowLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initDefaultAttrs(context);
+        initCustomAttrs(context, attrs);
+    }
+
+    private void initDefaultAttrs(Context context) {
         mHorizontalChildGap = dp2px(context, 10);
         mVerticalChildGap = dp2px(context, 10);
+    }
+
+    private void initCustomAttrs(Context context, AttributeSet attrs) {
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout);
+        final int N = typedArray.getIndexCount();
+        for (int i = 0; i < N; i++) {
+            initCustomAttr(typedArray.getIndex(i), typedArray);
+        }
+        typedArray.recycle();
+    }
+
+    private void initCustomAttr(int attr, TypedArray typedArray) {
+        if (attr == R.styleable.FlowLayout_fl_horizontalChildGap) {
+            /**
+             * getDimension和getDimensionPixelOffset的功能差不多,都是获取某个dimen的值,如果是dp或sp的单位,将其乘以density,如果是px,则不乘;两个函数的区别是一个返回float,一个返回int. getDimensionPixelSize则不管写的是dp还是sp还是px,都会乘以denstiy.
+             */
+            mHorizontalChildGap = typedArray.getDimensionPixelOffset(attr, mHorizontalChildGap);
+        } else if (attr == R.styleable.FlowLayout_fl_verticalChildGap) {
+            mVerticalChildGap = typedArray.getDimensionPixelOffset(attr, mVerticalChildGap);
+        }
     }
 
     @Override

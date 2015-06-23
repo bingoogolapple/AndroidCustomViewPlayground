@@ -2,7 +2,7 @@ package cn.bingoogolapple.acvp.flowlayout;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class MainActivity extends ActionBarActivity {
-    private String[] mVals = new String[]{"Hello", "AndroidAndroidAndroid", "AndroidWelcome", "Welcome", "Button", "HelloWelcome", "Button"};
+public class MainActivity extends AppCompatActivity {
+    private String[] mVals = new String[]{"bingo", "googol", "apple", "bingoogolapple"};
     private FlowLayout mFlowLayout;
     private EditText mTagEt;
 
