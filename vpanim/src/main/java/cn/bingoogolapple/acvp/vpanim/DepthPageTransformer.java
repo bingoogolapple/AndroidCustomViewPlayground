@@ -12,6 +12,13 @@ import com.nineoldandroids.view.ViewHelper;
 public class DepthPageTransformer extends BGAPageTransformer {
     private float mMinScale = 0.8f;
 
+    public DepthPageTransformer() {
+    }
+
+    public DepthPageTransformer(float minScale) {
+        setMinScale(minScale);
+    }
+
     @Override
     public void handleInvisiblePage(View view, float position) {
         ViewHelper.setAlpha(view, 0);
@@ -28,10 +35,10 @@ public class DepthPageTransformer extends BGAPageTransformer {
     @Override
     public void handleRightPage(View view, float position) {
         ViewHelper.setAlpha(view, 1 - position);
-        ViewHelper.setTranslationX(view, view.getWidth() * -position);
-        float scaleFactor = mMinScale + (1 - mMinScale) * (1 - Math.abs(position));
-        ViewHelper.setScaleX(view, scaleFactor);
-        ViewHelper.setScaleY(view, scaleFactor);
+        ViewHelper.setTranslationX(view, -view.getWidth() * position);
+        float scale = mMinScale + (1 - mMinScale) * (1 - position);
+        ViewHelper.setScaleX(view, scale);
+        ViewHelper.setScaleY(view, scale);
     }
 
     public void setMinScale(float minScale) {

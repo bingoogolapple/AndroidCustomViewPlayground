@@ -13,6 +13,14 @@ public class ZoomPageTransformer extends BGAPageTransformer {
     private float mMinScale = 0.85f;
     private float mMinAlpha = 0.65f;
 
+    public ZoomPageTransformer() {
+    }
+
+    public ZoomPageTransformer(float minAlpha, float minScale) {
+        setMinAlpha(minAlpha);
+        setMinScale(minScale);
+    }
+
     @Override
     public void handleInvisiblePage(View view, float position) {
         ViewHelper.setAlpha(view, 0);
@@ -20,22 +28,24 @@ public class ZoomPageTransformer extends BGAPageTransformer {
 
     @Override
     public void handleLeftPage(View view, float position) {
-        float scaleFactor = Math.max(mMinScale, 1 - Math.abs(position));
-        float vertMargin = view.getHeight() * (1 - scaleFactor) / 2;
-        float horzMargin = view.getWidth() * (1 - scaleFactor) / 2;
-        if (position < 0) {
-            ViewHelper.setTranslationX(view, horzMargin - vertMargin / 2);
-        } else {
-            ViewHelper.setTranslationX(view, -horzMargin + vertMargin / 2);
-        }
-        ViewHelper.setScaleX(view, scaleFactor);
-        ViewHelper.setScaleY(view, scaleFactor);
-        ViewHelper.setAlpha(view, mMinAlpha + (scaleFactor - mMinScale) / (1 - mMinScale) * (1 - mMinAlpha));
+        float scale = Math.max(mMinScale, 1 + position);
+        float vertMargin = view.getHeight() * (1 - scale) / 2;
+        float horzMargin = view.getWidth() * (1 - scale) / 2;
+        ViewHelper.setTranslationX(view, horzMargin - vertMargin / 2);
+        ViewHelper.setScaleX(view, scale);
+        ViewHelper.setScaleY(view, scale);
+        ViewHelper.setAlpha(view, mMinAlpha + (scale - mMinScale) / (1 - mMinScale) * (1 - mMinAlpha));
     }
 
     @Override
     public void handleRightPage(View view, float position) {
-        handleLeftPage(view, position);
+        float scale = Math.max(mMinScale, 1 - position);
+        float vertMargin = view.getHeight() * (1 - scale) / 2;
+        float horzMargin = view.getWidth() * (1 - scale) / 2;
+        ViewHelper.setTranslationX(view, -horzMargin + vertMargin / 2);
+        ViewHelper.setScaleX(view, scale);
+        ViewHelper.setScaleY(view, scale);
+        ViewHelper.setAlpha(view, mMinAlpha + (scale - mMinScale) / (1 - mMinScale) * (1 - mMinAlpha));
     }
 
     public void setMinAlpha(float minAlpha) {

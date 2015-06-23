@@ -8,17 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-
 public class MainActivity extends AppCompatActivity {
-    private ViewPagerCompat mViewPager;
-    private static final int[] mImgIds = new int[]{R.mipmap.guide_1, R.mipmap.guide_2, R.mipmap.guide_3};
+    private HorizontalViewPager mViewPager;
+    private static final int[] mImgIds = new int[]{R.mipmap.guide_1, R.mipmap.guide_2, R.mipmap.guide_3, R.mipmap.guide_4};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mViewPager = (ViewPagerCompat) findViewById(R.id.viewpager);
+        mViewPager = (HorizontalViewPager) findViewById(R.id.viewpager);
 //        mViewPager.setScrollable(false);
 
         mViewPager.setAdapter(new AnimPagerAdapter(this));
@@ -66,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
         public Object instantiateItem(ViewGroup container, int position) {
             ImageView imageView = new ImageView(mContext);
             imageView.setImageResource(mImgIds[position]);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            // 这里采用了.9图片，所以用FIT_XY
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             container.addView(imageView);
             return imageView;
         }

@@ -14,14 +14,14 @@ import java.lang.reflect.Method;
  * 创建时间:15/6/19 11:23
  * 描述:通过继承+反射方式实现
  */
-public class ViewPagerCompat extends ViewPager {
+public class HorizontalViewPager extends ViewPager {
     private boolean mScrollable = true;
 
-    public ViewPagerCompat(Context context) {
+    public HorizontalViewPager(Context context) {
         super(context);
     }
 
-    public ViewPagerCompat(Context context, AttributeSet attrs) {
+    public HorizontalViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
