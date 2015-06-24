@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    private String[] mVals = new String[]{"bingo", "googol", "apple", "bingoogolapple"};
+    private String[] mVals = new String[]{"bingo", "googol", "apple", "bingoogolapple", "helloworld"};
     private FlowLayout mFlowLayout;
     private EditText mTagEt;
 

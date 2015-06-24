@@ -14,6 +14,7 @@ public class FlowLayout extends ViewGroup {
     private List<Row> mRows = new ArrayList<>();
     private int mHorizontalChildGap;
     private int mVerticalChildGap;
+    private boolean mIsDistributionWhiteSpacing = true;
 
     public FlowLayout(Context context) {
         this(context, null);
@@ -51,6 +52,8 @@ public class FlowLayout extends ViewGroup {
             mHorizontalChildGap = typedArray.getDimensionPixelOffset(attr, mHorizontalChildGap);
         } else if (attr == R.styleable.FlowLayout_fl_verticalChildGap) {
             mVerticalChildGap = typedArray.getDimensionPixelOffset(attr, mVerticalChildGap);
+        } else if (attr == R.styleable.FlowLayout_fl_isDistributionWhiteSpacing) {
+            mIsDistributionWhiteSpacing = typedArray.getBoolean(attr, mIsDistributionWhiteSpacing);
         }
     }
 
@@ -103,7 +106,7 @@ public class FlowLayout extends ViewGroup {
         Row row;
         for (int i = 0; i < rowCount; i++) {
             row = mRows.get(i);
-            if (i != rowCount - 1) {
+            if (mIsDistributionWhiteSpacing && i != rowCount - 1) {
                 row.layout(true, top);
             } else {
                 row.layout(false, top);
@@ -145,6 +148,11 @@ public class FlowLayout extends ViewGroup {
             return mNewWidth > mMaxWidth;
         }
 
+        /**
+         *
+         * @param isNeedSplit 是否需要平均分配空白区域给每一个子孩子
+         * @param top
+         */
         public void layout(boolean isNeedSplit, int top) {
             if (mViews.size() == 0) {
                 return;
@@ -158,7 +166,6 @@ public class FlowLayout extends ViewGroup {
                 view = mViews.get(i);
                 int childWidth = view.getMeasuredWidth();
                 int childHeight = view.getMeasuredHeight();
-                int topOffset = (int) ((mHeight - childHeight) / 2.0 + 0.5);
                 if (isNeedSplit) {
                     childWidth = childWidth + splitWidth;
                     view.getLayoutParams().width = childWidth;
@@ -173,6 +180,8 @@ public class FlowLayout extends ViewGroup {
                         view.measure(widthMeasureSpec, heightMeasureSpec);
                     }
                 }
+
+                int topOffset = (int) ((mHeight - childHeight) / 2.0 + 0.5);
                 view.layout(left, top + topOffset, left + childWidth, top + topOffset + childHeight);
 
                 left += childWidth + mHorizontalChildGap;

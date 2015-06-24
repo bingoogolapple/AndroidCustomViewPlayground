@@ -7,7 +7,8 @@
         android:background="#8E92DB"
         android:padding="10dp"
         app:fl_horizontalChildGap="15dp"
-        app:fl_verticalChildGap="10dp">
+        app:fl_verticalChildGap="10dp"
+        app:fl_isDistributionWhiteSpacing="true">
 
         <TextView
             style="@style/TvMainTag"
@@ -68,7 +69,8 @@
         android:id="@+id/flowlayout"
         style="@style/MatchWrap"
         android:background="#8a9a22"
-        android:padding="10dp" />
+        android:padding="10dp"
+        app:fl_isDistributionWhiteSpacing="true"/>
 
     <LinearLayout
         style="@style/MatchWrap.Horizontal"
