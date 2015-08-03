@@ -1,0 +1,12 @@
+<cn.bingoogolapple.scroll.BounceableLinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:text="向下拉动后松开" />
+</cn.bingoogolapple.scroll.BounceableLinearLayout>

@@ -32,6 +32,7 @@ public class VerticalPageScrollView extends ViewGroup {
         mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                Log.i(TAG, "distanceY = " + distanceY);
                 if (getScrollY() + distanceY >= 0 && getScrollY() + distanceY <= getHeight() * (getChildCount() - 1)) {
                     scrollBy(0, (int) distanceY);
                 }

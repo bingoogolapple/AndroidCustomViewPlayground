@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch.Vertical">
+
+    <Button
+        style="@style/MatchWrap"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:onClick="demo1"
+        android:text="demo1" />
+
+    <Button
+        style="@style/MatchWrap"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:onClick="demo2"
+        android:text="demo2" />
+
+    <Button
+        style="@style/MatchWrap"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:onClick="demo3"
+        android:text="demo3" />
+
+    <Button
+        style="@style/MatchWrap"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:onClick="demo4"
+        android:text="demo4" />
+
+</LinearLayout>

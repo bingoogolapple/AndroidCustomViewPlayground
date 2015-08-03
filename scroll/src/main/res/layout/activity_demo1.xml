@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch">
+
+    <LinearLayout
+        android:id="@+id/viewGroup"
+        style="@style/WrapWrap.Vertical"
+        android:layout_marginTop="20dip"
+        android:background="#f00"
+        android:padding="10dp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="#0f0"
+            android:text="可移动可移动" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="#00f"
+            android:text="不可移动" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/leftButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dip"
+        android:text="TextView移向屏幕的左边" />
+
+    <Button
+        android:id="@+id/rightButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="250dip"
+        android:text="TextView移向屏幕的右边" />
+
+</RelativeLayout>
