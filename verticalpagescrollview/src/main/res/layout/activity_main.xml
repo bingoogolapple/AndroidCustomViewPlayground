@@ -1,10 +1,48 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <RadioGroup
+        android:id="@+id/radiogroup"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <RadioButton
+            android:id="@+id/rb_main_1"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:checked="true"
+            android:text="1"/>
+        <RadioButton
+            android:id="@+id/rb_main_2"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:text="2"/>
+        <RadioButton
+            android:id="@+id/rb_main_3"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:text="3"/>
+        <RadioButton
+            android:id="@+id/rb_main_4"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:text="4"/>
+        <RadioButton
+            android:id="@+id/rb_main_5"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:text="5"/>
+    </RadioGroup>
 
     <cn.bingoogolapple.verticalpagescrollview.VerticalPageScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-</RelativeLayout>
+</LinearLayout>

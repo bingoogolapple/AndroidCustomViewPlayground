@@ -20,6 +20,7 @@ public class VerticalPageScrollView extends ViewGroup {
     private int mStartY;
     private int mCurrentItem;
     private Scroller mScroller;
+    private VerticalPageScrollViewDelegate mDelegate;
 
     public VerticalPageScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -31,7 +32,9 @@ public class VerticalPageScrollView extends ViewGroup {
         mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                scrollBy(0, (int) distanceY);
+                if (getScrollY() + distanceY >= 0 && getScrollY() + distanceY <= getHeight() * (getChildCount() - 1)) {
+                    scrollBy(0, (int) distanceY);
+                }
                 return true;
             }
 
@@ -43,12 +46,21 @@ public class VerticalPageScrollView extends ViewGroup {
                 } else if (velocityY < -1000) {
                     tempItem++;
                 }
-                moveTo(tempItem);
+                setCurrentItem(tempItem);
                 Log.i(TAG, "onFling");
                 return super.onFling(e1, e2, velocityX, velocityY);
             }
         });
 
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        for (int i = 0; i < getChildCount(); i++) {
+            View view = getChildAt(i);
+            view.measure(widthMeasureSpec, heightMeasureSpec);
+        }
     }
 
     @Override
@@ -58,6 +70,35 @@ public class VerticalPageScrollView extends ViewGroup {
             View view = getChildAt(i);
             view.layout(0, i * getHeight(), getWidth(), getHeight() * (i + 1));
         }
+    }
+
+    private int mDownX;
+    private int mDownY;
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        boolean result = false;
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mGestureDetector.onTouchEvent(ev);
+                mDownX = (int) ev.getX();
+                mDownY = (int) ev.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                int endX = (int) ev.getX();
+                int endY = (int) ev.getY();
+                int dX = Math.abs(endX - mDownX);
+                int dY = Math.abs(endY - mDownY);
+                if (dY > dX) {
+                    result = true;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+
+                break;
+        }
+        return result;
     }
 
     @Override
@@ -76,25 +117,41 @@ public class VerticalPageScrollView extends ViewGroup {
                 } else if (mStartY - endY > getHeight() / 2) {
                     tempItem++;
                 }
-                moveTo(tempItem);
+                setCurrentItem(tempItem);
                 Log.i(TAG, "ACTION_UP");
                 break;
         }
         return true;
     }
 
-    private void moveTo(int tempItem) {
+    public void setCurrentItem(int tempItem) {
+        setCurrentItem(tempItem, true);
+    }
+
+    public void setCurrentItem(int tempItem, boolean isSmooth) {
         if (tempItem < 0) {
             tempItem = 0;
         }
         if (tempItem > getChildCount() - 1) {
             tempItem = getChildCount() - 1;
         }
-        mCurrentItem = tempItem;
+        if (mCurrentItem != tempItem && mDelegate != null) {
+            mDelegate.onPageSelected(tempItem);
+        }
 
-        int distanceY = getHeight() * mCurrentItem - getScrollY();
-        mScroller.startScroll(0, getScrollY(), 0, distanceY);
-        invalidate();
+        if (isSmooth) {
+            int diff = Math.abs(mCurrentItem - tempItem);
+            int duration = diff == 0 ? 250 : diff * 250;
+            mCurrentItem = tempItem;
+
+            int distanceY = getHeight() * mCurrentItem - getScrollY();
+            mScroller.startScroll(0, getScrollY(), 0, distanceY, duration);
+            invalidate();
+        } else {
+            mCurrentItem = tempItem;
+            scrollTo(0, getHeight() * mCurrentItem);
+            invalidate();
+        }
     }
 
     @Override
@@ -103,5 +160,13 @@ public class VerticalPageScrollView extends ViewGroup {
             scrollTo(0, mScroller.getCurrY());
             invalidate();
         }
+    }
+
+    public void setDelegate(VerticalPageScrollViewDelegate delegate) {
+        mDelegate = delegate;
+    }
+
+    public interface VerticalPageScrollViewDelegate {
+        void onPageSelected(int position);
     }
 }
