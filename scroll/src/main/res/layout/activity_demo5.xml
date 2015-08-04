@@ -1,6 +1,69 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.bingoogolapple.scroll.BGAScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
     style="@style/MatchMatch.Vertical">
 
+    <LinearLayout style="@style/MatchMatch.Vertical">
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/parallax" />
 
-</LinearLayout>
+        <TextView
+            style="@style/MatchWrap"
+            android:gravity="center"
+            android:text="测试文本"
+            android:textSize="70sp" />
+
+        <TextView
+            style="@style/MatchWrap"
+            android:gravity="center"
+            android:text="测试文本"
+            android:textSize="70sp" />
+
+        <TextView
+            style="@style/MatchWrap"
+            android:gravity="center"
+            android:text="测试文本"
+            android:textSize="70sp" />
+
+        <TextView
+            style="@style/MatchWrap"
+            android:gravity="center"
+            android:text="测试文本"
+            android:textSize="70sp" />
+
+        <TextView
+            style="@style/MatchWrap"
+            android:gravity="center"
+            android:text="测试文本"
+            android:textSize="70sp" />
+
+        <TextView
+            style="@style/MatchWrap"
+            android:gravity="center"
+            android:text="测试文本"
+            android:textSize="70sp" />
+
+        <TextView
+            style="@style/MatchWrap"
+            android:gravity="center"
+            android:text="测试文本"
+            android:textSize="70sp" />
+
+        <TextView
+            style="@style/MatchWrap"
+            android:gravity="center"
+            android:text="测试文本"
+            android:textSize="70sp" />
+
+        <TextView
+            style="@style/MatchWrap"
+            android:gravity="center"
+            android:text="测试文本"
+            android:textSize="70sp" />
+    </LinearLayout>
+
+</cn.bingoogolapple.scroll.BGAScrollView>

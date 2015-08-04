@@ -29,4 +29,10 @@
         android:onClick="demo4"
         android:text="demo4" />
 
+    <Button
+        style="@style/MatchWrap"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:onClick="demo5"
+        android:text="demo5" />
 </LinearLayout>
