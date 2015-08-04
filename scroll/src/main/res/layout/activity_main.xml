@@ -35,4 +35,18 @@
         android:gravity="center"
         android:onClick="demo5"
         android:text="demo5" />
+
+    <Button
+        style="@style/MatchWrap"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:onClick="demo6"
+        android:text="demo6" />
+
+    <Button
+        style="@style/MatchWrap"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:onClick="demo7"
+        android:text="demo7" />
 </LinearLayout>
