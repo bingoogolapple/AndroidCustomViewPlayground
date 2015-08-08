@@ -1,26 +1,29 @@
 package cn.bingoogolapple.acvp.touchevent.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
 import cn.bingoogolapple.acvp.touchevent.R;
 import cn.bingoogolapple.acvp.touchevent.util.TouchEventUtil;
-import cn.bingoogolapple.bgaannotation.BGAA;
-import cn.bingoogolapple.bgaannotation.BGAALayout;
 
 /**
  * dispatchTouchEvent  -->  onInterceptTouchEvent  -->  onTouchEvent
  */
-@BGAALayout(R.layout.activity_main)
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BGAA.injectView2Activity(this);
+        setContentView(R.layout.activity_main);
+    }
+
+    public void demo2(View v) {
+        startActivity(new Intent(this, Demo2Activity.class));
     }
 
     @Override

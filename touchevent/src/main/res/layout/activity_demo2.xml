@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.bingoogolapple.acvp.touchevent.widget.CustomLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch.Horizontal">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview1"
+        style="@style/AutoMatch"
+        android:scrollbars="none" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview2"
+        style="@style/AutoMatch"
+        android:scrollbars="none" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview3"
+        style="@style/AutoMatch"
+        android:scrollbars="none" />
+</cn.bingoogolapple.acvp.touchevent.widget.CustomLinearLayout>

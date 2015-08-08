@@ -1,7 +1,12 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/MatchMatch"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch.Vertical"
     android:padding="70dp"
     android:background="#00f">
+
+    <Button
+        style="@style/MatchWrap"
+        android:onClick="demo2"
+        android:text="demo2" />
 
     <cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup1
         style="@style/MatchMatch"
@@ -21,4 +26,4 @@
         </cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup2>
     </cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup1>
 
-</RelativeLayout>
+</LinearLayout>
