@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch.Vertical"
+    android:background="#9674FC">
+
+    <cn.bingoogolapple.acvp.velocitytracker.BGAStickyNavRefreshLayout
+        android:id="@+id/stickyNavRefreshLayout"
+        style="@style/MatchMatch"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="#179641"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:id="@+id/tv_main_header"
+            style="@style/MatchWrap"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="#B2DB4D"
+            android:gravity="center"
+            android:paddingBottom="50dp"
+            android:paddingTop="50dp"
+            android:text="顶部视图"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+
+        <TextView
+            style="@style/MatchWrap"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="#50E746"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="导航视图"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_main_data"
+            style="@style/MatchMatch"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/white"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:scrollbars="none" />
+
+    </cn.bingoogolapple.acvp.velocitytracker.BGAStickyNavRefreshLayout>
+</LinearLayout>
