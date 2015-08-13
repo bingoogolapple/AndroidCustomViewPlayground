@@ -163,28 +163,28 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
                     if (differentY > 0 && !mIsInControl) {
                         mIsInControl = true;
 
-                        ev.setAction(MotionEvent.ACTION_CANCEL);
-                        MotionEvent newEvent = MotionEvent.obtain(ev);
-                        dispatchTouchEvent(ev);
-
-                        newEvent.setAction(MotionEvent.ACTION_DOWN);
-                        return dispatchTouchEvent(newEvent);
+                        return resetDispatchTouchEvent(ev);
                     }
 
                     if (differentY < 0 && mIsInControl) {
                         mIsInControl = false;
 
-                        ev.setAction(MotionEvent.ACTION_CANCEL);
-                        MotionEvent newEvent = MotionEvent.obtain(ev);
-                        dispatchTouchEvent(ev);
-
-                        newEvent.setAction(MotionEvent.ACTION_DOWN);
-                        return dispatchTouchEvent(newEvent);
+                        return resetDispatchTouchEvent(ev);
                     }
                 }
                 break;
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    private boolean resetDispatchTouchEvent(MotionEvent ev) {
+        MotionEvent newEvent = MotionEvent.obtain(ev);
+
+        ev.setAction(MotionEvent.ACTION_CANCEL);
+        dispatchTouchEvent(ev);
+
+        newEvent.setAction(MotionEvent.ACTION_DOWN);
+        return dispatchTouchEvent(newEvent);
     }
 
     @Override
@@ -197,7 +197,7 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
             case MotionEvent.ACTION_MOVE:
                 float differentY = currentTouchY - mLastTouchY;
                 if (Math.abs(differentY) > mTouchSlop) {
-                    if (!isHeaderViewCompleteInvisible() || (isRecyclerViewToTop() && isHeaderViewCompleteInvisible() && differentY > 0)) {
+                    if (!isHeaderViewCompleteInvisible() || (isRecyclerViewToTop() && isHeaderViewCompleteInvisible() && mIsInControl)) {
                         mLastTouchY = currentTouchY;
                         return true;
                     }
@@ -223,16 +223,13 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
                 break;
             case MotionEvent.ACTION_MOVE:
                 float differentY = currentTouchY - mLastTouchY;
+                mLastTouchY = currentTouchY;
                 if (Math.abs(differentY) > 0) {
                     scrollBy(0, (int) -differentY);
                 }
-
-                mLastTouchY = currentTouchY;
                 break;
-
             case MotionEvent.ACTION_CANCEL:
                 recycleVelocityTracker();
-
                 if (!mOverScroller.isFinished()) {
                     mOverScroller.abortAnimation();
                 }
@@ -243,11 +240,9 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
                 if ((Math.abs(initialVelocity) > mMinimumVelocity)) {
                     fling(-initialVelocity);
                 }
-
                 recycleVelocityTracker();
                 break;
         }
-
         return true;
     }
 
