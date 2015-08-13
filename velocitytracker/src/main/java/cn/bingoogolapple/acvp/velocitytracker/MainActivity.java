@@ -17,7 +17,7 @@ import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildLongClickListener;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemClickListener;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemLongClickListener;
 
-public class MainActivity extends AppCompatActivity implements BGAOnRVItemClickListener, BGAOnRVItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener {
+public class MainActivity extends AppCompatActivity implements BGAOnRVItemClickListener, BGAOnRVItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener, View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private BGAStickyNavRefreshLayout mStickyNavRefreshLayout;
     private RecyclerView mDataRv;
@@ -53,6 +53,10 @@ public class MainActivity extends AppCompatActivity implements BGAOnRVItemClickL
                 }
             }
         });
+
+        findViewById(R.id.tv_main_retweet).setOnClickListener(this);
+        findViewById(R.id.tv_main_comment).setOnClickListener(this);
+        findViewById(R.id.tv_main_praise).setOnClickListener(this);
     }
 
     private void processLogic() {
@@ -99,6 +103,17 @@ public class MainActivity extends AppCompatActivity implements BGAOnRVItemClickL
             return true;
         }
         return false;
+    }
+    
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.tv_main_retweet) {
+            showToast("点击了转发");
+        } else if (v.getId() == R.id.tv_main_comment) {
+            showToast("点击了评论");
+        } else if (v.getId() == R.id.tv_main_praise) {
+            showToast("点击了赞");
+        }
     }
 
     protected void showToast(String text) {

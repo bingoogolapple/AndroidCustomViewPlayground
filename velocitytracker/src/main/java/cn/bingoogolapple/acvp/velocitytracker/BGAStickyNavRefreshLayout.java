@@ -32,9 +32,9 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
     private int mMaximumVelocity;
     private int mMinimumVelocity;
 
-    private boolean mIsBeingDragged = false;
-    private boolean mIsInControl = false;
+    private boolean mIsInControl = true;
 
+    private float mLastDispatchY;
     private float mLastTouchY;
 
     public BGAStickyNavRefreshLayout(Context context, AttributeSet attrs) {
@@ -46,9 +46,10 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
         setOrientation(VERTICAL);
 
         mOverScroller = new OverScroller(context);
-        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        mMaximumVelocity = ViewConfiguration.get(context).getScaledMaximumFlingVelocity();
-        mMinimumVelocity = ViewConfiguration.get(context).getScaledMinimumFlingVelocity();
+        final ViewConfiguration configuration = ViewConfiguration.get(context);
+        mTouchSlop = configuration.getScaledTouchSlop();
+        mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
+        mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
     }
 
     @Override
@@ -127,10 +128,10 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
         int navViewTopOnScreenY = location[1] - params.topMargin;
 
         if (navViewTopOnScreenY == contentOnScreenTopY) {
-            debug("头部视图完全隐藏  navViewTopOnScreenY = " + navViewTopOnScreenY + "   contentOnScreenTopY = " + contentOnScreenTopY);
+//            debug("头部视图完全隐藏  navViewTopOnScreenY = " + navViewTopOnScreenY + "   contentOnScreenTopY = " + contentOnScreenTopY);
             return true;
         } else {
-            debug("头部视图没有完全隐藏  navViewTopOnScreenY = " + navViewTopOnScreenY + "   contentOnScreenTopY = " + contentOnScreenTopY);
+//            debug("头部视图没有完全隐藏  navViewTopOnScreenY = " + navViewTopOnScreenY + "   contentOnScreenTopY = " + contentOnScreenTopY);
             return false;
         }
     }
@@ -153,20 +154,34 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
         float currentTouchY = ev.getY();
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mLastTouchY = currentTouchY;
+                mLastDispatchY = currentTouchY;
                 break;
             case MotionEvent.ACTION_MOVE:
-                float differentY = currentTouchY - mLastTouchY;
-                if (isRecyclerViewToTop() && isHeaderViewCompleteInvisible() && differentY > 0 && !mIsInControl) {
-                    mIsInControl = true;
-                    ev.setAction(MotionEvent.ACTION_CANCEL);
-                    MotionEvent ev2 = MotionEvent.obtain(ev);
-                    dispatchTouchEvent(ev);
+                float differentY = currentTouchY - mLastDispatchY;
+                mLastDispatchY = currentTouchY;
+                if (isRecyclerViewToTop() && isHeaderViewCompleteInvisible()) {
+                    if (differentY > 0 && !mIsInControl) {
+                        mIsInControl = true;
 
-                    ev2.setAction(MotionEvent.ACTION_DOWN);
-                    return dispatchTouchEvent(ev2);
+                        ev.setAction(MotionEvent.ACTION_CANCEL);
+                        MotionEvent newEvent = MotionEvent.obtain(ev);
+                        dispatchTouchEvent(ev);
+
+                        newEvent.setAction(MotionEvent.ACTION_DOWN);
+                        return dispatchTouchEvent(newEvent);
+                    }
+
+                    if (differentY < 0 && mIsInControl) {
+                        mIsInControl = false;
+
+                        ev.setAction(MotionEvent.ACTION_CANCEL);
+                        MotionEvent newEvent = MotionEvent.obtain(ev);
+                        dispatchTouchEvent(ev);
+
+                        newEvent.setAction(MotionEvent.ACTION_DOWN);
+                        return dispatchTouchEvent(newEvent);
+                    }
                 }
-
                 break;
         }
         return super.dispatchTouchEvent(ev);
@@ -182,19 +197,11 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
             case MotionEvent.ACTION_MOVE:
                 float differentY = currentTouchY - mLastTouchY;
                 if (Math.abs(differentY) > mTouchSlop) {
-                    mIsBeingDragged = true;
-
                     if (!isHeaderViewCompleteInvisible() || (isRecyclerViewToTop() && isHeaderViewCompleteInvisible() && differentY > 0)) {
-                        initVelocityTrackerIfNotExists();
-                        mVelocityTracker.addMovement(ev);
                         mLastTouchY = currentTouchY;
                         return true;
                     }
                 }
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                reset();
                 break;
         }
         return super.onInterceptTouchEvent(ev);
@@ -204,49 +211,44 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
     public boolean onTouchEvent(MotionEvent event) {
         initVelocityTrackerIfNotExists();
         mVelocityTracker.addMovement(event);
+
         float currentTouchY = event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (!mOverScroller.isFinished()) {
                     mOverScroller.abortAnimation();
                 }
+
                 mLastTouchY = currentTouchY;
-                return true;
+                break;
             case MotionEvent.ACTION_MOVE:
                 float differentY = currentTouchY - mLastTouchY;
-                mLastTouchY = currentTouchY;
-                if (!mIsBeingDragged && Math.abs(differentY) > mTouchSlop) {
-                    mIsBeingDragged = true;
-                }
-                if (mIsBeingDragged) {
+                if (Math.abs(differentY) > 0) {
                     scrollBy(0, (int) -differentY);
+                }
 
-                    if (isHeaderViewCompleteInvisible() && differentY < 0) {
-                        event.setAction(MotionEvent.ACTION_DOWN);
-                        dispatchTouchEvent(event);
-                        mIsInControl = false;
-                    }
+                mLastTouchY = currentTouchY;
+                break;
 
+            case MotionEvent.ACTION_CANCEL:
+                recycleVelocityTracker();
+
+                if (!mOverScroller.isFinished()) {
+                    mOverScroller.abortAnimation();
                 }
                 break;
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
                 mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
                 int initialVelocity = (int) mVelocityTracker.getYVelocity();
                 if ((Math.abs(initialVelocity) > mMinimumVelocity)) {
                     fling(-initialVelocity);
                 }
 
-                reset();
+                recycleVelocityTracker();
                 break;
         }
 
-        return super.onTouchEvent(event);
-    }
-
-    private void reset() {
-        recycleVelocityTracker();
-        mIsBeingDragged = false;
+        return true;
     }
 
     private boolean isRecyclerViewToTop() {
