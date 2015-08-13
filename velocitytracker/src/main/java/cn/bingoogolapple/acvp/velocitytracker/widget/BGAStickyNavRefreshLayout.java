@@ -1,14 +1,16 @@
-package cn.bingoogolapple.acvp.velocitytracker;
+package cn.bingoogolapple.acvp.velocitytracker.widget;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.OverScroller;
 
@@ -25,6 +27,7 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
     private View mContentView;
 
     private RecyclerView mRecyclerView;
+    private AbsListView mAbsListView;
 
     private OverScroller mOverScroller;
     private VelocityTracker mVelocityTracker;
@@ -64,7 +67,11 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
         mNavView = getChildAt(1);
         mContentView = getChildAt(2);
 
-        mRecyclerView = (RecyclerView) mContentView;
+        if (mContentView instanceof AbsListView) {
+            mAbsListView = (AbsListView) mContentView;
+        } else if (mContentView instanceof RecyclerView) {
+            mRecyclerView = (RecyclerView) mContentView;
+        }
     }
 
     @Override
@@ -159,14 +166,14 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
             case MotionEvent.ACTION_MOVE:
                 float differentY = currentTouchY - mLastDispatchY;
                 mLastDispatchY = currentTouchY;
-                if (isRecyclerViewToTop() && isHeaderViewCompleteInvisible()) {
-                    if (differentY > 0 && !mIsInControl) {
+                if (isContentViewToTop() && isHeaderViewCompleteInvisible()) {
+                    if (differentY >= 0 && !mIsInControl) {
                         mIsInControl = true;
 
                         return resetDispatchTouchEvent(ev);
                     }
 
-                    if (differentY < 0 && mIsInControl) {
+                    if (differentY <= 0 && mIsInControl) {
                         mIsInControl = false;
 
                         return resetDispatchTouchEvent(ev);
@@ -197,7 +204,7 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
             case MotionEvent.ACTION_MOVE:
                 float differentY = currentTouchY - mLastTouchY;
                 if (Math.abs(differentY) > mTouchSlop) {
-                    if (!isHeaderViewCompleteInvisible() || (isRecyclerViewToTop() && isHeaderViewCompleteInvisible() && mIsInControl)) {
+                    if (!isHeaderViewCompleteInvisible() || (isContentViewToTop() && isHeaderViewCompleteInvisible() && mIsInControl)) {
                         mLastTouchY = currentTouchY;
                         return true;
                     }
@@ -246,9 +253,51 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
         return true;
     }
 
-    private boolean isRecyclerViewToTop() {
-        LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-        return layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
+    private boolean isContentViewToTop() {
+        if (mAbsListView != null) {
+            int firstChildTop = 0;
+            if (mAbsListView.getChildCount() > 0) {
+                // 如果AdapterView的子控件数量不为0，获取第一个子控件的top
+                firstChildTop = mAbsListView.getChildAt(0).getTop() - mAbsListView.getPaddingTop();
+            }
+            if (mAbsListView.getFirstVisiblePosition() == 0 && firstChildTop == 0) {
+                return true;
+            }
+        }
+
+        if (mRecyclerView != null) {
+            int firstChildTop = 0;
+            if (mRecyclerView.getChildCount() > 0) {
+                // 如果RecyclerView的子控件数量不为0，获取第一个子控件的top
+
+                // 解决item的topMargin不为0时不能触发下拉刷新
+                MarginLayoutParams layoutParams = (MarginLayoutParams) mRecyclerView.getChildAt(0).getLayoutParams();
+                firstChildTop = mRecyclerView.getChildAt(0).getTop() - layoutParams.topMargin - mRecyclerView.getPaddingTop();
+            }
+
+            RecyclerView.LayoutManager manager = mRecyclerView.getLayoutManager();
+            if (manager == null) {
+                return true;
+            }
+            if (manager.getItemCount() == 0) {
+                return true;
+            }
+
+            if (manager instanceof LinearLayoutManager) {
+                LinearLayoutManager layoutManager = (LinearLayoutManager) manager;
+                if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0 && firstChildTop == 0) {
+                    return true;
+                }
+            } else if (manager instanceof StaggeredGridLayoutManager) {
+                StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) manager;
+
+                int[] out = layoutManager.findFirstCompletelyVisibleItemPositions(null);
+                if (out[0] == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static void debug(String msg) {

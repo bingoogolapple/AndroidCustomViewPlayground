@@ -1,72 +1,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/MatchMatch.Vertical"
-    android:background="#9674FC"
-    android:paddingBottom="5dp"
-    android:paddingTop="5dp">
+    android:background="#179641"
+    android:gravity="center">
 
-    <cn.bingoogolapple.acvp.velocitytracker.BGAStickyNavRefreshLayout
-        android:id="@+id/stickyNavRefreshLayout"
-        style="@style/MatchMatch"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:background="#179641"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp">
+    <TextView
+        style="@style/MatchWrap"
+        android:background="#B2DB4D"
+        android:gravity="center"
+        android:onClick="recyclerViewDemo"
+        android:padding="10dp"
+        android:text="RecyclerViewDemo"
+        android:layout_marginBottom="10dp"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
 
-        <TextView
-            style="@style/MatchWrap"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="#B2DB4D"
-            android:gravity="center"
-            android:paddingBottom="50dp"
-            android:paddingTop="50dp"
-            android:text="顶部视图"
-            android:textColor="@android:color/white"
-            android:textSize="30sp" />
+    <TextView
+        style="@style/MatchWrap"
+        android:background="#B2DB4D"
+        android:gravity="center"
+        android:onClick="listViewDemo"
+        android:padding="10dp"
+        android:text="ListViewDemo"
+        android:layout_marginBottom="10dp"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
 
-        <LinearLayout
-            style="@style/MatchWrap.Horizontal"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="#50E746"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
-
-            <TextView
-                android:id="@+id/tv_main_retweet"
-                style="@style/AutoWrap"
-                android:gravity="center"
-                android:text="转发"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tv_main_comment"
-                style="@style/AutoWrap"
-                android:gravity="center"
-                android:text="评论"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tv_main_praise"
-                style="@style/AutoWrap"
-                android:gravity="center"
-                android:text="赞"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_main_data"
-            style="@style/MatchMatch"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@android:color/white"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:scrollbars="none" />
-
-    </cn.bingoogolapple.acvp.velocitytracker.BGAStickyNavRefreshLayout>
 </LinearLayout>

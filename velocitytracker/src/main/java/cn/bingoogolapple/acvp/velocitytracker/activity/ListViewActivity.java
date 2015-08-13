@@ -1,32 +1,33 @@
-package cn.bingoogolapple.acvp.velocitytracker;
+package cn.bingoogolapple.acvp.velocitytracker.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
 
-import cn.bingoogolapple.acvp.velocitytracker.adapter.SwipeRecyclerViewAdapter;
+import cn.bingoogolapple.acvp.velocitytracker.R;
+import cn.bingoogolapple.acvp.velocitytracker.adapter.SwipeAdapterViewAdapter;
 import cn.bingoogolapple.acvp.velocitytracker.engine.DataEngine;
 import cn.bingoogolapple.acvp.velocitytracker.model.RefreshModel;
+import cn.bingoogolapple.acvp.velocitytracker.widget.BGAStickyNavRefreshLayout;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildClickListener;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildLongClickListener;
-import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemClickListener;
-import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemLongClickListener;
 
-public class MainActivity extends AppCompatActivity implements BGAOnRVItemClickListener, BGAOnRVItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener, View.OnClickListener {
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class ListViewActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener, View.OnClickListener {
+    private static final String TAG = ListViewActivity.class.getSimpleName();
     private BGAStickyNavRefreshLayout mStickyNavRefreshLayout;
-    private RecyclerView mDataRv;
-    private SwipeRecyclerViewAdapter mAdapter;
+    private ListView mDataLv;
+    private SwipeAdapterViewAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_listview);
 
         initView();
         setListener();
@@ -35,36 +36,36 @@ public class MainActivity extends AppCompatActivity implements BGAOnRVItemClickL
 
     private void initView() {
         mStickyNavRefreshLayout = (BGAStickyNavRefreshLayout) findViewById(R.id.stickyNavRefreshLayout);
-        mDataRv = (RecyclerView) findViewById(R.id.rv_main_data);
+        mDataLv = (ListView) findViewById(R.id.data);
     }
 
     private void setListener() {
-        mAdapter = new SwipeRecyclerViewAdapter(this);
-        mAdapter.setOnRVItemClickListener(this);
-        mAdapter.setOnRVItemLongClickListener(this);
-        mAdapter.setOnItemChildClickListener(this);
-        mAdapter.setOnItemChildLongClickListener(this);
-
-        mDataRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mDataLv.setOnItemClickListener(this);
+        mDataLv.setOnItemLongClickListener(this);
+        mDataLv.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                if (RecyclerView.SCROLL_STATE_DRAGGING == newState) {
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL == scrollState) {
                     mAdapter.closeOpenedSwipeItemLayoutWithAnim();
                 }
             }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            }
         });
 
-        findViewById(R.id.tv_main_retweet).setOnClickListener(this);
-        findViewById(R.id.tv_main_comment).setOnClickListener(this);
-        findViewById(R.id.tv_main_praise).setOnClickListener(this);
+        mAdapter = new SwipeAdapterViewAdapter(this);
+        mAdapter.setOnItemChildClickListener(this);
+        mAdapter.setOnItemChildLongClickListener(this);
+
+        findViewById(R.id.retweet).setOnClickListener(this);
+        findViewById(R.id.comment).setOnClickListener(this);
+        findViewById(R.id.praise).setOnClickListener(this);
     }
 
     private void processLogic() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mDataRv.setLayoutManager(linearLayoutManager);
-
-        mDataRv.setAdapter(mAdapter);
+        mDataLv.setAdapter(mAdapter);
 
         DataEngine.loadInitDatas(new DataEngine.RefreshModelResponseHandler() {
             @Override
@@ -79,12 +80,12 @@ public class MainActivity extends AppCompatActivity implements BGAOnRVItemClickL
     }
 
     @Override
-    public void onRVItemClick(View v, int position) {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         showToast("点击了条目 " + mAdapter.getItem(position).title);
     }
 
     @Override
-    public boolean onRVItemLongClick(View v, int position) {
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         showToast("长按了条目 " + mAdapter.getItem(position).title);
         return true;
     }
@@ -92,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements BGAOnRVItemClickL
     @Override
     public void onItemChildClick(View v, int position) {
         if (v.getId() == R.id.tv_item_swipe_delete) {
+            // 作为ListView的item使用时，如果删除了某一个item，请先关闭已经打开的item，否则其他item会显示不正常（RecyclerView不会有这个问题）
+            mAdapter.closeOpenedSwipeItemLayout();
             mAdapter.removeItem(position);
         }
     }
@@ -104,14 +107,14 @@ public class MainActivity extends AppCompatActivity implements BGAOnRVItemClickL
         }
         return false;
     }
-    
+
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.tv_main_retweet) {
+        if (v.getId() == R.id.retweet) {
             showToast("点击了转发");
-        } else if (v.getId() == R.id.tv_main_comment) {
+        } else if (v.getId() == R.id.comment) {
             showToast("点击了评论");
-        } else if (v.getId() == R.id.tv_main_praise) {
+        } else if (v.getId() == R.id.praise) {
             showToast("点击了赞");
         }
     }
@@ -119,4 +122,5 @@ public class MainActivity extends AppCompatActivity implements BGAOnRVItemClickL
     protected void showToast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
+
 }
