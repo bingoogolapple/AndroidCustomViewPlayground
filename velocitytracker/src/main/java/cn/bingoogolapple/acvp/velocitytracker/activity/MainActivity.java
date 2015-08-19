@@ -31,4 +31,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, SwipeListViewActivity.class));
     }
 
+    public void scrollViewDemo(View v) {
+        startActivity(new Intent(this, ScrollViewActivity.class));
+    }
+
+    public void webViewDemo(View v) {
+        startActivity(new Intent(this, WebViewActivity.class));
+    }
+
 }

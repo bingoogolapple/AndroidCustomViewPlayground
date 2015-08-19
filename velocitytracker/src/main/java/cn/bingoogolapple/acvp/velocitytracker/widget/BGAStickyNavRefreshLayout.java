@@ -1,6 +1,7 @@
 package cn.bingoogolapple.acvp.velocitytracker.widget;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -10,9 +11,11 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.OverScroller;
+import android.widget.ScrollView;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
@@ -26,8 +29,10 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
     private View mNavView;
     private View mContentView;
 
-    private RecyclerView mRecyclerView;
-    private AbsListView mAbsListView;
+    private RecyclerView mDirectRecyclerView;
+    private AbsListView mDirectAbsListView;
+    private ScrollView mDirectScrollView;
+    private WebView mDirectWebView;
 
     private OverScroller mOverScroller;
     private VelocityTracker mVelocityTracker;
@@ -56,6 +61,13 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
     }
 
     @Override
+    public void setOrientation(@LinearLayoutCompat.OrientationMode int orientation) {
+        if (VERTICAL == orientation) {
+            super.setOrientation(VERTICAL);
+        }
+    }
+
+    @Override
     public void onFinishInflate() {
         super.onFinishInflate();
 
@@ -68,16 +80,20 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
         mContentView = getChildAt(2);
 
         if (mContentView instanceof AbsListView) {
-            mAbsListView = (AbsListView) mContentView;
+            mDirectAbsListView = (AbsListView) mContentView;
         } else if (mContentView instanceof RecyclerView) {
-            mRecyclerView = (RecyclerView) mContentView;
+            mDirectRecyclerView = (RecyclerView) mContentView;
+        } else if (mContentView instanceof ScrollView) {
+            mDirectScrollView = (ScrollView) mContentView;
+        } else if (mContentView instanceof WebView) {
+            mDirectWebView = (WebView) mContentView;
         }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        mContentView.getLayoutParams().height = getMeasuredHeight() - mNavView.getMeasuredHeight();
+        measureChild(mContentView, widthMeasureSpec, MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec) - getNavViewHeight(), MeasureSpec.EXACTLY));
     }
 
     @Override
@@ -117,6 +133,16 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
     private int getHeaderViewHeight() {
         MarginLayoutParams layoutParams = (MarginLayoutParams) mHeaderView.getLayoutParams();
         return mHeaderView.getMeasuredHeight() + layoutParams.topMargin + layoutParams.bottomMargin;
+    }
+
+    /**
+     * 获取导航视图的高度，包括topMargin和bottomMargin
+     *
+     * @return
+     */
+    private int getNavViewHeight() {
+        MarginLayoutParams layoutParams = (MarginLayoutParams) mNavView.getLayoutParams();
+        return mNavView.getMeasuredHeight() + layoutParams.topMargin + layoutParams.bottomMargin;
     }
 
     /**
@@ -254,28 +280,37 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
     }
 
     private boolean isContentViewToTop() {
-        if (mAbsListView != null) {
+        if (mDirectWebView != null && mDirectWebView.getScrollY() == 0) {
+            return true;
+        }
+
+        // 内容是ScrollView，并且其scrollY为0时满足
+        if (mDirectScrollView != null && mDirectScrollView.getScrollY() == 0) {
+            return true;
+        }
+
+        if (mDirectAbsListView != null) {
             int firstChildTop = 0;
-            if (mAbsListView.getChildCount() > 0) {
+            if (mDirectAbsListView.getChildCount() > 0) {
                 // 如果AdapterView的子控件数量不为0，获取第一个子控件的top
-                firstChildTop = mAbsListView.getChildAt(0).getTop() - mAbsListView.getPaddingTop();
+                firstChildTop = mDirectAbsListView.getChildAt(0).getTop() - mDirectAbsListView.getPaddingTop();
             }
-            if (mAbsListView.getFirstVisiblePosition() == 0 && firstChildTop == 0) {
+            if (mDirectAbsListView.getFirstVisiblePosition() == 0 && firstChildTop == 0) {
                 return true;
             }
         }
 
-        if (mRecyclerView != null) {
+        if (mDirectRecyclerView != null) {
             int firstChildTop = 0;
-            if (mRecyclerView.getChildCount() > 0) {
+            if (mDirectRecyclerView.getChildCount() > 0) {
                 // 如果RecyclerView的子控件数量不为0，获取第一个子控件的top
 
                 // 解决item的topMargin不为0时不能触发下拉刷新
-                MarginLayoutParams layoutParams = (MarginLayoutParams) mRecyclerView.getChildAt(0).getLayoutParams();
-                firstChildTop = mRecyclerView.getChildAt(0).getTop() - layoutParams.topMargin - mRecyclerView.getPaddingTop();
+                MarginLayoutParams layoutParams = (MarginLayoutParams) mDirectRecyclerView.getChildAt(0).getLayoutParams();
+                firstChildTop = mDirectRecyclerView.getChildAt(0).getTop() - layoutParams.topMargin - mDirectRecyclerView.getPaddingTop();
             }
 
-            RecyclerView.LayoutManager manager = mRecyclerView.getLayoutManager();
+            RecyclerView.LayoutManager manager = mDirectRecyclerView.getLayoutManager();
             if (manager == null) {
                 return true;
             }

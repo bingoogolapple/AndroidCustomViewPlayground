@@ -47,4 +47,26 @@
         android:textColor="@android:color/white"
         android:textSize="14sp" />
 
+    <TextView
+        style="@style/MatchWrap"
+        android:background="#B2DB4D"
+        android:gravity="center"
+        android:onClick="scrollViewDemo"
+        android:padding="10dp"
+        android:text="ScrollViewDemo"
+        android:layout_marginBottom="10dp"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        style="@style/MatchWrap"
+        android:background="#B2DB4D"
+        android:gravity="center"
+        android:onClick="webViewDemo"
+        android:padding="10dp"
+        android:text="WebViewDemo"
+        android:layout_marginBottom="10dp"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
 </LinearLayout>

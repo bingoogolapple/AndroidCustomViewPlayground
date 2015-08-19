@@ -22,6 +22,8 @@
         <activity android:name=".activity.NormalListViewActivity" />
         <activity android:name=".activity.SwipeRecyclerViewActivity" />
         <activity android:name=".activity.SwipeListViewActivity" />
+        <activity android:name=".activity.ScrollViewActivity" />
+        <activity android:name=".activity.WebViewActivity" />
     </application>
 
 </manifest>
