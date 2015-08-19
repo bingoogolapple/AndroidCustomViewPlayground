@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.List;
@@ -20,8 +21,8 @@ import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildLongClickListener;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemClickListener;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemLongClickListener;
 
-public class RecyclerViewActivity extends AppCompatActivity implements BGAOnRVItemClickListener, BGAOnRVItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener, View.OnClickListener {
-    private static final String TAG = RecyclerViewActivity.class.getSimpleName();
+public class SwipeRecyclerViewActivity extends AppCompatActivity implements BGAOnRVItemClickListener, BGAOnRVItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener, View.OnClickListener {
+    private static final String TAG = SwipeRecyclerViewActivity.class.getSimpleName();
     private BGAStickyNavRefreshLayout mStickyNavRefreshLayout;
     private RecyclerView mDataRv;
     private SwipeRecyclerViewAdapter mAdapter;
@@ -42,7 +43,7 @@ public class RecyclerViewActivity extends AppCompatActivity implements BGAOnRVIt
     }
 
     private void setListener() {
-        mAdapter = new SwipeRecyclerViewAdapter(this);
+        mAdapter = new SwipeRecyclerViewAdapter(mDataRv);
         mAdapter.setOnRVItemClickListener(this);
         mAdapter.setOnRVItemLongClickListener(this);
         mAdapter.setOnItemChildClickListener(this);
@@ -83,30 +84,30 @@ public class RecyclerViewActivity extends AppCompatActivity implements BGAOnRVIt
     }
 
     @Override
-    public void onRVItemClick(View v, int position) {
-        showToast("点击了条目 " + mAdapter.getItem(position).title);
-    }
-
-    @Override
-    public boolean onRVItemLongClick(View v, int position) {
-        showToast("长按了条目 " + mAdapter.getItem(position).title);
-        return true;
-    }
-
-    @Override
-    public void onItemChildClick(View v, int position) {
-        if (v.getId() == R.id.tv_item_swipe_delete) {
+    public void onItemChildClick(ViewGroup viewGroup, View childView, int position) {
+        if (childView.getId() == R.id.tv_item_swipe_delete) {
             mAdapter.removeItem(position);
         }
     }
 
     @Override
-    public boolean onItemChildLongClick(View v, int position) {
-        if (v.getId() == R.id.tv_item_swipe_delete) {
+    public boolean onItemChildLongClick(ViewGroup viewGroup, View childView, int position) {
+        if (childView.getId() == R.id.tv_item_swipe_delete) {
             showToast("长按了删除 " + mAdapter.getItem(position).title);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onRVItemClick(ViewGroup viewGroup, View itemView, int position) {
+        showToast("点击了条目 " + mAdapter.getItem(position).title);
+    }
+
+    @Override
+    public boolean onRVItemLongClick(ViewGroup viewGroup, View itemView, int position) {
+        showToast("长按了条目 " + mAdapter.getItem(position).title);
+        return true;
     }
 
     @Override

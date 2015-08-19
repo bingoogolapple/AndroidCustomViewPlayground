@@ -18,8 +18,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.RecyclerViewActivity" />
-        <activity android:name=".activity.ListViewActivity" />
+        <activity android:name=".activity.NormalRecyclerViewActivity" />
+        <activity android:name=".activity.NormalListViewActivity" />
+        <activity android:name=".activity.SwipeRecyclerViewActivity" />
+        <activity android:name=".activity.SwipeListViewActivity" />
     </application>
 
 </manifest>

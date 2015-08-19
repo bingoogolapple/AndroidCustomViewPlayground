@@ -15,12 +15,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void recyclerViewDemo(View v) {
-        startActivity(new Intent(this, RecyclerViewActivity.class));
+    public void normalRecyclerViewDemo(View v) {
+        startActivity(new Intent(this, NormalRecyclerViewActivity.class));
     }
 
-    public void listViewDemo(View v) {
-        startActivity(new Intent(this, ListViewActivity.class));
+    public void normalListViewDemo(View v) {
+        startActivity(new Intent(this, NormalListViewActivity.class));
+    }
+
+    public void swipeRecyclerViewDemo(View v) {
+        startActivity(new Intent(this, SwipeRecyclerViewActivity.class));
+    }
+
+    public void swipeListViewDemo(View v) {
+        startActivity(new Intent(this, SwipeListViewActivity.class));
     }
 
 }

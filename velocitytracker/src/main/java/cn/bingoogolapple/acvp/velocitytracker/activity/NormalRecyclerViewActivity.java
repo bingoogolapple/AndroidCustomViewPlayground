@@ -2,32 +2,35 @@ package cn.bingoogolapple.acvp.velocitytracker.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.List;
 
 import cn.bingoogolapple.acvp.velocitytracker.R;
-import cn.bingoogolapple.acvp.velocitytracker.adapter.SwipeAdapterViewAdapter;
+import cn.bingoogolapple.acvp.velocitytracker.adapter.NormalRecyclerViewAdapter;
 import cn.bingoogolapple.acvp.velocitytracker.engine.DataEngine;
 import cn.bingoogolapple.acvp.velocitytracker.model.RefreshModel;
 import cn.bingoogolapple.acvp.velocitytracker.widget.BGAStickyNavRefreshLayout;
+import cn.bingoogolapple.acvp.velocitytracker.widget.Divider;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildClickListener;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildLongClickListener;
+import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemClickListener;
+import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemLongClickListener;
 
-public class ListViewActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener, View.OnClickListener {
-    private static final String TAG = ListViewActivity.class.getSimpleName();
+public class NormalRecyclerViewActivity extends AppCompatActivity implements BGAOnRVItemClickListener, BGAOnRVItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener, View.OnClickListener {
+    private static final String TAG = NormalRecyclerViewActivity.class.getSimpleName();
     private BGAStickyNavRefreshLayout mStickyNavRefreshLayout;
-    private ListView mDataLv;
-    private SwipeAdapterViewAdapter mAdapter;
+    private RecyclerView mDataRv;
+    private NormalRecyclerViewAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listview);
+        setContentView(R.layout.activity_recyclerview);
 
         initView();
         setListener();
@@ -36,26 +39,13 @@ public class ListViewActivity extends AppCompatActivity implements AdapterView.O
 
     private void initView() {
         mStickyNavRefreshLayout = (BGAStickyNavRefreshLayout) findViewById(R.id.stickyNavRefreshLayout);
-        mDataLv = (ListView) findViewById(R.id.data);
+        mDataRv = (RecyclerView) findViewById(R.id.data);
     }
 
     private void setListener() {
-        mDataLv.setOnItemClickListener(this);
-        mDataLv.setOnItemLongClickListener(this);
-        mDataLv.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL == scrollState) {
-                    mAdapter.closeOpenedSwipeItemLayoutWithAnim();
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            }
-        });
-
-        mAdapter = new SwipeAdapterViewAdapter(this);
+        mAdapter = new NormalRecyclerViewAdapter(mDataRv);
+        mAdapter.setOnRVItemClickListener(this);
+        mAdapter.setOnRVItemLongClickListener(this);
         mAdapter.setOnItemChildClickListener(this);
         mAdapter.setOnItemChildLongClickListener(this);
 
@@ -65,7 +55,12 @@ public class ListViewActivity extends AppCompatActivity implements AdapterView.O
     }
 
     private void processLogic() {
-        mDataLv.setAdapter(mAdapter);
+        mDataRv.addItemDecoration(new Divider(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mDataRv.setLayoutManager(linearLayoutManager);
+
+        mDataRv.setAdapter(mAdapter);
 
         DataEngine.loadInitDatas(new DataEngine.RefreshModelResponseHandler() {
             @Override
@@ -80,32 +75,30 @@ public class ListViewActivity extends AppCompatActivity implements AdapterView.O
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        showToast("点击了条目 " + mAdapter.getItem(position).title);
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        showToast("长按了条目 " + mAdapter.getItem(position).title);
-        return true;
-    }
-
-    @Override
-    public void onItemChildClick(View v, int position) {
-        if (v.getId() == R.id.tv_item_swipe_delete) {
-            // 作为ListView的item使用时，如果删除了某一个item，请先关闭已经打开的item，否则其他item会显示不正常（RecyclerView不会有这个问题）
-            mAdapter.closeOpenedSwipeItemLayout();
+    public void onItemChildClick(ViewGroup viewGroup, View childView, int position) {
+        if (childView.getId() == R.id.tv_item_normal_delete) {
             mAdapter.removeItem(position);
         }
     }
 
     @Override
-    public boolean onItemChildLongClick(View v, int position) {
-        if (v.getId() == R.id.tv_item_swipe_delete) {
+    public boolean onItemChildLongClick(ViewGroup viewGroup, View childView, int position) {
+        if (childView.getId() == R.id.tv_item_normal_delete) {
             showToast("长按了删除 " + mAdapter.getItem(position).title);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onRVItemClick(ViewGroup viewGroup, View itemView, int position) {
+        showToast("点击了条目 " + mAdapter.getItem(position).title);
+    }
+
+    @Override
+    public boolean onRVItemLongClick(ViewGroup viewGroup, View itemView, int position) {
+        showToast("长按了条目 " + mAdapter.getItem(position).title);
+        return true;
     }
 
     @Override
@@ -122,5 +115,4 @@ public class ListViewActivity extends AppCompatActivity implements AdapterView.O
     protected void showToast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
-
 }
