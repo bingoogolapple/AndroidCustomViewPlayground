@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/MatchMatch.Vertical"
+    android:background="#9674FC"
+    android:paddingBottom="@dimen/test_padding_margin"
+    android:paddingTop="@dimen/test_padding_margin">
+
+    <cn.bingoogolapple.acvp.velocitytracker.widget.BGAStickyNavRefreshLayout
+        android:id="@+id/stickyNavRefreshLayout"
+        style="@style/MatchMatch"
+        android:layout_marginBottom="@dimen/test_padding_margin"
+        android:layout_marginTop="@dimen/test_padding_margin"
+        android:background="#179641"
+        android:paddingBottom="@dimen/test_padding_margin"
+        android:paddingTop="@dimen/test_padding_margin">
+
+        <TextView
+            style="@style/MatchWrap"
+            android:layout_marginBottom="@dimen/test_padding_margin"
+            android:layout_marginTop="@dimen/test_padding_margin"
+            android:background="#B2DB4D"
+            android:gravity="center"
+            android:paddingBottom="50dp"
+            android:paddingTop="50dp"
+            android:text="顶部视图"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+
+        <cn.bingoogolapple.bgaindicator.BGAFixedIndicator
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="@dimen/test_padding_margin"
+            android:layout_marginTop="@dimen/test_padding_margin"
+            android:background="#50E746"
+            android:paddingBottom="@dimen/test_padding_margin"
+            android:paddingTop="@dimen/test_padding_margin"
+            app:indicator_dividerColor="@color/srl_blue_bright"
+            app:indicator_dividerVerticalMargin="8dp"
+            app:indicator_dividerWidth="2dp"
+            app:indicator_hasDivider="true"
+            app:indicator_textColor="@color/selector_tab"
+            app:indicator_textSizeNormal="14sp"
+            app:indicator_textSizeSelected="18sp"
+            app:indicator_triangleColor="@color/srl_red_light"
+            app:indicator_triangleHeight="2dp"
+            app:indicator_triangleHorizontalMargin="0dp" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_viewpager_content"
+            style="@style/MatchMatch"
+            android:layout_marginBottom="@dimen/test_padding_margin"
+            android:layout_marginTop="@dimen/test_padding_margin"
+            android:background="#B2DB4D"
+            android:paddingBottom="@dimen/test_padding_margin"
+            android:paddingTop="@dimen/test_padding_margin" />
+
+    </cn.bingoogolapple.acvp.velocitytracker.widget.BGAStickyNavRefreshLayout>
+</LinearLayout>

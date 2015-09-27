@@ -11,13 +11,15 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import cn.bingoogolapple.acvp.velocitytracker.App;
 import cn.bingoogolapple.acvp.velocitytracker.R;
 import cn.bingoogolapple.acvp.velocitytracker.adapter.SwipeAdapterViewAdapter;
-import cn.bingoogolapple.acvp.velocitytracker.engine.DataEngine;
 import cn.bingoogolapple.acvp.velocitytracker.model.RefreshModel;
 import cn.bingoogolapple.acvp.velocitytracker.widget.BGAStickyNavRefreshLayout;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildClickListener;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildLongClickListener;
+import retrofit.Callback;
+import retrofit.Response;
 
 public class SwipeListViewActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener, View.OnClickListener {
     private static final String TAG = SwipeListViewActivity.class.getSimpleName();
@@ -68,14 +70,14 @@ public class SwipeListViewActivity extends AppCompatActivity implements AdapterV
     private void processLogic() {
         mDataLv.setAdapter(mAdapter);
 
-        DataEngine.loadInitDatas(new DataEngine.RefreshModelResponseHandler() {
+        App.getInstance().getEngine().loadInitDatas().enqueue(new Callback<List<RefreshModel>>() {
             @Override
-            public void onFailure() {
+            public void onResponse(Response<List<RefreshModel>> response) {
+                mAdapter.setDatas(response.body());
             }
 
             @Override
-            public void onSuccess(List<RefreshModel> refreshModels) {
-                mAdapter.setDatas(refreshModels);
+            public void onFailure(Throwable t) {
             }
         });
     }

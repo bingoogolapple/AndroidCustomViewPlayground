@@ -1,6 +1,7 @@
 package cn.bingoogolapple.acvp.velocitytracker.widget;
 
 import android.content.Context;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,6 +34,7 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
     private AbsListView mDirectAbsListView;
     private ScrollView mDirectScrollView;
     private WebView mDirectWebView;
+    private ViewPager mDirectViewPager;
 
     private OverScroller mOverScroller;
     private VelocityTracker mVelocityTracker;
@@ -87,6 +89,8 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
             mDirectScrollView = (ScrollView) mContentView;
         } else if (mContentView instanceof WebView) {
             mDirectWebView = (WebView) mContentView;
+        } else if (mContentView instanceof ViewPager) {
+            mDirectViewPager = (ViewPager) mContentView;
         }
     }
 
@@ -332,6 +336,13 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
                 }
             }
         }
+        if (mDirectViewPager != null) {
+            return isViewPagerContentViewToTop();
+        }
+        return false;
+    }
+
+    private boolean isViewPagerContentViewToTop() {
         return false;
     }
 

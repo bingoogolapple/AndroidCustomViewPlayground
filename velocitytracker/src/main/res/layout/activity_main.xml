@@ -5,67 +5,78 @@
 
     <TextView
         style="@style/MatchWrap"
+        android:layout_marginBottom="10dp"
         android:background="#B2DB4D"
         android:gravity="center"
         android:onClick="normalRecyclerViewDemo"
         android:padding="10dp"
         android:text="NormalRecyclerViewDemo"
-        android:layout_marginBottom="10dp"
         android:textColor="@android:color/white"
         android:textSize="14sp" />
 
     <TextView
         style="@style/MatchWrap"
+        android:layout_marginBottom="10dp"
         android:background="#B2DB4D"
         android:gravity="center"
         android:onClick="normalListViewDemo"
         android:padding="10dp"
         android:text="NormalListViewDemo"
-        android:layout_marginBottom="10dp"
         android:textColor="@android:color/white"
         android:textSize="14sp" />
 
     <TextView
         style="@style/MatchWrap"
+        android:layout_marginBottom="10dp"
         android:background="#B2DB4D"
         android:gravity="center"
         android:onClick="swipeRecyclerViewDemo"
         android:padding="10dp"
         android:text="SwipeRecyclerViewDemo"
-        android:layout_marginBottom="10dp"
         android:textColor="@android:color/white"
         android:textSize="14sp" />
 
     <TextView
         style="@style/MatchWrap"
+        android:layout_marginBottom="10dp"
         android:background="#B2DB4D"
         android:gravity="center"
         android:onClick="swipeListViewDemo"
         android:padding="10dp"
         android:text="SwipeListViewDemo"
-        android:layout_marginBottom="10dp"
         android:textColor="@android:color/white"
         android:textSize="14sp" />
 
     <TextView
         style="@style/MatchWrap"
+        android:layout_marginBottom="10dp"
         android:background="#B2DB4D"
         android:gravity="center"
         android:onClick="scrollViewDemo"
         android:padding="10dp"
         android:text="ScrollViewDemo"
-        android:layout_marginBottom="10dp"
         android:textColor="@android:color/white"
         android:textSize="14sp" />
 
     <TextView
         style="@style/MatchWrap"
+        android:layout_marginBottom="10dp"
         android:background="#B2DB4D"
         android:gravity="center"
         android:onClick="webViewDemo"
         android:padding="10dp"
         android:text="WebViewDemo"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        style="@style/MatchWrap"
         android:layout_marginBottom="10dp"
+        android:background="#B2DB4D"
+        android:gravity="center"
+        android:onClick="viewPagerDemo"
+        android:padding="10dp"
+        android:text="ViewPagerDemo"
         android:textColor="@android:color/white"
         android:textSize="14sp" />
 

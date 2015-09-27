@@ -39,4 +39,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, WebViewActivity.class));
     }
 
+    public void viewPagerDemo(View v) {
+        startActivity(new Intent(this, ViewPagerActivity.class));
+    }
+
 }

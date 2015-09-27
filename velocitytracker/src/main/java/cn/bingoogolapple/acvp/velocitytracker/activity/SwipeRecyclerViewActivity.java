@@ -10,9 +10,9 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import cn.bingoogolapple.acvp.velocitytracker.App;
 import cn.bingoogolapple.acvp.velocitytracker.R;
 import cn.bingoogolapple.acvp.velocitytracker.adapter.SwipeRecyclerViewAdapter;
-import cn.bingoogolapple.acvp.velocitytracker.engine.DataEngine;
 import cn.bingoogolapple.acvp.velocitytracker.model.RefreshModel;
 import cn.bingoogolapple.acvp.velocitytracker.widget.BGAStickyNavRefreshLayout;
 import cn.bingoogolapple.acvp.velocitytracker.widget.Divider;
@@ -20,6 +20,8 @@ import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildClickListener;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildLongClickListener;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemClickListener;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemLongClickListener;
+import retrofit.Callback;
+import retrofit.Response;
 
 public class SwipeRecyclerViewActivity extends AppCompatActivity implements BGAOnRVItemClickListener, BGAOnRVItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener, View.OnClickListener {
     private static final String TAG = SwipeRecyclerViewActivity.class.getSimpleName();
@@ -71,14 +73,14 @@ public class SwipeRecyclerViewActivity extends AppCompatActivity implements BGAO
 
         mDataRv.setAdapter(mAdapter);
 
-        DataEngine.loadInitDatas(new DataEngine.RefreshModelResponseHandler() {
+        App.getInstance().getEngine().loadInitDatas().enqueue(new Callback<List<RefreshModel>>() {
             @Override
-            public void onFailure() {
+            public void onResponse(Response<List<RefreshModel>> response) {
+                mAdapter.setDatas(response.body());
             }
 
             @Override
-            public void onSuccess(List<RefreshModel> refreshModels) {
-                mAdapter.setDatas(refreshModels);
+            public void onFailure(Throwable t) {
             }
         });
     }
