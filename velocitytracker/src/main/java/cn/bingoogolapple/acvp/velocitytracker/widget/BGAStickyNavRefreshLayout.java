@@ -1,6 +1,10 @@
 package cn.bingoogolapple.acvp.velocitytracker.widget;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +39,12 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
     private ScrollView mDirectScrollView;
     private WebView mDirectWebView;
     private ViewPager mDirectViewPager;
+
+    private View mNestedContentView;
+    private RecyclerView mNestedRecyclerView;
+    private AbsListView mNestedAbsListView;
+    private ScrollView mNestedScrollView;
+    private WebView mNestedWebView;
 
     private OverScroller mOverScroller;
     private VelocityTracker mVelocityTracker;
@@ -343,7 +353,87 @@ public class BGAStickyNavRefreshLayout extends LinearLayout {
     }
 
     private boolean isViewPagerContentViewToTop() {
+        resetNestedContentView();
+
+        if (mNestedWebView != null && mNestedWebView.getScrollY() == 0) {
+            return true;
+        }
+
+        // 内容是ScrollView，并且其scrollY为0时满足
+        if (mNestedScrollView != null && mNestedScrollView.getScrollY() == 0) {
+            return true;
+        }
+
+        if (mNestedAbsListView != null) {
+            int firstChildTop = 0;
+            if (mNestedAbsListView.getChildCount() > 0) {
+                // 如果AdapterView的子控件数量不为0，获取第一个子控件的top
+                firstChildTop = mNestedAbsListView.getChildAt(0).getTop() - mNestedAbsListView.getPaddingTop();
+            }
+            if (mNestedAbsListView.getFirstVisiblePosition() == 0 && firstChildTop == 0) {
+                return true;
+            }
+        }
+
+        if (mNestedRecyclerView != null) {
+            int firstChildTop = 0;
+            if (mNestedRecyclerView.getChildCount() > 0) {
+                // 如果RecyclerView的子控件数量不为0，获取第一个子控件的top
+
+                // 解决item的topMargin不为0时不能触发下拉刷新
+                MarginLayoutParams layoutParams = (MarginLayoutParams) mNestedRecyclerView.getChildAt(0).getLayoutParams();
+                firstChildTop = mNestedRecyclerView.getChildAt(0).getTop() - layoutParams.topMargin - mNestedRecyclerView.getPaddingTop();
+            }
+
+            RecyclerView.LayoutManager manager = mNestedRecyclerView.getLayoutManager();
+            if (manager == null) {
+                return true;
+            }
+            if (manager.getItemCount() == 0) {
+                return true;
+            }
+
+            if (manager instanceof LinearLayoutManager) {
+                LinearLayoutManager layoutManager = (LinearLayoutManager) manager;
+                if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0 && firstChildTop == 0) {
+                    return true;
+                }
+            } else if (manager instanceof StaggeredGridLayoutManager) {
+                StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) manager;
+
+                int[] out = layoutManager.findFirstCompletelyVisibleItemPositions(null);
+                if (out[0] == 0) {
+                    return true;
+                }
+            }
+        }
         return false;
+    }
+
+    private void resetNestedContentView() {
+        int currentItem = mDirectViewPager.getCurrentItem();
+        PagerAdapter adapter = mDirectViewPager.getAdapter();
+        if (adapter instanceof FragmentPagerAdapter || adapter instanceof FragmentStatePagerAdapter) {
+            Fragment item = (Fragment) adapter.instantiateItem(mDirectViewPager, currentItem);
+            mNestedContentView = item.getView();
+
+            mNestedAbsListView = null;
+            mNestedRecyclerView = null;
+            mNestedScrollView = null;
+            mNestedWebView = null;
+
+            if (mNestedContentView instanceof AbsListView) {
+                mNestedAbsListView = (AbsListView) mNestedContentView;
+            } else if (mNestedContentView instanceof RecyclerView) {
+                mNestedRecyclerView = (RecyclerView) mNestedContentView;
+            } else if (mNestedContentView instanceof ScrollView) {
+                mNestedScrollView = (ScrollView) mNestedContentView;
+            } else if (mNestedContentView instanceof WebView) {
+                mNestedWebView = (WebView) mNestedContentView;
+            }
+        } else {
+            throw new IllegalStateException(BGAStickyNavRefreshLayout.class.getSimpleName() + "的第三个子控件为ViewPager时，其adapter必须是FragmentPagerAdapter或者FragmentStatePagerAdapter");
+        }
     }
 
     private static void debug(String msg) {
