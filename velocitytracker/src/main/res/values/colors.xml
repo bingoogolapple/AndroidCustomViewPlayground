@@ -9,4 +9,9 @@
     <color name="black_middle">#8f8f8f</color>
     <color name="black_light">#d4d4d4</color>
     <color name="black_dark">#4d4d4d</color>
+
+    <color name="test_spacing1">#9674FC</color>
+    <color name="test_spacing2">#179641</color>
+    <color name="test_spacing3">#B2DB4D</color>
+    <color name="test_spacing4">#50E746</color>
 </resources>

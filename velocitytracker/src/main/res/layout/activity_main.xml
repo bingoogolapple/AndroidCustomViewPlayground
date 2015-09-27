@@ -1,12 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/MatchMatch.Vertical"
-    android:background="#179641"
+    android:background="@color/test_spacing2"
     android:gravity="center">
 
     <TextView
         style="@style/MatchWrap"
         android:layout_marginBottom="10dp"
-        android:background="#B2DB4D"
+        android:background="@color/test_spacing3"
         android:gravity="center"
         android:onClick="normalRecyclerViewDemo"
         android:padding="10dp"
@@ -17,7 +17,7 @@
     <TextView
         style="@style/MatchWrap"
         android:layout_marginBottom="10dp"
-        android:background="#B2DB4D"
+        android:background="@color/test_spacing3"
         android:gravity="center"
         android:onClick="normalListViewDemo"
         android:padding="10dp"
@@ -28,7 +28,7 @@
     <TextView
         style="@style/MatchWrap"
         android:layout_marginBottom="10dp"
-        android:background="#B2DB4D"
+        android:background="@color/test_spacing3"
         android:gravity="center"
         android:onClick="swipeRecyclerViewDemo"
         android:padding="10dp"
@@ -39,7 +39,7 @@
     <TextView
         style="@style/MatchWrap"
         android:layout_marginBottom="10dp"
-        android:background="#B2DB4D"
+        android:background="@color/test_spacing3"
         android:gravity="center"
         android:onClick="swipeListViewDemo"
         android:padding="10dp"
@@ -50,7 +50,7 @@
     <TextView
         style="@style/MatchWrap"
         android:layout_marginBottom="10dp"
-        android:background="#B2DB4D"
+        android:background="@color/test_spacing3"
         android:gravity="center"
         android:onClick="scrollViewDemo"
         android:padding="10dp"
@@ -61,7 +61,7 @@
     <TextView
         style="@style/MatchWrap"
         android:layout_marginBottom="10dp"
-        android:background="#B2DB4D"
+        android:background="@color/test_spacing3"
         android:gravity="center"
         android:onClick="webViewDemo"
         android:padding="10dp"
@@ -72,7 +72,7 @@
     <TextView
         style="@style/MatchWrap"
         android:layout_marginBottom="10dp"
-        android:background="#B2DB4D"
+        android:background="@color/test_spacing3"
         android:gravity="center"
         android:onClick="viewPagerDemo"
         android:padding="10dp"

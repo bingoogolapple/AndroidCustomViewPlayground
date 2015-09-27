@@ -1,4 +1,5 @@
-<android.support.v7.widget.RecyclerView
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/data"
     style="@style/MatchMatch"
     android:layout_marginBottom="@dimen/test_padding_margin"
@@ -7,4 +8,4 @@
     android:paddingBottom="@dimen/test_padding_margin"
     android:paddingTop="@dimen/test_padding_margin"
     android:scrollbars="none"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    tools:listitem="@layout/item_normal" />

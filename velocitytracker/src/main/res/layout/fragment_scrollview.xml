@@ -4,7 +4,7 @@
     style="@style/MatchMatch"
     android:layout_marginBottom="@dimen/test_padding_margin"
     android:layout_marginTop="@dimen/test_padding_margin"
-    android:background="#B2DB4D"
+    android:background="@color/test_spacing3"
     android:paddingBottom="@dimen/test_padding_margin"
     android:paddingTop="@dimen/test_padding_margin"
     android:scrollbars="none">

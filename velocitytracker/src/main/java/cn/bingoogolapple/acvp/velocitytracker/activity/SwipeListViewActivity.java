@@ -1,13 +1,11 @@
 package cn.bingoogolapple.acvp.velocitytracker.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -15,34 +13,23 @@ import cn.bingoogolapple.acvp.velocitytracker.App;
 import cn.bingoogolapple.acvp.velocitytracker.R;
 import cn.bingoogolapple.acvp.velocitytracker.adapter.SwipeAdapterViewAdapter;
 import cn.bingoogolapple.acvp.velocitytracker.model.RefreshModel;
-import cn.bingoogolapple.acvp.velocitytracker.widget.BGAStickyNavRefreshLayout;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildClickListener;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnItemChildLongClickListener;
 import retrofit.Callback;
 import retrofit.Response;
 
-public class SwipeListViewActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener, View.OnClickListener {
-    private static final String TAG = SwipeListViewActivity.class.getSimpleName();
-    private BGAStickyNavRefreshLayout mStickyNavRefreshLayout;
+public class SwipeListViewActivity extends BaseActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, BGAOnItemChildClickListener, BGAOnItemChildLongClickListener {
     private ListView mDataLv;
     private SwipeAdapterViewAdapter mAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_listview);
-
-        initView();
-        setListener();
-        processLogic();
-    }
-
-    private void initView() {
-        mStickyNavRefreshLayout = (BGAStickyNavRefreshLayout) findViewById(R.id.stickyNavRefreshLayout);
         mDataLv = (ListView) findViewById(R.id.data);
     }
 
-    private void setListener() {
+    @Override
+    protected void setListener() {
         mDataLv.setOnItemClickListener(this);
         mDataLv.setOnItemLongClickListener(this);
         mDataLv.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -67,7 +54,8 @@ public class SwipeListViewActivity extends AppCompatActivity implements AdapterV
         findViewById(R.id.praise).setOnClickListener(this);
     }
 
-    private void processLogic() {
+    @Override
+    protected void processLogic(Bundle savedInstanceState) {
         mDataLv.setAdapter(mAdapter);
 
         App.getInstance().getEngine().loadInitDatas().enqueue(new Callback<List<RefreshModel>>() {
@@ -121,9 +109,4 @@ public class SwipeListViewActivity extends AppCompatActivity implements AdapterV
             showToast("点击了赞");
         }
     }
-
-    protected void showToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-    }
-
 }

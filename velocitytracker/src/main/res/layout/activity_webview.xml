@@ -1,15 +1,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/MatchMatch.Vertical"
-    android:background="#9674FC"
+    android:background="@color/test_spacing1"
     android:paddingBottom="@dimen/test_padding_margin"
     android:paddingTop="@dimen/test_padding_margin">
 
-    <cn.bingoogolapple.acvp.velocitytracker.widget.BGAStickyNavRefreshLayout
-        android:id="@+id/stickyNavRefreshLayout"
+    <cn.bingoogolapple.acvp.velocitytracker.widget.BGAStickyNavLayout
+        android:id="@+id/stickyNavLayout"
         style="@style/MatchMatch"
         android:layout_marginBottom="@dimen/test_padding_margin"
         android:layout_marginTop="@dimen/test_padding_margin"
-        android:background="#179641"
+        android:background="@color/test_spacing2"
         android:paddingBottom="@dimen/test_padding_margin"
         android:paddingTop="@dimen/test_padding_margin">
 
@@ -17,7 +17,7 @@
             style="@style/MatchWrap"
             android:layout_marginBottom="@dimen/test_padding_margin"
             android:layout_marginTop="@dimen/test_padding_margin"
-            android:background="#B2DB4D"
+            android:background="@color/test_spacing3"
             android:gravity="center"
             android:paddingBottom="50dp"
             android:paddingTop="50dp"
@@ -29,7 +29,7 @@
             style="@style/MatchWrap.Horizontal"
             android:layout_marginBottom="@dimen/test_padding_margin"
             android:layout_marginTop="@dimen/test_padding_margin"
-            android:background="#50E746"
+            android:background="@color/test_spacing4"
             android:paddingBottom="@dimen/test_padding_margin"
             android:paddingTop="@dimen/test_padding_margin">
 
@@ -63,9 +63,9 @@
             style="@style/MatchMatch"
             android:layout_marginBottom="@dimen/test_padding_margin"
             android:layout_marginTop="@dimen/test_padding_margin"
-            android:background="#B2DB4D"
+            android:background="@color/test_spacing3"
             android:paddingBottom="@dimen/test_padding_margin"
             android:paddingTop="@dimen/test_padding_margin" />
 
-    </cn.bingoogolapple.acvp.velocitytracker.widget.BGAStickyNavRefreshLayout>
+    </cn.bingoogolapple.acvp.velocitytracker.widget.BGAStickyNavLayout>
 </LinearLayout>

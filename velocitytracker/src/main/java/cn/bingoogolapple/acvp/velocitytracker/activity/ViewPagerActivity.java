@@ -6,43 +6,31 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 
 import cn.bingoogolapple.acvp.velocitytracker.R;
 import cn.bingoogolapple.acvp.velocitytracker.fragment.ListViewFragment;
 import cn.bingoogolapple.acvp.velocitytracker.fragment.RecyclerViewFragment;
 import cn.bingoogolapple.acvp.velocitytracker.fragment.ScrollViewFragment;
 import cn.bingoogolapple.acvp.velocitytracker.fragment.WebViewFragment;
-import cn.bingoogolapple.acvp.velocitytracker.widget.BGAStickyNavRefreshLayout;
 import cn.bingoogolapple.bgaindicator.BGAFixedIndicator;
 
-public class ViewPagerActivity extends AppCompatActivity {
-    private static final String TAG = ViewPagerActivity.class.getSimpleName();
-    private BGAStickyNavRefreshLayout mStickyNavRefreshLayout;
+public class ViewPagerActivity extends BaseActivity {
     private ViewPager mContentVp;
     private BGAFixedIndicator mIndicator;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_viewpager);
-
-        initView();
-        setListener();
-        processLogic();
-    }
-
-    private void initView() {
-        mStickyNavRefreshLayout = (BGAStickyNavRefreshLayout) findViewById(R.id.stickyNavRefreshLayout);
         mIndicator = (BGAFixedIndicator) findViewById(R.id.indicator);
         mContentVp = (ViewPager) findViewById(R.id.vp_viewpager_content);
     }
 
-    private void setListener() {
-
+    @Override
+    protected void setListener() {
     }
 
-    private void processLogic() {
+    @Override
+    protected void processLogic(Bundle savedInstanceState) {
         mContentVp.setAdapter(new ContentViewPagerAdapter(getSupportFragmentManager(), this));
         mIndicator.initData(0, mContentVp);
     }
