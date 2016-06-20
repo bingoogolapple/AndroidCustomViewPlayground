@@ -2,18 +2,18 @@
     style="@style/MatchMatch.Vertical"
     android:padding="10dp">
 
-    <Button
-        style="@style/MatchWrap"
+    <TextView
+        style="@style/MatchWrapTv"
         android:text="img3"
         android:onClick="img3" />
 
-    <Button
-        style="@style/MatchWrap"
+    <TextView
+        style="@style/MatchWrapTv"
         android:text="ColorMatrix"
         android:onClick="colorMatrix" />
 
-    <Button
-        style="@style/MatchWrap"
+    <TextView
+        style="@style/MatchWrapTv"
         android:text="Pixel"
         android:onClick="pixel" />
 </LinearLayout>

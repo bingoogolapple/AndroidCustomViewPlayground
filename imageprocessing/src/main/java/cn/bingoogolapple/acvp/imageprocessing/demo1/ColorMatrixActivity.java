@@ -6,23 +6,18 @@ import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
-import cn.bingoogolapple.acvp.imageprocessing.BaseActivity;
 import cn.bingoogolapple.acvp.imageprocessing.R;
-import cn.bingoogolapple.bgaannotation.BGAALayout;
-import cn.bingoogolapple.bgaannotation.BGAAView;
+import cn.bingoogolapple.bacvp.BaseActivity;
 
-@BGAALayout(R.layout.activity_colormatrix)
 public class ColorMatrixActivity extends BaseActivity {
-    @BGAAView(R.id.iv_colormatrix_icon)
     private ImageView mIconIv;
-    @BGAAView(R.id.gl_colormatrix_group)
     private GridLayout mGroupGl;
-
 
     private Bitmap mBitmap;
     private int mEtWidth;
@@ -32,7 +27,14 @@ public class ColorMatrixActivity extends BaseActivity {
     private float[] mColorMatrixs = new float[20];
 
     @Override
-    protected void processLogic() {
+    protected void initView(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_colormatrix);
+        mIconIv = getViewById(R.id.iv_colormatrix_icon);
+        mGroupGl = getViewById(R.id.gl_colormatrix_group);
+    }
+
+    @Override
+    protected void processLogic(Bundle savedInstanceState) {
         mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.img3);
         mIconIv.setImageBitmap(mBitmap);
         mGroupGl.post(new Runnable() {

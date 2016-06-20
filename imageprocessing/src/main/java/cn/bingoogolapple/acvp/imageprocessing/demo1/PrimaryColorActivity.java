@@ -2,25 +2,20 @@ package cn.bingoogolapple.acvp.imageprocessing.demo1;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
-import cn.bingoogolapple.acvp.imageprocessing.BaseActivity;
 import cn.bingoogolapple.acvp.imageprocessing.R;
-import cn.bingoogolapple.bgaannotation.BGAALayout;
-import cn.bingoogolapple.bgaannotation.BGAAView;
+import cn.bingoogolapple.bacvp.BaseActivity;
 
-@BGAALayout(R.layout.activity_primarycolor)
+
 public class PrimaryColorActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener {
     private static final int MAX_VALUE = 255;
     private static final int MID_VALUE = 127;
-    @BGAAView(R.id.iv_img3_icon)
     private ImageView mIconIv;
-    @BGAAView(R.id.sb_img3_hue)
     private SeekBar mHueSb;
-    @BGAAView(R.id.sb_img3_saturation)
     private SeekBar mSaturationSb;
-    @BGAAView(R.id.sb_img3_lum)
     private SeekBar mLumSb;
     private float mHue = 0.0f;
     private float mSaturation = 1.0f;
@@ -28,7 +23,23 @@ public class PrimaryColorActivity extends BaseActivity implements SeekBar.OnSeek
     private Bitmap mBitmap;
 
     @Override
-    protected void processLogic() {
+    protected void initView(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_primarycolor);
+        mIconIv = getViewById(R.id.iv_img3_icon);
+        mHueSb = getViewById(R.id.sb_img3_hue);
+        mSaturationSb = getViewById(R.id.sb_img3_saturation);
+        mLumSb = getViewById(R.id.sb_img3_lum);
+    }
+
+    @Override
+    protected void setListener() {
+        mHueSb.setOnSeekBarChangeListener(this);
+        mSaturationSb.setOnSeekBarChangeListener(this);
+        mLumSb.setOnSeekBarChangeListener(this);
+    }
+
+    @Override
+    protected void processLogic(Bundle savedInstanceState) {
         mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.img3);
         mIconIv.setImageBitmap(mBitmap);
         mHueSb.setMax(MAX_VALUE);
@@ -38,13 +49,6 @@ public class PrimaryColorActivity extends BaseActivity implements SeekBar.OnSeek
         mHueSb.setProgress(MID_VALUE);
         mSaturationSb.setProgress(MID_VALUE);
         mLumSb.setProgress(MID_VALUE);
-    }
-
-    @Override
-    protected void setListener() {
-        mHueSb.setOnSeekBarChangeListener(this);
-        mSaturationSb.setOnSeekBarChangeListener(this);
-        mLumSb.setOnSeekBarChangeListener(this);
     }
 
     @Override

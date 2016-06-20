@@ -61,7 +61,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      *
      * @param savedInstanceState
      */
-    protected abstract void processLogic(Bundle savedInstanceState);
+    protected void processLogic(Bundle savedInstanceState) {
+    }
 
     /**
      * 需要处理点击事件时，重写该方法

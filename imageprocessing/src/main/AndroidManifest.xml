@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".demo1.Demo1Activity" />
-        <activity android:name=".demo1.img3Activity" />
+        <activity android:name=".demo1.PrimaryColorActivity" />
         <activity android:name=".demo1.ColorMatrixActivity" />
         <activity android:name=".demo1.PixelActivity" />
 

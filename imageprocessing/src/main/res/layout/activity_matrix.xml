@@ -24,13 +24,13 @@
 
     <LinearLayout style="@style/MatchWrap">
 
-        <Button
-            style="@style/AutoWrap"
+        <TextView
+            style="@style/AutoWrapTv"
             android:onClick="change"
             android:text="change" />
 
-        <Button
-            style="@style/AutoWrap"
+        <TextView
+            style="@style/AutoWrapTv"
             android:text="reset"
             android:onClick="reset" />
 

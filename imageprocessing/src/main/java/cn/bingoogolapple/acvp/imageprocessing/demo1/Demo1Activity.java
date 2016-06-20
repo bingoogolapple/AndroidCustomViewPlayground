@@ -1,14 +1,22 @@
 package cn.bingoogolapple.acvp.imageprocessing.demo1;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 
-import cn.bingoogolapple.acvp.imageprocessing.BaseActivity;
 import cn.bingoogolapple.acvp.imageprocessing.R;
-import cn.bingoogolapple.bgaannotation.BGAALayout;
+import cn.bingoogolapple.bacvp.BaseActivity;
 
-@BGAALayout(R.layout.activity_demo1)
 public class Demo1Activity extends BaseActivity {
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_demo1);
+    }
+
+    @Override
+    protected void processLogic(Bundle savedInstanceState) {
+    }
 
     public void img3(View view) {
         startActivity(new Intent(this, PrimaryColorActivity.class));

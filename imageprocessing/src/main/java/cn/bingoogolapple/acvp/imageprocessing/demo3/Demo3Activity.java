@@ -1,25 +1,28 @@
 package cn.bingoogolapple.acvp.imageprocessing.demo3;
 
+import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import cn.bingoogolapple.acvp.imageprocessing.BaseActivity;
 import cn.bingoogolapple.acvp.imageprocessing.R;
-import cn.bingoogolapple.bgaannotation.BGAALayout;
-import cn.bingoogolapple.bgaannotation.BGAAView;
+import cn.bingoogolapple.bacvp.BaseActivity;
 
-@BGAALayout(R.layout.activity_demo3)
 public class Demo3Activity extends BaseActivity {
-    @BGAAView(R.id.vp_demo3_content)
     private ViewPager mContentVp;
     private int[] mImgs = new int[]{R.mipmap.img1, R.mipmap.img2, R.mipmap.img3};
     private ImageView[] mImageViews = new ImageView[mImgs.length];
 
     @Override
-    protected void processLogic() {
+    protected void initView(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_demo3);
+        mContentVp = getViewById(R.id.vp_demo3_content);
+    }
+
+    @Override
+    protected void processLogic(Bundle savedInstanceState) {
         mContentVp.setAdapter(new PagerAdapter() {
 
             @Override
@@ -47,5 +50,4 @@ public class Demo3Activity extends BaseActivity {
             }
         });
     }
-
 }

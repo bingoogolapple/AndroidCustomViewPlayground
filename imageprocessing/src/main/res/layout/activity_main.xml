@@ -2,18 +2,18 @@
     style="@style/MatchMatch.Vertical"
     android:padding="10dp">
 
-    <Button
-        style="@style/MatchWrap"
+    <TextView
+        style="@style/MatchWrapTv"
         android:text="Demo1"
         android:onClick="demo1" />
 
-    <Button
-        style="@style/MatchWrap"
+    <TextView
+        style="@style/MatchWrapTv"
         android:text="Demo2"
         android:onClick="demo2" />
 
-    <Button
-        style="@style/MatchWrap"
+    <TextView
+        style="@style/MatchWrapTv"
         android:text="Demo3"
         android:onClick="demo3" />
 

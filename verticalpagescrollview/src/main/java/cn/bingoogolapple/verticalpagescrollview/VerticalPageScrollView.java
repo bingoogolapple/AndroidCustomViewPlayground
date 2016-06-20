@@ -20,7 +20,7 @@ public class VerticalPageScrollView extends ViewGroup {
     private int mStartY;
     private int mCurrentItem;
     private Scroller mScroller;
-    private VerticalPageScrollViewDelegate mDelegate;
+    private Delegate mDelegate;
 
     public VerticalPageScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -163,11 +163,11 @@ public class VerticalPageScrollView extends ViewGroup {
         }
     }
 
-    public void setDelegate(VerticalPageScrollViewDelegate delegate) {
+    public void setDelegate(Delegate delegate) {
         mDelegate = delegate;
     }
 
-    public interface VerticalPageScrollViewDelegate {
+    public interface Delegate {
         void onPageSelected(int position);
     }
 }

@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         mScrollView.addView(page5);
 
 
-        mScrollView.setDelegate(new VerticalPageScrollView.VerticalPageScrollViewDelegate() {
+        mScrollView.setDelegate(new VerticalPageScrollView.Delegate() {
             @Override
             public void onPageSelected(int position) {
                 switch (position) {

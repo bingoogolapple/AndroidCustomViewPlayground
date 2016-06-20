@@ -1,9 +1,14 @@
 package cn.bingoogolapple.acvp.imageprocessing.demo2;
 
-import cn.bingoogolapple.acvp.imageprocessing.BaseActivity;
-import cn.bingoogolapple.acvp.imageprocessing.R;
-import cn.bingoogolapple.bgaannotation.BGAALayout;
+import android.os.Bundle;
 
-@BGAALayout(R.layout.activity_mesh)
+import cn.bingoogolapple.acvp.imageprocessing.R;
+import cn.bingoogolapple.bacvp.BaseActivity;
+
 public class MeshActivity extends BaseActivity {
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_mesh);
+    }
 }

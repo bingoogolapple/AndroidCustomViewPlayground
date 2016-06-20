@@ -2,23 +2,23 @@
     style="@style/MatchMatch.Vertical"
     android:padding="10dp">
 
-    <Button
-        style="@style/MatchWrap"
+    <TextView
+        style="@style/MatchWrapTv"
         android:text="Matrix"
         android:onClick="matrix" />
 
-    <Button
-        style="@style/MatchWrap"
+    <TextView
+        style="@style/MatchWrapTv"
         android:text="XFermode"
         android:onClick="xFermode" />
 
-    <Button
-        style="@style/MatchWrap"
+    <TextView
+        style="@style/MatchWrapTv"
         android:text="Shader"
         android:onClick="shader" />
 
-    <Button
-        style="@style/MatchWrap"
+    <TextView
+        style="@style/MatchWrapTv"
         android:text="Mesh"
         android:onClick="mesh" />
 
