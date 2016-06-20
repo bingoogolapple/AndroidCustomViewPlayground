@@ -2,7 +2,7 @@ package cn.bingoogolapple.acvp.viewdraghelper.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import cn.bingoogolapple.acvp.viewdraghelper.R;
@@ -10,7 +10,7 @@ import cn.bingoogolapple.bgaannotation.BGAA;
 import cn.bingoogolapple.bgaannotation.BGAALayout;
 
 @BGAALayout(R.layout.activity_main)
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,14 +20,8 @@ public class MainActivity extends ActionBarActivity {
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_main_helloworld:
-                startActivity(new Intent(this, HelloWorldActivity.class));
-                break;
             case R.id.btn_main_youtube:
                 startActivity(new Intent(this, YouTubeActivity.class));
-                break;
-            case R.id.btn_main_swiperecyclerviewitem:
-                startActivity(new Intent(this, SwipeItemActivity.class));
                 break;
         }
     }

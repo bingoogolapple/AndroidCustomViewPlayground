@@ -32,6 +32,7 @@ public class YouTubeLayout extends ViewGroup {
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         if (getChildCount() != 2) {
             throw new RuntimeException(YouTubeLayout.class.getSimpleName() + "必须有且只有两个子控件");
         }

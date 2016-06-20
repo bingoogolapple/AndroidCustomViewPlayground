@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <declare-styleable name="SelectView">
-        <attr name="sv_defaultValue" format="reference|string"/>
-        <attr name="sv_arrowImg" format="reference" />
-    </declare-styleable>
-</resources>

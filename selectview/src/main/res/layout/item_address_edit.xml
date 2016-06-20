@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tv_item_address_edit_name"
-    style="@style/MatchWrap"
-    android:textSize="13sp"
-    android:padding="5dp"
-    android:background="#ddd"
-    android:text="北京" />

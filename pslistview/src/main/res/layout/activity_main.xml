@@ -1,6 +1,0 @@
-<cn.bingoogolapple.acvp.pslistview.PinnedSectionListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/list"
-    style="@style/MatchWrap"
-    android:headerDividersEnabled="false"
-    android:footerDividersEnabled="false"
-    android:divider="@null" />

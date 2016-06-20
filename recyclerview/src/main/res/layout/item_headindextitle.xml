@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tv_item_headindextitle_title"
-    style="@style/MatchWrap"
-    android:padding="15dp"
-    android:background="#ccc"
-    android:textColor="@android:color/white"
-    android:textSize="18sp"
-    android:text="类型1" />
