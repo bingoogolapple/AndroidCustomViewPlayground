@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch">
+
+    <ImageView
+        android:id="@+id/dustboxview"
+        android:layout_centerInParent="true"
+        android:src="@drawable/clip_dustbox_red"
+        android:background="@mipmap/dustbox_bg"
+        style="@style/WrapWrap" />
+
+</RelativeLayout>

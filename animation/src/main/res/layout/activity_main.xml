@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch">
+
+    <LinearLayout style="@style/MatchMatch.Vertical">
+
+        <TextView
+            style="@style/MatchWrapTv"
+            android:onClick="chrysanthemum"
+            android:text="菊花" />
+
+        <TextView
+            style="@style/MatchWrapTv"
+            android:onClick="dustboxview"
+            android:text="集尘箱" />
+
+    </LinearLayout>
+</ScrollView>
