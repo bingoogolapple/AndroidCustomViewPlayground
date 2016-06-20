@@ -1,9 +1,0 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/MatchMatch">
-
-    <cn.bingoogolapple.acvp.strainerview.StrainerView
-        android:id="@+id/strainerview"
-        style="@style/WrapWrap"
-        android:layout_centerInParent="true" />
-
-</RelativeLayout>

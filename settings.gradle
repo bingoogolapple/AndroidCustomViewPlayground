@@ -1,1 +1,1 @@
-include ':strainerview', ':clearedittext', ':scratchcard', ':lockpatternview', ':viewdraghelper', ':touchevent', ':imageprocessing', ':verticalpagescrollview', ':scroll', ':velocitytracker', ':nestedscrolling', ':bacvp', ':animation'
+include ':bacvp', ':animation', ':clearedittext', ':scratchcard', ':lockpatternview', ':viewdraghelper', ':touchevent', ':imageprocessing', ':verticalpagescrollview', ':scroll', ':nestedscrolling'

@@ -24,4 +24,8 @@ public class MainActivity extends BaseActivity {
     public void dustboxview(View v) {
         forwardActivity(DustBoxViewActivity.class);
     }
+
+    public void strainerview(View v) {
+        forwardActivity(StrainerViewActivity.class);
+    }
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchMatch">
+
+    <ImageView
+        android:id="@+id/strainerview"
+        android:layout_centerInParent="true"
+        android:background="@mipmap/strainer_bg"
+        style="@style/WrapWrap" />
+
+</RelativeLayout>

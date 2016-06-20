@@ -14,5 +14,10 @@
             android:onClick="dustboxview"
             android:text="集尘箱" />
 
+        <TextView
+            style="@style/MatchWrapTv"
+            android:onClick="strainerview"
+            android:text="滤网" />
+
     </LinearLayout>
 </ScrollView>

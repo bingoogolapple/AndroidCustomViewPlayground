@@ -17,6 +17,7 @@
         </activity>
         <activity android:name=".activity.ChrysanthemumActivity" />
         <activity android:name=".activity.DustBoxViewActivity" />
+        <activity android:name=".activity.StrainerViewActivity" />
     </application>
 
 </manifest>
