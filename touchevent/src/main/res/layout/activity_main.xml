@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/MatchMatch.Vertical"
-    android:padding="70dp"
-    android:background="#00f">
+    android:background="#00f"
+    android:padding="70dp">
 
     <Button
         style="@style/MatchWrap"
@@ -10,14 +10,14 @@
 
     <cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup1
         style="@style/MatchMatch"
-        android:padding="70dp"
-        android:background="#f00">
+        android:background="#f00"
+        android:padding="70dp">
 
         <cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup2
             style="@style/MatchMatch"
-            android:paddingTop="70dp"
+            android:background="#0f0"
             android:paddingBottom="70dp"
-            android:background="#0f0">
+            android:paddingTop="70dp">
 
             <cn.bingoogolapple.acvp.touchevent.widget.ChildView
                 style="@style/MatchMatch"

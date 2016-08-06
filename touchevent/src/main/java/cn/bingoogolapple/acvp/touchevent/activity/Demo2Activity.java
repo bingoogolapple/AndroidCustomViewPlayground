@@ -1,6 +1,5 @@
 package cn.bingoogolapple.acvp.touchevent.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,18 +39,18 @@ public class Demo2Activity extends AppCompatActivity {
         for (int i = 0; i < 200; i++) {
             datas.add(i);
         }
-        mRecyclerView1.setAdapter(new TestAdapter(this, datas));
-        mRecyclerView2.setAdapter(new TestAdapter(this, datas));
-        mRecyclerView3.setAdapter(new TestAdapter(this, datas));
+        mRecyclerView1.setAdapter(new TestAdapter(mRecyclerView1, datas));
+        mRecyclerView2.setAdapter(new TestAdapter(mRecyclerView2, datas));
+        mRecyclerView3.setAdapter(new TestAdapter(mRecyclerView3, datas));
     }
 
     private static final class TestAdapter extends BGARecyclerViewAdapter<Integer> {
 
         private static final int[] ids = new int[]{R.mipmap.img1, R.mipmap.img2, R.mipmap.img3, R.mipmap.img4, R.mipmap.img5, R.mipmap.img6, R.mipmap.img7};
 
-        public TestAdapter(Context context, List<Integer> datas) {
-            super(context, R.layout.item);
-            setDatas(datas);
+        public TestAdapter(RecyclerView recyclerView, List<Integer> data) {
+            super(recyclerView, R.layout.item);
+            setData(data);
         }
 
         @Override

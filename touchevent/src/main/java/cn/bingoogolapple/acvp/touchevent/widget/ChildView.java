@@ -24,11 +24,38 @@ public class ChildView extends View {
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        Log.i(TAG, "dispatchTouchEvent --> " + TouchEventUtil.getTouchAction(event.getAction()));
+
+        /**
+         * 告诉父组件，不要拦截我的事件。调用该方法后，所有父控件的onInterceptTouchEvent都不会再被调用，直到下一次重新ACTION_DOWN
+         * 在dispatchTouchEvent或onTouchEvent里调该方法都可以
+         */
+//        getParent().requestDisallowInterceptTouchEvent(true);
+
+        return super.dispatchTouchEvent(event);
+//        return true;
+//        return false;
+
+//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//            return true;
+//        } else {
+//            return super.dispatchTouchEvent(event);
+//        }
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         Log.i(TAG, "onTouchEvent --> " + TouchEventUtil.getTouchAction(event.getAction()));
+
 //        return super.onTouchEvent(event);
-        // 如果在ACTION_DOWN事件中没有返回true，则不会收到后续的ACTION_MOVE和ACTION_UP事件
-        // 如果在ACTION_DOWN事件中返回true，则父视图的onTouchEvent方法将不会被调用
         return true;
+//        return false;
+
+//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//            return true;
+//        } else {
+//            return super.onTouchEvent(event);
+//        }
     }
 }
