@@ -1,31 +1,29 @@
 package cn.bingoogolapple.verticalpagescrollview;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import cn.bingoogolapple.bacvp.BaseActivity;
+
+public class MainActivity extends BaseActivity {
     private VerticalPageScrollView mScrollView;
     private RadioGroup mRadioGroup;
 
     private int[] ivIds = {R.mipmap.iv1, R.mipmap.iv2, R.mipmap.iv3, R.mipmap.iv4};
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
 
-        mRadioGroup = (RadioGroup) findViewById(R.id.radiogroup);
-        mScrollView = (VerticalPageScrollView) findViewById(R.id.scrollView);
-
-        initRadioGroup();
-        initScrollView();
+        mRadioGroup = getViewById(R.id.radiogroup);
+        mScrollView = getViewById(R.id.scrollView);
     }
 
-    private void initRadioGroup() {
+    @Override
+    protected void setListener() {
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -48,23 +46,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void initScrollView() {
-        for (int ivId : ivIds) {
-            ImageView iv = new ImageView(this);
-            iv.setBackgroundResource(ivId);
-            mScrollView.addView(iv);
-        }
-        View page5 = View.inflate(this, R.layout.view_page5, null);
-        page5.findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "点击了测试按钮", Toast.LENGTH_SHORT).show();
-            }
-        });
-        mScrollView.addView(page5);
-
 
         mScrollView.setDelegate(new VerticalPageScrollView.Delegate() {
             @Override
@@ -88,6 +69,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void processLogic(Bundle savedInstanceState) {
+        for (int ivId : ivIds) {
+            ImageView iv = new ImageView(this);
+            iv.setBackgroundResource(ivId);
+            mScrollView.addView(iv);
+        }
+        View page5 = View.inflate(this, R.layout.view_page5, null);
+        page5.findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "点击了测试按钮", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mScrollView.addView(page5);
     }
 
 }

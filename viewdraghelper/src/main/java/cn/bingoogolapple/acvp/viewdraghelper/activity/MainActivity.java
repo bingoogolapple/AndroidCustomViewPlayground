@@ -2,20 +2,16 @@ package cn.bingoogolapple.acvp.viewdraghelper.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import cn.bingoogolapple.acvp.viewdraghelper.R;
-import cn.bingoogolapple.bgaannotation.BGAA;
-import cn.bingoogolapple.bgaannotation.BGAALayout;
+import cn.bingoogolapple.bacvp.BaseActivity;
 
-@BGAALayout(R.layout.activity_main)
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        BGAA.injectView2Activity(this);
+    protected void initView(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_main);
     }
 
     public void onClick(View view) {
