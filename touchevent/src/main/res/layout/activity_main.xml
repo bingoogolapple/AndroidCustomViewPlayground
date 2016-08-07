@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/MatchMatch.Vertical"
     android:background="#00f"
-    android:padding="70dp">
+    android:padding="60dp">
 
     <Button
         style="@style/MatchWrap"
@@ -11,17 +11,22 @@
     <cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup1
         style="@style/MatchMatch"
         android:background="#f00"
-        android:padding="70dp">
+        android:padding="60dp">
 
         <cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup2
-            style="@style/MatchMatch"
+            style="@style/MatchMatch.Vertical"
             android:background="#0f0"
-            android:paddingBottom="70dp"
-            android:paddingTop="70dp">
+            android:paddingBottom="60dp"
+            android:paddingTop="60dp">
 
-            <cn.bingoogolapple.acvp.touchevent.widget.ChildView
-                style="@style/MatchMatch"
+            <cn.bingoogolapple.acvp.touchevent.widget.ChildView1
+                android:id="@+id/childView1"
+                style="@style/MatchAuto"
                 android:background="#ccc" />
+
+            <cn.bingoogolapple.acvp.touchevent.widget.ChildView2
+                style="@style/MatchAuto"
+                android:background="#abc" />
 
         </cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup2>
     </cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup1>

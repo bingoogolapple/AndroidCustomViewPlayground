@@ -8,18 +8,18 @@ import android.view.View;
 
 import cn.bingoogolapple.acvp.touchevent.util.TouchEventUtil;
 
-public class ChildView extends View {
-    private static final String TAG = ChildView.class.getSimpleName();
+public class ChildView1 extends View {
+    private static final String TAG = ChildView1.class.getSimpleName();
 
-    public ChildView(Context context) {
+    public ChildView1(Context context) {
         super(context);
     }
 
-    public ChildView(Context context, AttributeSet attrs) {
+    public ChildView1(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ChildView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ChildView1(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
