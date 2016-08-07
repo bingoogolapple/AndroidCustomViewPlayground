@@ -29,21 +29,21 @@ public class CustomLinearLayout extends LinearLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int width = getWidth() / getChildCount();
-        int height = getHeight();
-        int count = getChildCount();
+        int childCount = getChildCount();
+        int childWidth = getWidth() / childCount;
+        int childHeight = getHeight();
 
         float eventX = event.getX();
 
-        if (eventX < width) {
-            event.setLocation(width / 2, event.getY());
+        if (eventX < childWidth) {
+            event.setLocation(childWidth / 2, event.getY());
             getChildAt(0).dispatchTouchEvent(event);
-            return true;
-        } else if (eventX > width && eventX < 2 * width) {
+        } else if (eventX > childWidth && eventX < 2 * childWidth) {
             float eventY = event.getY();
-            if (eventY < height / 2) {
-                event.setLocation(width / 2, event.getY());
-                for (int i = 0; i < count; i++) {
+            if (eventY < childHeight / 2) {
+                // y小于高度的二分之一时所有子控件联动
+                event.setLocation(childWidth / 2, event.getY());
+                for (int i = 0; i < childCount; i++) {
                     View child = getChildAt(i);
                     try {
                         child.dispatchTouchEvent(event);
@@ -51,20 +51,18 @@ public class CustomLinearLayout extends LinearLayout {
                         e.printStackTrace();
                     }
                 }
-                return true;
-            } else if (eventY > height / 2) {
-                event.setLocation(width / 2, event.getY());
+            } else if (eventY >= childHeight / 2) {
+                // y大于等于高度的二分之一时只传递事件给第二个子控件
+                event.setLocation(childWidth / 2, event.getY());
                 try {
                     getChildAt(1).dispatchTouchEvent(event);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return true;
             }
-        } else if (eventX > 2 * width) {
-            event.setLocation(width / 2, event.getY());
+        } else if (eventX > 2 * childWidth) {
+            event.setLocation(childWidth / 2, event.getY());
             getChildAt(2).dispatchTouchEvent(event);
-            return true;
         }
         return true;
     }

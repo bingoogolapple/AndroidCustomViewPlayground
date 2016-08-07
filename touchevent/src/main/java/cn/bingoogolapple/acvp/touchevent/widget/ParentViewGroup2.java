@@ -44,7 +44,7 @@ public class ParentViewGroup2 extends LinearLayout {
     public boolean onInterceptTouchEvent(MotionEvent event) {
         /**
          * 如果onInterceptTouchEvent返回了true，那么本次touch事件之后的所有action都不会再向深层的View传递，通通都会传给
-         * 负层View的onTouchEvent，就是说父层已经截获了这次touch事件，「之后的action也不必询问onInterceptTouchEvent，在
+         * 父层View的onTouchEvent，就是说父层已经截获了这次touch事件，「之后的action也不必询问onInterceptTouchEvent，在
          * 这次的touch事件之后发出的action时onInterceptTouchEvent不会再次调用，并且所有子控件都会收到ACTION_CANCEL事件」，直到下一次重新ACTION_DOWN
          */
         Log.i(TAG, "onInterceptTouchEvent --> " + TouchEventUtil.getTouchAction(event.getAction()));

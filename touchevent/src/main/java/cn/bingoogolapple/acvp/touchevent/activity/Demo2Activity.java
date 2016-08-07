@@ -31,17 +31,17 @@ public class Demo2Activity extends AppCompatActivity {
         mRecyclerView2 = (RecyclerView) findViewById(R.id.recyclerview2);
         mRecyclerView3 = (RecyclerView) findViewById(R.id.recyclerview3);
 
-        mRecyclerView1.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        mRecyclerView2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        mRecyclerView3.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView1.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView2.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView3.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Integer> datas = new ArrayList<>();
+        List<Integer> data = new ArrayList<>();
         for (int i = 0; i < 200; i++) {
-            datas.add(i);
+            data.add(i);
         }
-        mRecyclerView1.setAdapter(new TestAdapter(mRecyclerView1, datas));
-        mRecyclerView2.setAdapter(new TestAdapter(mRecyclerView2, datas));
-        mRecyclerView3.setAdapter(new TestAdapter(mRecyclerView3, datas));
+        mRecyclerView1.setAdapter(new TestAdapter(mRecyclerView1, data));
+        mRecyclerView2.setAdapter(new TestAdapter(mRecyclerView2, data));
+        mRecyclerView3.setAdapter(new TestAdapter(mRecyclerView3, data));
     }
 
     private static final class TestAdapter extends BGARecyclerViewAdapter<Integer> {
