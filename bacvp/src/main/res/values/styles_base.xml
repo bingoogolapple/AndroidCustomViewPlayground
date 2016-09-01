@@ -119,15 +119,52 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
+    <style name="HLine" parent="MatchOne">
+        <item name="android:background">@color/gray_line</item>
+    </style>
+
+    <style name="VLine" parent="OneMatch">
+        <item name="android:background">@color/gray_line</item>
+    </style>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- 状态栏颜色 -->
+        <!--colorPrimaryDark对应状态栏的颜色-->
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <!-- toolbar（actionbar）背景颜色 -->
+        <!--colorPrimary对应ActionBar的颜色-->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="colorControlActivated">@color/colorPrimary</item>
         <!-- 底部导航栏的颜色 -->
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/navigationBarColor</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">
+            @color/navigationBarColor
+        </item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+        <!--colorAccent 对应EditText编辑时、RadioButton选中、CheckBox等选中时的颜色-->
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.Fullscreen">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!--适用于欢迎界面避免第一次进来白屏或黑屏，或开启滑动返回功能的Activity的主题-->
+    <style name="AppTheme.Transparent">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="AppTheme.Transparent.Fullscreen">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="DemoBtn" parent="MatchWrap">
+        <item name="android:textAllCaps" tools:targetApi="ice_cream_sandwich">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/textSize_16</item>
+        <item name="android:layout_marginTop">@dimen/size_level3</item>
+        <item name="android:layout_marginLeft">@dimen/size_level3</item>
+        <item name="android:layout_marginRight">@dimen/size_level3</item>
+        <item name="android:background">@drawable/selector_roundrect_primary</item>
     </style>
 
     <style name="MatchWrapTv" parent="MatchWrap">

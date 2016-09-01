@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="size_level1">5dp</dimen>
+    <dimen name="size_level2">10dp</dimen>
+    <dimen name="size_level3">15dp</dimen>
+    <dimen name="size_level4">20dp</dimen>
+    <dimen name="size_level5">25dp</dimen>
+    <dimen name="size_level6">30dp</dimen>
+    <dimen name="size_level7">35dp</dimen>
+    <dimen name="size_level8">40dp</dimen>
+    <dimen name="size_level9">45dp</dimen>
+    <dimen name="size_level10">50dp</dimen>
+    <dimen name="size_level11">55dp</dimen>
+    <dimen name="size_level12">60dp</dimen>
+    <dimen name="size_level13">65dp</dimen>
+    <dimen name="size_level14">70dp</dimen>
+    <dimen name="size_level15">75dp</dimen>
+    <dimen name="size_level16">80dp</dimen>
+    <dimen name="size_level17">85dp</dimen>
+    <dimen name="size_level18">90dp</dimen>
+    <dimen name="size_level19">95dp</dimen>
+    <dimen name="size_level20">100dp</dimen>
+
+    <dimen name="textSize_10">10sp</dimen>
+    <dimen name="textSize_12">12sp</dimen>
+    <dimen name="textSize_14">14sp</dimen>
+    <dimen name="textSize_16">16sp</dimen>
+    <dimen name="textSize_18">18sp</dimen>
+    <dimen name="textSize_20">20sp</dimen>
+
+    <dimen name="titlebar_height">50dp</dimen>
+
+    <dimen name="form_item_height">45dp</dimen>
+
+    <dimen name="btn_radius">3dp</dimen>
+</resources>

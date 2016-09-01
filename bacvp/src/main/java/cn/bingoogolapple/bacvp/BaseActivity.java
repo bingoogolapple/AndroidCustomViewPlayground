@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 /**
  * 作者:王浩 邮件:bingoogolapple@gmail.com
@@ -74,5 +77,19 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     protected void forwardActivity(Class<? extends Activity> activityClass) {
         startActivity(new Intent(this, activityClass));
+    }
+
+    public void show(CharSequence text) {
+        if (!TextUtils.isEmpty(text)) {
+            if (text.length() < 10) {
+                Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    public void show(@StringRes int resId) {
+        show(getResources().getString(resId));
     }
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MatchWrap.Vertical"
+    android:background="@drawable/selector_white_gray"
+    android:paddingBottom="@dimen/size_level1"
+    android:paddingLeft="@dimen/size_level2"
+    android:paddingRight="@dimen/size_level2"
+    android:paddingTop="@dimen/size_level1">
+
+    <TextView
+        android:id="@+id/tv_item_title_desc_title"
+        style="@style/MatchWrap"
+        android:drawablePadding="@dimen/size_level1"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="我是测试标题"
+        android:textColor="@color/black_dark"
+        android:textSize="@dimen/textSize_16" />
+
+    <TextView
+        android:id="@+id/tv_item_title_desc_desc"
+        style="@style/MatchWrap"
+        android:layout_marginTop="@dimen/size_level1"
+        android:text="我是测试描述信息"
+        android:textColor="@color/black_middle"
+        android:textSize="@dimen/textSize_14" />
+</LinearLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_item_title_title"
+    style="@style/MatchWrap"
+    android:background="@drawable/selector_white_gray"
+    android:ellipsize="end"
+    android:padding="@dimen/size_level2"
+    android:singleLine="true"
+    android:text="我是测试标题"
+    android:textColor="@color/black_dark"
+    android:textSize="@dimen/textSize_16" />
