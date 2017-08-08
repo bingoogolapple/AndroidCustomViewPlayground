@@ -64,8 +64,8 @@ public class ParentViewGroup2 extends LinearLayout {
     public boolean onTouchEvent(MotionEvent event) {
         Log.i(TAG, "onTouchEvent --> " + TouchEventUtil.getTouchAction(event.getAction()));
 
-        return super.onTouchEvent(event);
-//        return true;
+//        return super.onTouchEvent(event);
+        return true;
 //        return false;
 
 //        if (event.getAction() == MotionEvent.ACTION_DOWN) {

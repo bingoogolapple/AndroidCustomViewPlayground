@@ -17,6 +17,8 @@
             style="@style/MatchMatch.Vertical"
             android:background="#0f0"
             android:paddingBottom="60dp"
+            android:clickable="false"
+            android:longClickable="false"
             android:paddingTop="60dp">
 
             <cn.bingoogolapple.acvp.touchevent.widget.ChildView1
@@ -26,7 +28,9 @@
 
             <cn.bingoogolapple.acvp.touchevent.widget.ChildView2
                 style="@style/MatchAuto"
-                android:background="#abc" />
+                android:background="#abc"
+                android:clickable="false"
+                android:longClickable="true" />
 
         </cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup2>
     </cn.bingoogolapple.acvp.touchevent.widget.ParentViewGroup1>

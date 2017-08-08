@@ -11,6 +11,8 @@ import cn.bingoogolapple.acvp.touchevent.util.TouchEventUtil;
 
 public class ChildView2 extends Button {
     private static final String TAG = ChildView2.class.getSimpleName();
+    private boolean mIsNeedRequestDisallowIntercept = true;
+    private boolean mIsHandledOnTouchListener = true;
 
     public ChildView2(Context context) {
         super(context);
@@ -27,11 +29,8 @@ public class ChildView2 extends Button {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.i(TAG, "onTouch --> " + TouchEventUtil.getTouchAction(motionEvent.getAction()));
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    return true;
-                } else {
-                    return false;
-                }
+//                getParent().requestDisallowInterceptTouchEvent(mIsNeedRequestDisallowIntercept);
+                return mIsHandledOnTouchListener;
             }
         });
         setOnClickListener(new OnClickListener() {
@@ -40,6 +39,14 @@ public class ChildView2 extends Button {
                 Log.i(TAG, "onClick");
             }
         });
+
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mIsNeedRequestDisallowIntercept = false;
+                mIsHandledOnTouchListener = false;
+            }
+        }, 10000);
     }
 
     public ChildView2(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -54,7 +61,7 @@ public class ChildView2 extends Button {
          * 告诉父组件，不要拦截我的事件。调用该方法后，所有父控件的onInterceptTouchEvent都不会再被调用，直到下一次重新ACTION_DOWN
          * 在dispatchTouchEvent或onTouchEvent里调该方法都可以
          */
-//        getParent().requestDisallowInterceptTouchEvent(true);
+//        getParent().requestDisallowInterceptTouchEvent(mIsNeedRequestDisallowIntercept);
 
         return super.dispatchTouchEvent(event);
 //        return true;
@@ -70,7 +77,6 @@ public class ChildView2 extends Button {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         Log.i(TAG, "onTouchEvent --> " + TouchEventUtil.getTouchAction(event.getAction()));
-
         return super.onTouchEvent(event);
 //        return true;
 //        return false;
