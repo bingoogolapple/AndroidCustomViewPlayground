@@ -9,7 +9,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +21,6 @@ import java.util.List;
 
 import cn.bingoogolapple.bacvp.BaseActivity;
 import cn.bingoogolapple.testservice.R;
-import cn.bingoogolapple.testservice.TestServiceAidlInterface;
 import cn.bingoogolapple.testservice.service.TestService;
 
 public class ServiceActivity extends BaseActivity {
@@ -32,8 +34,24 @@ public class ServiceActivity extends BaseActivity {
         }
     };
 
+
     //    private TestService.TestBinder mTestBinder;
-    private TestServiceAidlInterface mTestBinder;
+//    private TestServiceAidlInterface mTestBinder;
+    private Messenger mServiceMessenger;
+
+    public static final int WHAT_SERVICE_RESPONSE = 1;
+    private Messenger mActivityMessenger = new Messenger(new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case WHAT_SERVICE_RESPONSE:
+                    Log.d(TAG, "handleMessage " + msg.getData().getString("ext"));
+                    break;
+                default:
+                    break;
+            }
+        }
+    });
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -41,13 +59,16 @@ public class ServiceActivity extends BaseActivity {
             // 当 bind 成功时会被调用
             Log.d(TAG, "onServiceConnected");
 //            mTestBinder = (TestService.TestBinder) service;
-            mTestBinder = TestServiceAidlInterface.Stub.asInterface(service);
+//            mTestBinder = TestServiceAidlInterface.Stub.asInterface(service);
+            mServiceMessenger = new Messenger(service);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             // 在 Service 丢失时才会被调用，通常会在 Service 所在进程被迫终止时才会调用，当 Service 重新运行时会再次调用 onServiceConnected 方法
             Log.d(TAG, "onServiceDisconnected");
+//            mTestBinder = null;
+            mServiceMessenger = null;
         }
     };
 
@@ -84,13 +105,19 @@ public class ServiceActivity extends BaseActivity {
          * 如果已经 unbind 了，再次调用 unbind 的话会报 IllegalArgumentException
          * bindService 后必须在 Activity 销毁之前 unbindService
          */
-        if (mTestBinder != null) {
-            mTestBinder = null;
+//        if (mTestBinder != null) {
+//            mTestBinder = null;
+//            unbindService(mServiceConnection);
+//        }
+
+        if (mServiceMessenger != null) {
+            mServiceMessenger = null;
             unbindService(mServiceConnection);
         }
     }
 
     public void callBinderMethod(View v) {
+        /*
         if (mTestBinder != null) {
 //            String result = mTestBinder.serviceBinderMethod("bga");
 //            Log.d(TAG, result);
@@ -98,6 +125,21 @@ public class ServiceActivity extends BaseActivity {
             try {
                 String result = mTestBinder.serviceBinderMethod("bga");
                 Log.d(TAG, result);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        */
+
+        if (mServiceMessenger != null) {
+            try {
+                Message message = Message.obtain();
+                message.what = TestService.WHAT_CALL_SERVICE_BINDER_METHOD;
+                Bundle bundle = new Bundle();
+                bundle.putString("ext", "我是客户端的消息");
+                message.setData(bundle);
+                message.replyTo = mActivityMessenger;
+                mServiceMessenger.send(message);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
