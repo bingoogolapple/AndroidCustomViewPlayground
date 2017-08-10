@@ -1,4 +1,4 @@
-include ':bacvp'
+include ':bacvp', ':testservice'
 include ':animation'
 include ':clearedittext'
 include ':scratchcard'
