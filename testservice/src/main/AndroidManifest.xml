@@ -19,15 +19,15 @@
 
         <activity android:name=".activity.ServiceActivity" />
 
-        <service android:name=".service.TestService" />
+        <!--<service android:name=".service.TestService" />-->
 
         <!--<service
             android:name=".service.TestService"
             android:process="bga.test" />-->
 
-        <!--<service
+        <service
             android:name=".service.TestService"
-            android:process=":test" />-->
+            android:process=":test" />
     </application>
 
 </manifest>

@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 
@@ -17,6 +18,7 @@ import java.util.List;
 
 import cn.bingoogolapple.bacvp.BaseActivity;
 import cn.bingoogolapple.testservice.R;
+import cn.bingoogolapple.testservice.TestServiceAidlInterface;
 import cn.bingoogolapple.testservice.service.TestService;
 
 public class ServiceActivity extends BaseActivity {
@@ -30,14 +32,16 @@ public class ServiceActivity extends BaseActivity {
         }
     };
 
-    private TestService.TestBinder mTestBinder;
+    //    private TestService.TestBinder mTestBinder;
+    private TestServiceAidlInterface mTestBinder;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             // 当 bind 成功时会被调用
             Log.d(TAG, "onServiceConnected");
-            mTestBinder = (TestService.TestBinder) service;
+//            mTestBinder = (TestService.TestBinder) service;
+            mTestBinder = TestServiceAidlInterface.Stub.asInterface(service);
         }
 
         @Override
@@ -87,8 +91,17 @@ public class ServiceActivity extends BaseActivity {
     }
 
     public void callBinderMethod(View v) {
-        String result = mTestBinder.serviceBinderMethod();
-        Log.d(TAG, result);
+        if (mTestBinder != null) {
+//            String result = mTestBinder.serviceBinderMethod("bga");
+//            Log.d(TAG, result);
+
+            try {
+                String result = mTestBinder.serviceBinderMethod("bga");
+                Log.d(TAG, result);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void sendBroadcast(View v) {

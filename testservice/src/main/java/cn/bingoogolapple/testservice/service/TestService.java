@@ -9,11 +9,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import cn.bingoogolapple.testservice.R;
+import cn.bingoogolapple.testservice.TestServiceAidlInterface;
 import cn.bingoogolapple.testservice.activity.MainActivity;
 import cn.bingoogolapple.testservice.activity.ServiceActivity;
 
@@ -79,7 +81,8 @@ public class TestService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, Thread.currentThread().getName() + " onBind");
-        return new TestBinder();
+//        return new TestBinder();
+        return mBinder;
     }
 
     @Override
@@ -99,14 +102,28 @@ public class TestService extends Service {
      * 进程间通信不能用这种方式
      */
     public class TestBinder extends Binder {
-        public String serviceBinderMethod() {
+        public String serviceBinderMethod(String param) {
             Log.d(TAG, "serviceBinderMethod");
 
             Intent intent = new Intent(ServiceActivity.ACTION_ACTIVITY_RECEIVE);
             intent.putExtra("ext", "我是 Service Binder 扩展信息" + System.currentTimeMillis());
             sendBroadcast(intent);
 
-            return "我是 serviceBinderMethod 返回的结果";
+            return "我是 serviceBinderMethod 返回的结果 " + param.toUpperCase();
         }
     }
+
+    private TestServiceAidlInterface.Stub mBinder = new TestServiceAidlInterface.Stub() {
+
+        @Override
+        public String serviceBinderMethod(String param) throws RemoteException {
+            Log.d(TAG, "serviceBinderMethod");
+
+            Intent intent = new Intent(ServiceActivity.ACTION_ACTIVITY_RECEIVE);
+            intent.putExtra("ext", "我是 Service Stub Binder 扩展信息" + System.currentTimeMillis());
+            sendBroadcast(intent);
+
+            return "我是 Stub serviceBinderMethod 返回的结果 " + param.toUpperCase();
+        }
+    };
 }
